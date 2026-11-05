@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/presentation/ui/screens/product_details_screen.dart';
+import 'package:bdcalling_class/view/product_details/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProductDetailsScreen(productId: productId,));
+        Get.to(() => ProductDetailsScreen(productId: productId));
       },
       child: Card(
         elevation: 3,
@@ -115,8 +115,6 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-
-
             ],
           ),
         ),

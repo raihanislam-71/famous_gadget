@@ -1,7 +1,7 @@
-import 'package:bdcalling_class/presentation/ui/utils/assets_path.dart';
+import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 
-import '../category_card.dart';
+import 'category_card.dart';
 
 class HorizontalCategoriesListView extends StatelessWidget {
   HorizontalCategoriesListView({super.key});

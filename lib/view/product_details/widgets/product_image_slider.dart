@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/presentation/ui/utils/assets_path.dart';
+import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -83,7 +83,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
 
   Widget _buildBannerCardDesign(int index) {
     Widget currentWidget = Container(
-      margin: const EdgeInsets.symmetric(horizontal:8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.themeColor.withOpacity(0.2),

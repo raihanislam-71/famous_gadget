@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/presentation/ui/utils/app_colors.dart';
+import 'package:bdcalling_class/view/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ColorPicker extends StatefulWidget {
@@ -48,7 +48,9 @@ class _ColorPickerState extends State<ColorPicker> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isSelected ? AppColors.themeColor : Colors.transparent,
+                    color: isSelected
+                        ? AppColors.themeColor
+                        : Colors.transparent,
                     width: 2,
                   ),
                 ),
@@ -59,7 +61,9 @@ class _ColorPickerState extends State<ColorPicker> {
                       ? Icon(
                           Icons.check,
                           size: 18,
-                          color: item == Colors.white ? Colors.black : Colors.white,
+                          color: item == Colors.white
+                              ? Colors.black
+                              : Colors.white,
                         )
                       : null,
                 ),

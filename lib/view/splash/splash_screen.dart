@@ -1,9 +1,10 @@
-import 'package:bdcalling_class/presentation/ui/utils/assets_path.dart';
+import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+
 import '../utils/app_colors.dart';
-import 'main_bottom_nav_screen.dart';
+import '../navigation/main_bottom_nav_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

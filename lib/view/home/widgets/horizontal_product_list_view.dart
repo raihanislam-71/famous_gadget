@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../product_card.dart';
+
+import '../../widgets/product_card.dart';
 
 class HorizontalProductListView extends StatelessWidget {
   const HorizontalProductListView({super.key});
@@ -10,7 +11,7 @@ class HorizontalProductListView extends StatelessWidget {
       itemCount: 5,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        return ProductCard(productId: index.toString(),);
+        return ProductCard(productId: index.toString());
       },
       separatorBuilder: (_, _) => const SizedBox(width: 8),
     );

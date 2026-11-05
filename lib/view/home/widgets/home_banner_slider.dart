@@ -160,7 +160,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
 }
 */
 
-import 'package:bdcalling_class/presentation/ui/utils/assets_path.dart';
+import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
@@ -298,7 +298,10 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.themeColor,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 12,
+                          ),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           shape: RoundedRectangleBorder(

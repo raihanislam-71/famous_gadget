@@ -1,11 +1,11 @@
-import 'package:bdcalling_class/presentation/state_holders/bottom_nav_controller.dart';
-import 'package:bdcalling_class/presentation/ui/screens/cart_screen.dart';
-import 'package:bdcalling_class/presentation/ui/screens/home_screen.dart';
-import 'package:bdcalling_class/presentation/ui/screens/profile_screen.dart';
-import 'package:bdcalling_class/presentation/ui/utils/app_colors.dart';
+import 'package:bdcalling_class/controllers/bottom_nav_controller.dart';
+import 'package:bdcalling_class/view/cart/cart_screen.dart';
+import 'package:bdcalling_class/view/category/category_screen.dart';
+import 'package:bdcalling_class/view/home/home_screen.dart';
+import 'package:bdcalling_class/view/profile/profile_screen.dart';
+import 'package:bdcalling_class/view/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'category_screen.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});
@@ -15,7 +15,8 @@ class MainBottomNavScreen extends StatefulWidget {
 }
 
 class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
-  final BottomNavController _bottomNavController = Get.find<BottomNavController>();
+  final BottomNavController _bottomNavController =
+      Get.find<BottomNavController>();
 
   final List<Widget> _screens = const [
     HomeScreen(),
@@ -33,7 +34,10 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
           backgroundColor: Colors.transparent,
           body: _screens[_bottomNavController.selectedIndex],
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12.0,
+              vertical: 8.0,
+            ),
             child: Container(
               height: 70,
               decoration: BoxDecoration(
@@ -63,7 +67,12 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon, String label, {int badge = 0}) {
+  Widget _buildNavItem(
+    int index,
+    IconData icon,
+    String label, {
+    int badge = 0,
+  }) {
     bool isSelected = _bottomNavController.selectedIndex == index;
     return GestureDetector(
       onTap: () => _bottomNavController.changeIndex(index),
@@ -81,7 +90,9 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
               children: [
                 Icon(
                   icon,
-                  color: isSelected ? Colors.white : Colors.white.withOpacity(0.7),
+                  color: isSelected
+                      ? Colors.white
+                      : Colors.white.withOpacity(0.7),
                   size: 26,
                 ),
                 if (badge > 0)

@@ -1,7 +1,8 @@
-import 'package:bdcalling_class/presentation/ui/screens/splash_screen.dart';
-import 'package:bdcalling_class/presentation/ui/utils/app_colors.dart';
+import 'package:bdcalling_class/view/splash/splash_screen.dart';
+import 'package:bdcalling_class/view/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+
 import 'controller_binder.dart';
 
 class MyApp extends StatelessWidget {

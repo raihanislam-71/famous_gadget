@@ -1,13 +1,16 @@
-import 'package:bdcalling_class/presentation/ui/screens/review_screen.dart';
-import 'package:bdcalling_class/presentation/ui/utils/app_colors.dart';
-import 'package:bdcalling_class/presentation/ui/widgets/product_details/color_picker.dart';
-import 'package:bdcalling_class/presentation/ui/widgets/product_details/product_image_slider.dart';
+import 'package:bdcalling_class/view/product_details/widgets/color_picker.dart';
+import 'package:bdcalling_class/view/product_details/widgets/product_image_slider.dart';
+import 'package:bdcalling_class/view/review/review_screen.dart';
+import 'package:bdcalling_class/view/utils/app_colors.dart';
+import 'package:bdcalling_class/controllers/product_cart_button_controller.dart';
+import 'package:bdcalling_class/controllers/review_controller.dart';
+import 'package:bdcalling_class/models/product.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 
-import '../../state_holders/product_cart_button_controller.dart';
-import '../widgets/product_details/rating_and_reviews_section.dart';
+import 'widgets/rating_and_reviews_section.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key, required this.productId});
@@ -21,6 +24,8 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final product = Product.featured;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Product Details"),
@@ -46,7 +51,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    "Sony WH-1000XM5 Wireless Headphones",
+                    product.name,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -55,12 +60,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(height: 8),
                   const RatingAndReviewsSection(),
                   const SizedBox(height: 16),
-                  const Row(
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        "৳ 32,500",
+                        '৳ ${product.price.toStringAsFixed(0)}',
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w800,
@@ -69,7 +74,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       SizedBox(width: 12),
                       Text(
-                        "৳ 45,000",
+                        '৳ ${product.originalPrice.toStringAsFixed(0)}',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w400,
@@ -101,27 +106,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      _buildSpecificationItem("Battery Life", "Up to 30 Hours"),
-                      _buildSpecificationItem(
-                        "Noise Cancelling",
-                        "Industry Leading ANC",
-                      ),
-                      _buildSpecificationItem("Driver Size", "30mm"),
-                      _buildSpecificationItem("Connectivity", "Bluetooth 5.2"),
-                      _buildSpecificationItem("Weight", "250g"),
-                      _buildSpecificationItem(
-                        "Codec Support",
-                        "LDAC / AAC / SBC",
-                      ),
-                      _buildSpecificationItem(
-                        "Microphone",
-                        "Beamforming (4 mics)",
-                      ),
-                      _buildSpecificationItem("Water Resistance", "None"),
+                      for (final specification
+                          in product.specifications.entries)
+                        _buildSpecificationItem(
+                          specification.key,
+                          specification.value,
+                        ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -133,7 +127,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        '''The Sony WH-1000XM5 delivers exceptional sound quality with clear highs, rich bass, and a balanced signature that stays natural across every genre. Whether you're commuting, working, or relaxing, the industry-leading noise cancellation helps you focus on the music while keeping background distractions at bay. Comfort is designed for long listening sessions. The headphones feel lightweight, and the soft ear cushions are shaped to fit comfortably around your ears without putting pressure on the sides of your head. With up to 30 hours of battery life and quick charging, you can enjoy uninterrupted listening all day.''',
+                        product.description,
                         style: TextStyle(color: Colors.black54),
                       ),
                     ],
@@ -275,23 +269,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildReviewList() {
-    const reviews = [
-      {
-        'name': 'Aisha Rahman',
-        'date': '12 Mar 2026',
-        'text': "These are hands-down the best over-ears I've owned. The sound is incredibly detailed, noise cancellation is almost silent, and they stay comfortable even after a full day of travel.",
-      },
-      {
-        'name': 'Omar Khan',
-        'date': '08 Mar 2026',
-        'text': 'Great overall, but the case feels a bit larger than I expected. The sound quality and touch controls are worth it.',
-      },
-      {
-        'name': 'Priya Sengupta',
-        'date': '02 Mar 2026',
-        'text': 'Perfect for long flights. The ANC is incredible in loud environments and the battery life easily lasts a full day.',
-      },
-    ];
+    final reviews = Get.find<ReviewController>().previewReviews;
 
     return Column(
       children: reviews.map((review) {
@@ -311,7 +289,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      review['name']!,
+                      review.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -323,7 +301,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   const SizedBox(width: 4),
                   RatingBarIndicator(
-                    rating: 5,
+                    rating: review.rating.toDouble(),
                     itemCount: 5,
                     itemSize: 10,
                     unratedColor: const Color(0xFFE7E9ED),
@@ -332,7 +310,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    review['date']!,
+                    DateFormat('dd MMM yyyy').format(review.date),
                     style: const TextStyle(
                       fontSize: 8,
                       color: Color(0xFF777D87),
@@ -342,7 +320,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
               const SizedBox(height: 7),
               Text(
-                review['text']!,
+                review.reviewText,
                 style: const TextStyle(
                   fontSize: 10,
                   height: 1.4,
