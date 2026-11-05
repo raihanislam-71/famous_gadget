@@ -22,7 +22,7 @@ CraftyBay is a modern, responsive cross-platform e-commerce mobile application b
 
 | Home Page | Categories Screen | Category Products |
 | :---: | :---: | :---: |
-| <img src="screenshots/2.png" width="250"/> | <img src="screenshots/3.jpg" width="250"/> | <img src="screenshots/4.png" width="250"/> |
+| <img src="screenshots/2.png" width="250"/> | <img src="screenshots/3.png" width="250"/> | <img src="screenshots/4.png" width="250"/> |
 
 * **Feature & Purpose:**
   * **Home Page:** Features interactive promo banners, quick search bar, category shortcuts, and product lists (Popular, Special, New).
@@ -47,7 +47,7 @@ CraftyBay is a modern, responsive cross-platform e-commerce mobile application b
 
 | Customer Reviews | Create Review |
 | :---: | :---: |
-| <img src="screenshots/7.jpg" width="300"/> | <img src="screenshots/8.png" width="300"/> |
+| <img src="screenshots/7.png" width="300"/> | <img src="screenshots/8.png" width="300"/> |
 
 * **Feature & Purpose:**
   * **Customer Reviews:** Displays all customer feedback and rating cards for a product, accompanied by an floating button to add new reviews.
