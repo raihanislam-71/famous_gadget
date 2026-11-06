@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/bottom_nav_controller.dart';
 import '../utils/assets_path.dart';
-import '../utils/extensions.dart';
-import '../home/widgets/category_card.dart';
+import '../home/widgets/category_grid_card.dart';
+import 'sub_category_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -13,12 +13,17 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  final List<Map<String, String>> categories = [
-    {'name': 'Mobile', 'image': AssetsPath.phone},
-    {'name': 'Camera', 'image': AssetsPath.camera},
-    {'name': 'Gimbal', 'image': AssetsPath.gimbal},
-    {'name': 'Projector', 'image': AssetsPath.projector},
-    {'name': 'Watch', 'image': AssetsPath.smartWatch},
+  final List<Map<String, dynamic>> categories = [
+    {'name': 'Smartphones', 'image': AssetsPath.phone, 'items': 86},
+    {'name': 'Security', 'image': AssetsPath.camera, 'items': 45},
+    {'name': 'Gimbal', 'image': AssetsPath.gimbal, 'items': 32},
+    {'name': 'Accessories', 'image': AssetsPath.projector, 'items': 210},
+    {'name': 'Projector', 'image': AssetsPath.projector, 'items': 28},
+    {'name': 'Microphone', 'image': AssetsPath.gimbal, 'items': 54},
+    {'name': 'Router', 'image': AssetsPath.projector, 'items': 38},
+    {'name': 'Tablet', 'image': AssetsPath.phone, 'items': 67},
+    {'name': 'Android TV BOX', 'image': AssetsPath.projector, 'items': 22},
+    {'name': 'Router UPS', 'image': AssetsPath.projector, 'items': 19},
   ];
 
   @override
@@ -31,6 +36,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.circle_outlined, color: Colors.black),
+          ),
+        ],
         leading: IconButton(
           onPressed: () {
             Get.find<BottomNavController>().backToHome();
@@ -40,42 +51,39 @@ class _CategoryScreenState extends State<CategoryScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search categories...',
-                prefixIcon: const Icon(Icons.search),
-                contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                filled: true,
-                fillColor: Colors.grey[100],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                return CategoryCard(
-                  categoryName: categories[index]['name']!,
-                  imagePath: categories[index]['image']!,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Calculate crossAxisCount based on screen width
+                int crossAxisCount = constraints.maxWidth > 600 ? 5 : 4;
+
+                return GridView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 0.65, // Adjusted to give more vertical space
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    return CategoryGridCard(
+                      categoryName: categories[index]['name']!,
+                      imagePath: categories[index]['image']!,
+                      itemsCount: categories[index]['items']!,
+                      onTap: () {
+                        Get.to(() => SubCategoryScreen(
+                              categoryName: categories[index]['name']!,
+                            ));
+                      },
+                    );
+                  },
                 );
               },
             ),
           ),
         ],
-      ).padOnly(top: 8),
+      ),
     );
   }
 }
