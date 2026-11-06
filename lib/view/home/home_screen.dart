@@ -1,6 +1,8 @@
+import 'package:bdcalling_class/view/category/category_screen.dart';
 import 'package:bdcalling_class/view/widgets/recommended_for_you_grid_card.dart';
 import 'package:bdcalling_class/view/widgets/section_header.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 import '../utils/assets_path.dart';
 import '../widgets/hot_deal_grid_card.dart';
@@ -32,7 +34,10 @@ class HomeScreen extends StatelessWidget {
                 child: const HomeBannerSlider(),
               ),
               const SizedBox(height: 16),
-              SectionHeader(title: 'Category', onTap: () {}),
+              SectionHeader(
+                title: 'Category',
+                onTap: () => Get.to(() => const CategoryScreen()),
+              ),
               const SizedBox(height: 16),
               _buildCategoriesSection(),
               const SizedBox(height: 16),
