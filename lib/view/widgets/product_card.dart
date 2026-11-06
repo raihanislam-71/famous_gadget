@@ -1,3 +1,4 @@
+import 'package:bdcalling_class/view/product_details/out_of_stock_product_details_screen.dart';
 import 'package:bdcalling_class/view/product_details/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,15 +7,20 @@ import '../utils/app_colors.dart';
 import '../utils/assets_path.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.productId});
+  const ProductCard({super.key, required this.productId, this.isInStock = true});
 
   final String productId;
+  final bool isInStock;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProductDetailsScreen(productId: productId));
+        if (isInStock) {
+          Get.to(() => ProductDetailsScreen(productId: productId));
+        } else {
+          Get.to(() => OutOfStockProductDetailsScreen(productId: productId));
+        }
       },
       child: Card(
         elevation: 3,
@@ -30,7 +36,7 @@ class ProductCard extends StatelessWidget {
                   height: 100,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.themeColor.withOpacity(0.1),
+                    color: AppColors.themeColor.withValues(alpha: 0.1),
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8),

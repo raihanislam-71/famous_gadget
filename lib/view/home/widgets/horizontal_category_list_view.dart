@@ -1,6 +1,8 @@
 import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../category/sub_category_screen.dart';
 import 'category_card.dart';
 
 class HorizontalCategoriesListView extends StatelessWidget {
@@ -10,7 +12,7 @@ class HorizontalCategoriesListView extends StatelessWidget {
     "Smart Watch",
     "Camera",
     "Gimbal",
-    "Phone",
+    "Smartphones & Tablets",
     "Projector",
   ];
 
@@ -31,6 +33,11 @@ class HorizontalCategoriesListView extends StatelessWidget {
         return CategoryCard(
           imagePath: _categoryImagePath[index],
           categoryName: _categoryName[index],
+          onTap: () {
+            Get.to(() => SubCategoryScreen(
+                  categoryName: _categoryName[index],
+                ));
+          },
         );
       },
       separatorBuilder: (_, _) => const SizedBox(width: 16),
