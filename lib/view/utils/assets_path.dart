@@ -60,4 +60,22 @@ class AssetsPath {
   static const String wishlistHeart = '$_images/figma_wishlist/heart.svg';
   static const String wishlistCart =
       '$_images/figma_wishlist/shopping_cart.svg';
+  static const String accountGuestUser =
+      '$_images/figma_account/guest_user.svg';
+  static const String accountLock = '$_images/figma_account/lock.svg';
+  static const String accountChevron =
+      '$_images/figma_account/chevron_right.svg';
+  static const String accountMapPin = '$_images/figma_account/map_pin.svg';
+  static const String accountPackage = '$_images/figma_account/package.svg';
+  static const String accountHeart = '$_images/figma_account/heart.svg';
+  static const String accountSettings = '$_images/figma_account/settings.svg';
+  static const String accountHelp = '$_images/figma_account/help.svg';
+  static const String accountLogout = '$_images/figma_account/logout.svg';
+  static const String accountBackArrow =
+      '$_images/figma_account/back_arrow.svg';
+  static const String profileCamera = '$_images/figma_account/camera.svg';
+  static const String verifiedCheck =
+      '$_images/figma_account/verified_check.svg';
+  static const String passwordInvalid =
+      '$_images/figma_account/invalid_check.svg';
 }

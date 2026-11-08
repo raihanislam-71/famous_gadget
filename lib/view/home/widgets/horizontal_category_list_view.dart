@@ -27,6 +27,7 @@ class HorizontalCategoriesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       itemCount: _categoryName.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
@@ -34,13 +35,11 @@ class HorizontalCategoriesListView extends StatelessWidget {
           imagePath: _categoryImagePath[index],
           categoryName: _categoryName[index],
           onTap: () {
-            Get.to(() => SubCategoryScreen(
-                  categoryName: _categoryName[index],
-                ));
+            Get.to(() => SubCategoryScreen(categoryName: _categoryName[index]));
           },
         );
       },
-      separatorBuilder: (_, _) => const SizedBox(width: 16),
+      separatorBuilder: (_, _) => const SizedBox(width: 10),
     );
   }
 }

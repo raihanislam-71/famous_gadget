@@ -1,4 +1,5 @@
 import 'package:bdcalling_class/controllers/bottom_nav_controller.dart';
+import 'package:bdcalling_class/controllers/cart_controller.dart';
 import 'package:bdcalling_class/view/cart/cart_screen.dart';
 import 'package:bdcalling_class/view/category/category_screen.dart';
 import 'package:bdcalling_class/view/home/home_screen.dart';
@@ -58,8 +59,15 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
                   children: [
                     _buildNavItem(0, AssetsPath.navHome, 'Home'),
                     _buildNavItem(1, AssetsPath.navGrid, 'Category'),
-                    _buildNavItem(2, AssetsPath.navCart, 'Cart'),
-                    _buildNavItem(3, AssetsPath.navUser, 'Profile'),
+                    GetBuilder<CartController>(
+                      builder: (cart) => _buildNavItem(
+                        2,
+                        AssetsPath.navCart,
+                        'Cart',
+                        badge: cart.totalItemCount,
+                      ),
+                    ),
+                    _buildNavItem(3, AssetsPath.navUser, 'Account'),
                   ],
                 ),
               ),
