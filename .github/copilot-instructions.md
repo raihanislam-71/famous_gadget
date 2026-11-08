@@ -10,7 +10,7 @@ Widget & Method Extraction
 API & Backend Integration
 UI/UX Design
 Figma-to-Flutter Implementation
-Responsive Design (Mobile, Tablet & Web)
+Responsive Design (Mobile, Web)
 Security
 Existing Code & Change Safety
 Error Handling & Verification
