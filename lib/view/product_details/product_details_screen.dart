@@ -118,7 +118,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     const Text(
+                      const Text(
                         "Description",
                         style: TextStyle(
                           fontSize: 16,
@@ -187,11 +187,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomAddToCartSection(context),
+      bottomNavigationBar: _buildBottomAddToCartSection(product),
     );
   }
 
-  Widget _buildBottomAddToCartSection(BuildContext context) {
+  Widget _buildBottomAddToCartSection(Product product) {
     return GetBuilder<ProductCartButtonController>(
       builder: (productCartButtonController) {
         return Container(
@@ -207,59 +207,67 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               ),
             ],
           ),
-          child: Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () =>
-                          productCartButtonController.updateQuantity(-1),
-                      icon: const Icon(Icons.remove, size: 20),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 4,
                     ),
-                    Text(
-                      "${productCartButtonController.quantity}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () =>
-                          productCartButtonController.updateQuantity(1),
-                      icon: const Icon(Icons.add, size: 20),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    productCartButtonController.addToCart();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.themeColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    "Add to Cart - ৳ ${productCartButtonController.totalPrice.toStringAsFixed(0)}",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () =>
+                              productCartButtonController.updateQuantity(-1),
+                          icon: const Icon(Icons.remove, size: 20),
+                        ),
+                        Text(
+                          "${productCartButtonController.quantity}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              productCartButtonController.updateQuantity(1),
+                          icon: const Icon(Icons.add, size: 20),
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        productCartButtonController.addToCart(product);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.themeColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        "Add to Cart - ৳ ${productCartButtonController.totalPrice.toStringAsFixed(0)}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

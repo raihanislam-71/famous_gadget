@@ -4,7 +4,10 @@ import 'package:bdcalling_class/view/category/category_screen.dart';
 import 'package:bdcalling_class/view/home/home_screen.dart';
 import 'package:bdcalling_class/view/profile/profile_screen.dart';
 import 'package:bdcalling_class/view/utils/app_colors.dart';
+import 'package:bdcalling_class/view/utils/app_text_styles.dart';
+import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
@@ -34,31 +37,31 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
           backgroundColor: Colors.transparent,
           body: _screens[_bottomNavController.selectedIndex],
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12.0,
-              vertical: 8.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Container(
-              height: 70,
+              height: 68,
               decoration: BoxDecoration(
-                color: const Color(0xFF0F172A),
-                borderRadius: BorderRadius.circular(35),
+                color: AppColors.navyDark,
+                borderRadius: BorderRadius.circular(34),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
+                    color: Colors.black.withValues(alpha: 0.25),
+                    blurRadius: 12,
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildNavItem(0, Icons.home_filled, "Home"),
-                  _buildNavItem(1, Icons.grid_view_rounded, "Category"),
-                  _buildNavItem(2, Icons.shopping_cart, "Cart"),
-                  _buildNavItem(3, Icons.person, "Profile"),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildNavItem(0, AssetsPath.navHome, 'Home'),
+                    _buildNavItem(1, AssetsPath.navGrid, 'Category'),
+                    _buildNavItem(2, AssetsPath.navCart, 'Cart'),
+                    _buildNavItem(3, AssetsPath.navUser, 'Profile'),
+                  ],
+                ),
               ),
             ),
           ),
@@ -69,65 +72,62 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
 
   Widget _buildNavItem(
     int index,
-    IconData icon,
+    String iconPath,
     String label, {
     int badge = 0,
   }) {
-    bool isSelected = _bottomNavController.selectedIndex == index;
-    return GestureDetector(
-      onTap: () => _bottomNavController.changeIndex(index),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.themeColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Row(
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Icon(
-                  icon,
-                  color: isSelected
-                      ? Colors.white
-                      : Colors.white.withOpacity(0.7),
-                  size: 26,
-                ),
-                if (badge > 0)
-                  Positioned(
-                    right: -6,
-                    top: -6,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: AppColors.themeColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        badge.toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            if (isSelected) ...[
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+    final isSelected = _bottomNavController.selectedIndex == index;
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label: label,
+      child: InkWell(
+        onTap: () => _bottomNavController.changeIndex(index),
+        borderRadius: BorderRadius.circular(22),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: 44,
+          padding: EdgeInsets.symmetric(
+            horizontal: isSelected ? 16 : 12,
+            vertical: 8,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(22),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                iconPath,
+                width: 20,
+                height: 20,
+                colorFilter: const ColorFilter.mode(
+                  Colors.white,
+                  BlendMode.srcIn,
                 ),
               ),
+              if (isSelected) ...[
+                const SizedBox(width: 8),
+                Text(
+                  label,
+                  style: AppTextStyles.button.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+              if (badge > 0)
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Text(
+                    '$badge',
+                    style: AppTextStyles.caption.copyWith(color: Colors.white),
+                  ),
+                ),
             ],
-          ],
+          ),
         ),
       ),
     );
