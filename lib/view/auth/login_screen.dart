@@ -1,0 +1,226 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+
+import '../utils/app_colors.dart';
+import '../utils/app_text_styles.dart';
+import '../utils/assets_path.dart';
+import '../widgets/app_buttons.dart';
+import 'otp_verification_screen.dart';
+import 'register_screen.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({
+    super.key,
+    required this.onLoginSuccess,
+    required this.onRegisterSuccess,
+  });
+
+  final VoidCallback onLoginSuccess;
+  final VoidCallback onRegisterSuccess;
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: AppColors.pageBackground,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.pageBackground,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildWelcomeBanner(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Phone Number',
+                          style: AppTextStyles.badge.copyWith(
+                            fontSize: 13,
+                            color: AppColors.navyDark,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildPhoneField(),
+                        const SizedBox(height: 20),
+                        AppPrimaryButton(label: 'Login', onPressed: _submit),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Demo login: use any valid phone number and any 4-digit code.',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.caption.copyWith(fontSize: 11),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildRegisterPrompt(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomeBanner() {
+    return Container(
+      width: double.infinity,
+      height: 220,
+      padding: const EdgeInsets.all(24),
+      color: AppColors.navyDark,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Image.asset(
+            AssetsPath.loginLogo,
+            width: 160,
+            height: 40,
+            fit: BoxFit.contain,
+          ),
+          Column(
+            children: [
+              Text(
+                'Welcome Back',
+                style: AppTextStyles.h2.copyWith(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.surface,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Login to unlock premium gadget benefits',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.caption.copyWith(
+                  fontSize: 13,
+                  color: AppColors.secondaryText,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return SizedBox(
+      height: 48,
+      child: TextFormField(
+        controller: _phoneController,
+        keyboardType: TextInputType.phone,
+        textInputAction: TextInputAction.done,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(10),
+        ],
+        style: AppTextStyles.body,
+        validator: (value) {
+          final phone = value?.trim() ?? '';
+          if (phone.length != 10 || !phone.startsWith('1')) {
+            return 'Enter a valid phone number.';
+          }
+          return null;
+        },
+        onFieldSubmitted: (_) => _submit(),
+        decoration: InputDecoration(
+          prefixText: '+880 ',
+          prefixStyle: AppTextStyles.body.copyWith(
+            color: AppColors.secondaryText,
+          ),
+          hintText: '1XXXXXXXXX',
+          hintStyle: AppTextStyles.body.copyWith(
+            color: AppColors.secondaryText,
+          ),
+          filled: true,
+          fillColor: AppColors.surface,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: AppColors.border),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: AppColors.primary),
+          ),
+          errorStyle: const TextStyle(height: 0, fontSize: 0),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterPrompt() {
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text(
+          "Don't have an account? ",
+          style: AppTextStyles.caption.copyWith(fontSize: 13),
+        ),
+        TextButton(
+          onPressed: () {
+            Get.to<void>(
+              () => RegisterScreen(onRegisterSuccess: widget.onRegisterSuccess),
+            );
+          },
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            foregroundColor: AppColors.primary,
+            textStyle: AppTextStyles.body.copyWith(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          child: const Text('Register'),
+        ),
+      ],
+    );
+  }
+
+  void _submit() {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter a valid phone number.')),
+      );
+      return;
+    }
+
+    Get.to<void>(
+      () => OtpVerificationScreen(
+        phoneNumber: _phoneController.text.trim(),
+        onVerified: widget.onLoginSuccess,
+      ),
+    );
+  }
+}
