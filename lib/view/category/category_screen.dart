@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/bottom_nav_controller.dart';
 import '../utils/assets_path.dart';
 import '../home/widgets/category_grid_card.dart';
@@ -54,16 +55,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // Calculate crossAxisCount based on screen width
-                int crossAxisCount = constraints.maxWidth > 600 ? 5 : 4;
+                final width = constraints.maxWidth;
+                final crossAxisCount = width < 360
+                    ? 2
+                    : width < 600
+                    ? 3
+                    : width < 900
+                    ? 4
+                    : 6;
 
                 return GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
-                    childAspectRatio: 0.65, // Adjusted to give more vertical space
+                    childAspectRatio: 0.82,
                   ),
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
@@ -72,9 +82,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       imagePath: categories[index]['image']!,
                       itemsCount: categories[index]['items']!,
                       onTap: () {
-                        Get.to(() => SubCategoryScreen(
-                              categoryName: categories[index]['name']!,
-                            ));
+                        Get.to(
+                          () => SubCategoryScreen(
+                            categoryName: categories[index]['name']!,
+                          ),
+                        );
                       },
                     );
                   },

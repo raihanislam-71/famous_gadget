@@ -127,6 +127,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildCategoriesSection() {
-    return SizedBox(height: 110, child: HorizontalCategoriesListView());
+    return SizedBox(height: 124, child: HorizontalCategoriesListView());
   }
 }

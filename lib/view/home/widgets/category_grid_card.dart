@@ -21,6 +21,7 @@ class CategoryGridCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -29,46 +30,36 @@ class CategoryGridCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.themeColor.withValues(alpha: 0.05),
-                  shape: BoxShape.circle,
-                ),
-                child: SizedBox(
-                  width: 30,
-                  height: 30,
-                  child: Image.asset(imagePath, fit: BoxFit.contain),
-                ),
+            Container(
+              width: 56,
+              height: 56,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.themeColor.withValues(alpha: 0.05),
+                shape: BoxShape.circle,
+              ),
+              child: Image.asset(imagePath, fit: BoxFit.contain),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              categoryName,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+                fontSize: 11,
+                height: 1.15,
               ),
             ),
             const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Text(
-                categoryName,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 10,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                "$itemsCount items",
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 8,
-                ),
-              ),
+            Text(
+              '$itemsCount items',
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: Colors.grey.shade600, fontSize: 9),
             ),
           ],
         ),
