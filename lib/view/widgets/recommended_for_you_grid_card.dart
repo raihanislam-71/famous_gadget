@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/assets_path.dart';
@@ -9,7 +9,7 @@ class RecommendedForYouGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3,
+      elevation: 2,
       color: Colors.white,
       child: SizedBox(
         width: 140,
@@ -83,6 +83,129 @@ class RecommendedForYouGridCard extends StatelessWidget {
                         ],
                       ),
                       Card(
+                        color: AppColors.themeColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Icon(Icons.add, size: 16, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+ */
+
+import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
+import '../utils/assets_path.dart';
+
+class RecommendedForYouGridCard extends StatelessWidget {
+  const RecommendedForYouGridCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double cardWidth = (screenWidth - 36) / 2;
+
+    return SizedBox(
+      width: cardWidth,
+      height: 245,
+      child: Card(
+        elevation: 2,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 100,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.themeColor.withOpacity(0.1),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+                image: const DecorationImage(
+                  image: AssetImage(AssetsPath.productImage),
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+            ),
+            
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Product name",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 2),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.star_outline, color: Colors.amber, size: 14),
+                      const SizedBox(width: 2),
+                      const Text(
+                        "4.5",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        "(100)",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "\$999",
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: AppColors.themeColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            "\$1290",
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade500,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Card(
+                        margin: EdgeInsets.zero,
                         color: AppColors.themeColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
