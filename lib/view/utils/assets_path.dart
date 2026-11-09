@@ -78,4 +78,5 @@ class AssetsPath {
       '$_images/figma_account/verified_check.svg';
   static const String passwordInvalid =
       '$_images/figma_account/invalid_check.svg';
+  static const String webHeroWatch = '$_images/figma_web/hero_watch.png';
 }

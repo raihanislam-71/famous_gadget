@@ -9,6 +9,7 @@ import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 import 'checkout_delivery_screen.dart';
 import 'order_success_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class CheckoutConfirmationScreen extends StatefulWidget {
   const CheckoutConfirmationScreen({super.key, required this.deliveryAddress});
@@ -421,6 +422,10 @@ class _CheckoutConfirmationScreenState
       );
 
   void _placeOrder() {
-    Get.off<void>(() => const OrderSuccessScreen(isPreview: true));
+    AppRoutes.off<void>(
+      route: AppRoutes.orderSuccess,
+      arguments: const {'isPreview': true},
+      mobileBuilder: () => const OrderSuccessScreen(isPreview: true),
+    );
   }
 }

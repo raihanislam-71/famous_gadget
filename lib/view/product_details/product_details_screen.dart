@@ -11,6 +11,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 
 import 'widgets/rating_and_reviews_section.dart';
+import '../navigation/app_navigation.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key, required this.productId});
@@ -155,12 +156,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         width: double.infinity,
                         child: OutlinedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ReviewScreen(productId: widget.productId),
-                              ),
+                            AppRoutes.to<void>(
+                              route: AppRoutes.reviews,
+                              arguments: {'productId': widget.productId},
+                              mobileBuilder: () =>
+                                  ReviewScreen(productId: widget.productId),
                             );
                           },
                           style: OutlinedButton.styleFrom(

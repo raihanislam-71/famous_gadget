@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../widgets/product_card.dart';
 import 'search_product_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class ProductByCategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -9,7 +11,8 @@ class ProductByCategoryScreen extends StatefulWidget {
   const ProductByCategoryScreen({super.key, required this.categoryName});
 
   @override
-  State<ProductByCategoryScreen> createState() => _ProductByCategoryScreenState();
+  State<ProductByCategoryScreen> createState() =>
+      _ProductByCategoryScreenState();
 }
 
 class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
@@ -19,7 +22,10 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
       appBar: AppBar(
         title: Text(
           widget.categoryName,
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -32,7 +38,10 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Get.to(() => const SearchProductScreen());
+              AppRoutes.to<void>(
+                route: AppRoutes.search,
+                mobileBuilder: () => const SearchProductScreen(),
+              );
             },
             icon: const Icon(Icons.search, color: Colors.black),
           ),
@@ -41,7 +50,10 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: Row(
               children: [
                 OutlinedButton.icon(
@@ -50,7 +62,9 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
                   label: const Text("Sort by: Popularity"),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -60,7 +74,9 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
                   label: const Text("Filters (2)"),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                 ),
               ],

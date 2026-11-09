@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/bottom_nav_controller.dart';
 import '../utils/assets_path.dart';
 import '../home/widgets/category_grid_card.dart';
 import 'sub_category_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -45,7 +47,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ],
         leading: IconButton(
           onPressed: () {
-            Get.find<BottomNavController>().backToHome();
+            if (kIsWeb) {
+              AppRoutes.backToHome();
+            } else {
+              Get.find<BottomNavController>().backToHome();
+            }
           },
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
         ),
@@ -82,10 +88,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       imagePath: categories[index]['image']!,
                       itemsCount: categories[index]['items']!,
                       onTap: () {
-                        Get.to(
-                          () => SubCategoryScreen(
-                            categoryName: categories[index]['name']!,
-                          ),
+                        final categoryName =
+                            categories[index]['name']! as String;
+                        AppRoutes.to<void>(
+                          route: AppRoutes.subCategory,
+                          arguments: {'categoryName': categoryName},
+                          mobileBuilder: () =>
+                              SubCategoryScreen(categoryName: categoryName),
                         );
                       },
                     );

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
+import '../navigation/app_navigation.dart';
 import 'otp_verification_screen.dart';
 import 'register_screen.dart';
 
@@ -188,8 +188,11 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         TextButton(
           onPressed: () {
-            Get.to<void>(
-              () => RegisterScreen(onRegisterSuccess: widget.onRegisterSuccess),
+            AppRoutes.to<void>(
+              route: AppRoutes.register,
+              arguments: {'onRegisterSuccess': widget.onRegisterSuccess},
+              mobileBuilder: () =>
+                  RegisterScreen(onRegisterSuccess: widget.onRegisterSuccess),
             );
           },
           style: TextButton.styleFrom(
@@ -216,9 +219,15 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    Get.to<void>(
-      () => OtpVerificationScreen(
-        phoneNumber: _phoneController.text.trim(),
+    final phoneNumber = _phoneController.text.trim();
+    AppRoutes.to<void>(
+      route: AppRoutes.otp,
+      arguments: {
+        'phoneNumber': phoneNumber,
+        'onVerified': widget.onLoginSuccess,
+      },
+      mobileBuilder: () => OtpVerificationScreen(
+        phoneNumber: phoneNumber,
         onVerified: widget.onLoginSuccess,
       ),
     );

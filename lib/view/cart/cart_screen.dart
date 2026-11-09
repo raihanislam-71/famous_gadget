@@ -7,6 +7,7 @@ import '../../controllers/bottom_nav_controller.dart';
 import '../../controllers/cart_controller.dart';
 import '../../models/cart_item.dart';
 import '../checkout/checkout_delivery_screen.dart';
+import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
@@ -131,7 +132,10 @@ class _EmptyCart extends StatelessWidget {
               width: 280,
               child: OutlinedButton(
                 onPressed: () {
-                  Get.to<void>(() => const CheckoutDeliveryScreen());
+                  AppRoutes.to<void>(
+                    route: AppRoutes.checkoutDelivery,
+                    mobileBuilder: () => const CheckoutDeliveryScreen(),
+                  );
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
@@ -365,7 +369,10 @@ class _CartSummary extends StatelessWidget {
               label: 'Checkout (Cash on Delivery)',
               height: 48,
               onPressed: () {
-                Get.to<void>(() => const CheckoutDeliveryScreen());
+                AppRoutes.to<void>(
+                  route: AppRoutes.checkoutDelivery,
+                  mobileBuilder: () => const CheckoutDeliveryScreen(),
+                );
               },
             ),
             const SizedBox(height: 4),

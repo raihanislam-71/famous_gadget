@@ -8,6 +8,7 @@ import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 import 'checkout_confirmation_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class CheckoutDeliveryScreen extends StatefulWidget {
   const CheckoutDeliveryScreen({super.key});
@@ -468,7 +469,11 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
               '${_streetController.text.trim()}, '
               '${_district.trim()}, ${_cityController.text.trim()}';
 
-    Get.to<void>(() => CheckoutConfirmationScreen(deliveryAddress: address));
+    AppRoutes.to<void>(
+      route: AppRoutes.checkoutConfirmation,
+      arguments: {'deliveryAddress': address},
+      mobileBuilder: () => CheckoutConfirmationScreen(deliveryAddress: address),
+    );
   }
 
   String? _requiredValidator(String? value) =>

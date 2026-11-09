@@ -1,7 +1,9 @@
 import 'package:bdcalling_class/view/category/product_by_category_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../utils/app_colors.dart';
+import '../navigation/app_navigation.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -19,7 +21,11 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     {'name': 'Budget Phones', 'items': 32, 'icon': Icons.smartphone},
     {'name': 'Tablets & iPads', 'items': 22, 'icon': Icons.tablet_mac},
     {'name': 'Phone Cases & Covers', 'items': 15, 'icon': Icons.cases_outlined},
-    {'name': 'Screen Protectors', 'items': 18, 'icon': Icons.monitor_weight_outlined},
+    {
+      'name': 'Screen Protectors',
+      'items': 18,
+      'icon': Icons.monitor_weight_outlined,
+    },
     {'name': 'Chargers & Cables', 'items': 41, 'icon': Icons.bolt},
   ];
 
@@ -29,7 +35,10 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       appBar: AppBar(
         title: Text(
           widget.categoryName,
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -56,7 +65,10 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 color: AppColors.themeColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(subCategories[index]['icon'], color: AppColors.themeColor),
+              child: Icon(
+                subCategories[index]['icon'],
+                color: AppColors.themeColor,
+              ),
             ),
             title: Text(
               subCategories[index]['name'],
@@ -65,9 +77,13 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
             subtitle: Text('${subCategories[index]['items']} items'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              Get.to(() => ProductByCategoryScreen(
-                    categoryName: subCategories[index]['name'],
-                  ));
+              final categoryName = subCategories[index]['name'] as String;
+              AppRoutes.to<void>(
+                route: AppRoutes.products,
+                arguments: {'categoryName': categoryName},
+                mobileBuilder: () =>
+                    ProductByCategoryScreen(categoryName: categoryName),
+              );
             },
           );
         },

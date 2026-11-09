@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../view/auth/login_screen.dart';
 import '../view/auth/register_screen.dart';
+import '../view/navigation/app_navigation.dart';
 
 class AuthController extends GetxController {
   bool _isAuthenticated = false;
@@ -10,24 +11,37 @@ class AuthController extends GetxController {
   bool get isAuthenticated => _isAuthenticated;
 
   void openLogin() {
-    Get.to<void>(
-      () => LoginScreen(
-        onLoginSuccess: () => _completeAuthentication(() {}, routeCount: 2),
-        onRegisterSuccess: () => _completeAuthentication(() {}, routeCount: 3),
+    void onLoginSuccess() => _completeAuthentication(() {}, routeCount: 2);
+    void onRegisterSuccess() => _completeAuthentication(() {}, routeCount: 3);
+    AppRoutes.to<void>(
+      route: AppRoutes.login,
+      arguments: {
+        'onLoginSuccess': onLoginSuccess,
+        'onRegisterSuccess': onRegisterSuccess,
+      },
+      mobileBuilder: () => LoginScreen(
+        onLoginSuccess: onLoginSuccess,
+        onRegisterSuccess: onRegisterSuccess,
       ),
     );
   }
 
   void openRegister() {
-    Get.to<void>(
-      () => RegisterScreen(
-        onRegisterSuccess: () => _completeAuthentication(() {}, routeCount: 2),
-      ),
+    void onRegisterSuccess() => _completeAuthentication(() {}, routeCount: 2);
+    AppRoutes.to<void>(
+      route: AppRoutes.register,
+      arguments: {'onRegisterSuccess': onRegisterSuccess},
+      mobileBuilder: () => RegisterScreen(onRegisterSuccess: onRegisterSuccess),
     );
   }
 
   void logout() {
     _isAuthenticated = false;
+    update();
+  }
+
+  void completeDemoAuthentication() {
+    _isAuthenticated = true;
     update();
   }
 
@@ -37,12 +51,19 @@ class AuthController extends GetxController {
       return;
     }
 
-    Get.to<void>(
-      () => LoginScreen(
-        onLoginSuccess: () =>
-            _completeAuthentication(onAuthenticated, routeCount: 2),
-        onRegisterSuccess: () =>
-            _completeAuthentication(onAuthenticated, routeCount: 3),
+    void onLoginSuccess() =>
+        _completeAuthentication(onAuthenticated, routeCount: 2);
+    void onRegisterSuccess() =>
+        _completeAuthentication(onAuthenticated, routeCount: 3);
+    AppRoutes.to<void>(
+      route: AppRoutes.login,
+      arguments: {
+        'onLoginSuccess': onLoginSuccess,
+        'onRegisterSuccess': onRegisterSuccess,
+      },
+      mobileBuilder: () => LoginScreen(
+        onLoginSuccess: onLoginSuccess,
+        onRegisterSuccess: onRegisterSuccess,
       ),
     );
   }

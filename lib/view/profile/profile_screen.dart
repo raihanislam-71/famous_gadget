@@ -12,6 +12,7 @@ import '../wishlist/wishlist_screen.dart';
 import 'change_password_screen.dart';
 import 'edit_profile_screen.dart';
 import 'my_addresses_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -114,8 +115,11 @@ class _GuestAccount extends StatelessWidget {
                   title: 'My Orders',
                   subtitle: 'Track active & past shipments',
                   onTap: () => _requireLogin(
-                    () => Get.to<void>(
-                      () => const MyOrdersScreen(isPreview: true),
+                    () => AppRoutes.to<void>(
+                      route: AppRoutes.orders,
+                      arguments: const {'isPreview': true},
+                      mobileBuilder: () =>
+                          const MyOrdersScreen(isPreview: true),
                     ),
                   ),
                 ),
@@ -124,7 +128,10 @@ class _GuestAccount extends StatelessWidget {
                   title: 'Wishlist',
                   subtitle: 'View saved items to buy later',
                   onTap: () => _requireLogin(
-                    () => Get.to<void>(() => const WishlistScreen()),
+                    () => AppRoutes.to<void>(
+                      route: AppRoutes.wishlist,
+                      mobileBuilder: () => const WishlistScreen(),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -132,7 +139,10 @@ class _GuestAccount extends StatelessWidget {
                   title: 'Saved Addresses',
                   subtitle: 'Manage Dhaka delivery zones',
                   onTap: () => _requireLogin(
-                    () => Get.to<void>(() => const MyAddressesScreen()),
+                    () => AppRoutes.to<void>(
+                      route: AppRoutes.addresses,
+                      mobileBuilder: () => const MyAddressesScreen(),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -301,33 +311,45 @@ class _LoggedInAccount extends StatelessWidget {
                       _AccountMenuItem(
                         title: 'Edit Profile',
                         iconPath: AssetsPath.accountGuestUser,
-                        onTap: () =>
-                            Get.to<void>(() => const EditProfileScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.editProfile,
+                          mobileBuilder: () => const EditProfileScreen(),
+                        ),
                       ),
                       _AccountMenuItem(
                         title: 'Change Password',
                         iconPath: AssetsPath.accountLock,
-                        onTap: () =>
-                            Get.to<void>(() => const ChangePasswordScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.changePassword,
+                          mobileBuilder: () => const ChangePasswordScreen(),
+                        ),
                       ),
                       _AccountMenuItem(
                         title: 'My Addresses',
                         iconPath: AssetsPath.accountMapPin,
-                        onTap: () =>
-                            Get.to<void>(() => const MyAddressesScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.addresses,
+                          mobileBuilder: () => const MyAddressesScreen(),
+                        ),
                       ),
                       _AccountMenuItem(
                         title: 'My Orders',
                         iconPath: AssetsPath.accountPackage,
-                        onTap: () => Get.to<void>(
-                          () => const MyOrdersScreen(isPreview: true),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.orders,
+                          arguments: const {'isPreview': true},
+                          mobileBuilder: () =>
+                              const MyOrdersScreen(isPreview: true),
                         ),
                       ),
                       _AccountMenuItem(
                         title: 'My Wishlist',
                         iconPath: AssetsPath.accountHeart,
                         isLast: true,
-                        onTap: () => Get.to<void>(() => const WishlistScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.wishlist,
+                          mobileBuilder: () => const WishlistScreen(),
+                        ),
                       ),
                     ],
                   ),

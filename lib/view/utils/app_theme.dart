@@ -67,4 +67,36 @@ class AppTheme {
       ),
     ),
   );
+
+  static final ThemeData dark = ThemeData(
+    useMaterial3: true,
+    colorScheme:
+        ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Brightness.dark,
+        ).copyWith(
+          primary: AppColors.primary,
+          secondary: AppColors.orangeHover,
+          surface: const Color(0xFF1E293B),
+          error: AppColors.dangerRed,
+          onPrimary: Colors.white,
+          onSurface: const Color(0xFFF8FAFC),
+        ),
+    scaffoldBackgroundColor: const Color(0xFF0B1220),
+    cardColor: const Color(0xFF1E293B),
+    dividerColor: const Color(0xFF334155),
+    fontFamily: AppTextStyles.bodyFontFamily,
+    textTheme: light.textTheme.apply(
+      bodyColor: const Color(0xFFF8FAFC),
+      displayColor: const Color(0xFFF8FAFC),
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF1E293B),
+      foregroundColor: Color(0xFFF8FAFC),
+      surfaceTintColor: Color(0xFF1E293B),
+    ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: AppColors.primary,
+    ),
+  );
 }

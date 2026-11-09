@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../../models/saved_address.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import 'add_address_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class MyAddressesScreen extends StatefulWidget {
   const MyAddressesScreen({super.key});
@@ -97,8 +97,10 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
   }
 
   Future<void> _openAddressForm([SavedAddress? address]) async {
-    final updatedAddress = await Get.to<SavedAddress>(
-      () => AddAddressScreen(address: address),
+    final updatedAddress = await AppRoutes.to<SavedAddress>(
+      route: AppRoutes.addressForm,
+      arguments: {'address': address},
+      mobileBuilder: () => AddAddressScreen(address: address),
     );
     if (!mounted || updatedAddress == null) return;
 

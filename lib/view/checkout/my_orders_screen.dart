@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import 'order_detail_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key, this.isPreview = false});
@@ -111,8 +111,14 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                         final order = visibleOrders[index];
                         return _OrderCard(
                           order: order,
-                          onTap: () => Get.to<void>(
-                            () => OrderDetailScreen(
+                          onTap: () => AppRoutes.to<void>(
+                            route: AppRoutes.orderDetails,
+                            arguments: {
+                              'orderNumber': order.number,
+                              'status': order.status,
+                              'isPreview': widget.isPreview,
+                            },
+                            mobileBuilder: () => OrderDetailScreen(
                               orderNumber: order.number,
                               status: order.status,
                               isPreview: widget.isPreview,

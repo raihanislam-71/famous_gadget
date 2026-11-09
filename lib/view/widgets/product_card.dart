@@ -1,13 +1,17 @@
 import 'package:bdcalling_class/view/product_details/out_of_stock_product_details_screen.dart';
 import 'package:bdcalling_class/view/product_details/product_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/assets_path.dart';
+import '../navigation/app_navigation.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.productId, this.isInStock = true});
+  const ProductCard({
+    super.key,
+    required this.productId,
+    this.isInStock = true,
+  });
 
   final String productId;
   final bool isInStock;
@@ -17,9 +21,18 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (isInStock) {
-          Get.to(() => ProductDetailsScreen(productId: productId));
+          AppRoutes.to<void>(
+            route: AppRoutes.productDetails,
+            arguments: {'productId': productId},
+            mobileBuilder: () => ProductDetailsScreen(productId: productId),
+          );
         } else {
-          Get.to(() => OutOfStockProductDetailsScreen(productId: productId));
+          AppRoutes.to<void>(
+            route: AppRoutes.outOfStockProduct,
+            arguments: {'productId': productId},
+            mobileBuilder: () =>
+                OutOfStockProductDetailsScreen(productId: productId),
+          );
         }
       },
       child: Card(

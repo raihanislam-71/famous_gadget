@@ -9,7 +9,10 @@ import 'package:bdcalling_class/view/utils/app_text_styles.dart';
 import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+
+import '../home/web_home_screen.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});
@@ -31,6 +34,8 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) return const WebHomeScreen();
+
     return GetBuilder<BottomNavController>(
       builder: (_) {
         return Scaffold(

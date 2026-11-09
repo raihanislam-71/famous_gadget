@@ -5,6 +5,7 @@ import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
+import '../navigation/app_navigation.dart';
 import 'otp_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -348,12 +349,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => OtpVerificationScreen(
-          phoneNumber: _phoneController.text.trim(),
-          onVerified: widget.onRegisterSuccess,
-        ),
+    final phoneNumber = _phoneController.text.trim();
+    AppRoutes.to<void>(
+      route: AppRoutes.otp,
+      arguments: {
+        'phoneNumber': phoneNumber,
+        'onVerified': widget.onRegisterSuccess,
+      },
+      mobileBuilder: () => OtpVerificationScreen(
+        phoneNumber: phoneNumber,
+        onVerified: widget.onRegisterSuccess,
       ),
     );
   }
