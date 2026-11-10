@@ -173,7 +173,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         tooltip: 'Back',
         onPressed: () {
           if (kIsWeb) {
-            AppRoutes.backToHome();
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              AppRoutes.backToHome();
+            }
           } else {
             Get.back<void>();
           }
@@ -268,25 +272,56 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               child: Row(
                 children: [
-                  const Icon(Icons.arrow_back, size: 16),
+                  Icon(
+                    Icons.home_outlined,
+                    size: 16,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                   const SizedBox(width: 6),
-                  Text('Back to Home', style: theme.textTheme.bodyMedium),
+                  Text(
+                    'Home',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          Text('/', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Text(
-            'Products',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+            '/',
+            style: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
             ),
           ),
-          const SizedBox(width: 12),
-          Text('/', style: TextStyle(color: theme.colorScheme.onSurfaceVariant)),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
+          InkWell(
+            onTap: () => AppRoutes.to<void>(
+              route: AppRoutes.products,
+              mobileBuilder: () => const SizedBox.shrink(),
+            ),
+            borderRadius: BorderRadius.circular(4),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: Text(
+                'Products',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '/',
+            style: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(
               _product.name,
@@ -551,16 +586,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         const SizedBox(height: 12),
         // Social proof & Rating
-        Row(
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 12,
+          runSpacing: 6,
           children: [
             const RatingAndReviewsSection(),
-            const SizedBox(width: 16),
             Text(
               '•',
               style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
             ),
-            const SizedBox(width: 16),
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
                   widget.isInStock ? Icons.check_circle : Icons.cancel,
@@ -635,11 +672,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               Row(
                 children: [
                   const Icon(Icons.bolt, size: 16, color: AppColors.amber),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Best price guaranteed with 100% Cash on Delivery across Bangladesh.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      'Best price guaranteed with 100% Cash on Delivery across Bangladesh.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],
@@ -779,9 +818,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 child: FilledButton.icon(
                   onPressed: () => controller.addToCart(_product),
                   icon: const Icon(Icons.shopping_bag_outlined, size: 20),
-                  label: Text(
-                    'Add to Cart · ৳${_formatPrice(_product.price * controller.quantity)}',
-                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  label: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'Add to Cart · ৳${_formatPrice(_product.price * controller.quantity)}',
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                    ),
                   ),
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.primary,
@@ -801,9 +843,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _buyNow,
                   icon: const Icon(Icons.bolt, size: 20),
-                  label: const Text(
-                    'Buy Now',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  label: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'Buy Now',
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                    ),
                   ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
@@ -882,7 +927,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text('Currently Out of Stock'),
+                child: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text('Currently Out of Stock'),
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -890,9 +938,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: FilledButton.icon(
                 onPressed: _notifyRestock,
                 icon: const Icon(Icons.notifications_active_outlined, size: 20),
-                label: const Text(
-                  'Notify When Available',
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                label: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Notify When Available',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
                 ),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.amber,

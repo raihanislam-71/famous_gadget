@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:bdcalling_class/controllers/review_controller.dart';
 import 'package:get/get.dart';
 
+import '../navigation/app_navigation.dart';
 import 'widgets/review_card.dart';
 
 class ReviewScreen extends StatelessWidget {
@@ -12,12 +14,29 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('All Reviews'),
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
+        foregroundColor: theme.colorScheme.onSurface,
+        surfaceTintColor: theme.colorScheme.surface,
+        elevation: 0,
+        automaticallyImplyLeading: !isDesktopWeb,
+        leading: isDesktopWeb
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  } else {
+                    AppRoutes.backToHome();
+                  }
+                },
+              ),
       ),
       body: Column(
         children: [

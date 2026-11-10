@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/app_colors.dart';
@@ -21,6 +22,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -33,6 +35,19 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
+        automaticallyImplyLeading: !isDesktopWeb,
+        leading: isDesktopWeb
+            ? null
+            : IconButton(
+                onPressed: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  } else {
+                    AppRoutes.backToHome();
+                  }
+                },
+                icon: const Icon(Icons.arrow_back_ios),
+              ),
         actions: [
           IconButton(
             onPressed: () {

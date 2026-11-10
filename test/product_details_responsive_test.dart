@@ -270,4 +270,49 @@ void main() {
     expect(Get.find<ReviewController>().sortedReviews, hasLength(7));
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('WebSiteHeader shows announcement & search on home, hides on inner pages', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1280, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    // Inner page frame: isHome is false
+    await tester.pumpWidget(
+      GetMaterialApp(
+        theme: AppTheme.light,
+        initialRoute: '/products/details/anker-r50i',
+        getPages: AppRoutePages.pages,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Orange announcement bar should NOT be shown
+    expect(
+      find.text('Gadgets you love. Cash on Delivery BD.'),
+      findsNothing,
+    );
+    // Menu links should NOT be shown
+    expect(find.text('New Arrivals'), findsNothing);
+    expect(find.text('Campaigns'), findsNothing);
+
+    // Now test Home page: should show announcement & links
+    await tester.pumpWidget(
+      GetMaterialApp(
+        theme: AppTheme.light,
+        initialRoute: '/home',
+        getPages: AppRoutePages.pages,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Gadgets you love. Cash on Delivery BD.'),
+      findsOneWidget,
+    );
+    expect(find.text('New Arrivals'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

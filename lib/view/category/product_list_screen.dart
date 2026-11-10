@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../navigation/app_navigation.dart';
 import '../widgets/product_card.dart';
 
 class ProductListScreen extends StatefulWidget {
@@ -21,22 +23,34 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
+        foregroundColor: theme.colorScheme.onSurface,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-        ),
+        automaticallyImplyLeading: !isDesktopWeb,
+        leading: isDesktopWeb
+            ? null
+            : IconButton(
+                onPressed: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  } else {
+                    AppRoutes.backToHome();
+                  }
+                },
+                icon: const Icon(Icons.arrow_back_ios),
+              ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.tune, color: Colors.black),
+            icon: Icon(Icons.tune, color: theme.colorScheme.onSurface),
           ),
         ],
       ),
