@@ -2,9 +2,9 @@ import 'package:bdcalling_class/view/product_details/out_of_stock_product_detail
 import 'package:bdcalling_class/view/product_details/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/product.dart';
 import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
-import '../utils/assets_path.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
@@ -21,7 +21,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tileColor = theme.colorScheme.surfaceContainerHighest;
+    final product = Product.demoForId(productId, isInStock: isInStock);
 
     return GestureDetector(
       onTap: () {
@@ -50,8 +50,11 @@ class ProductCard extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final hasBoundedHeight = constraints.maxHeight.isFinite;
-              final image = _productImage(tileColor);
-              final details = _productDetails(context);
+              final image = _productImage(
+                theme.colorScheme.surface,
+                product.imagePath,
+              );
+              final details = _productDetails(context, product);
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -75,80 +78,129 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _productImage(Color backgroundColor) {
+  Widget _productImage(Color backgroundColor, String imagePath) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(8),
       color: backgroundColor,
-      child: Hero(
-        tag: 'product_image_$productId',
-        child: Image.asset(
-          AssetsPath.productImage,
-          fit: BoxFit.contain,
-          errorBuilder: (_, _, _) => const Icon(
-            Icons.devices_other,
-            size: 44,
-            color: AppColors.primary,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Hero(
+          tag: 'product_image_$productId',
+          child: Image.asset(
+            imagePath,
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => const Center(
+              child: Icon(
+                Icons.devices_other,
+                size: 44,
+                color: AppColors.primary,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _productDetails(BuildContext context) {
+  Widget _productDetails(BuildContext context, Product product) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Product name',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 175;
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            compact ? 8 : 10,
+            4,
+            compact ? 8 : 10,
+            6,
           ),
-          const SizedBox(height: 4),
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.star, color: AppColors.amber, size: 16),
-              const SizedBox(width: 4),
-              Text('4.5', style: theme.textTheme.labelMedium),
-              const SizedBox(width: 4),
-              Text('(100)', style: theme.textTheme.bodySmall),
-            ],
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Expanded(
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 6,
-                  children: [
-                    Text(
-                      '৳999',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Text(
-                      '৳1,290',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                  ],
+              Text(
+                product.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontSize: compact ? 11 : 12,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const Icon(Icons.add_circle, color: AppColors.primary, size: 28),
+              const SizedBox(height: 3),
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: AppColors.amber,
+                    size: compact ? 14 : 16,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '4.5',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontSize: compact ? 10 : 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '(100)',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      fontSize: compact ? 9 : 10,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '৳${_formatPrice(product.price)}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontSize: compact ? 13 : 14,
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          '৳${_formatPrice(product.originalPrice)}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontSize: compact ? 9 : 10,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.add_circle,
+                    color: AppColors.primary,
+                    size: compact ? 26 : 28,
+                  ),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
+        );
+      },
+    );
+  }
+
+  String _formatPrice(double price) {
+    final digits = price.round().toString();
+    return digits.replaceAllMapped(
+      RegExp(r'\B(?=(\d{3})+(?!\d))'),
+      (match) => ',',
     );
   }
 }

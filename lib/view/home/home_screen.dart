@@ -1,4 +1,3 @@
-import 'package:bdcalling_class/view/widgets/recommended_for_you_grid_card.dart';
 import 'package:bdcalling_class/view/widgets/section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,7 +6,7 @@ import '../../controllers/theme_controller.dart';
 import '../navigation/app_navigation.dart';
 import '../category/category_screen.dart';
 import '../utils/assets_path.dart';
-import '../widgets/hot_deal_grid_card.dart';
+import '../widgets/product_card.dart';
 import 'widgets/home_banner_slider.dart';
 import 'widgets/horizontal_category_list_view.dart';
 import 'widgets/horizontal_product_list_view.dart';
@@ -100,11 +99,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   static Widget _buildRecommendedProduct(BuildContext context, int index) {
-    return const RecommendedForYouGridCard();
+    return ProductCard(productId: '$index', width: double.infinity);
   }
 
   static Widget _buildHotDealProduct(BuildContext context, int index) {
-    return const HotDealGridCard();
+    return ProductCard(productId: '${index + 4}', width: double.infinity);
   }
 
   Widget _buildFeaturedProductSection() {
