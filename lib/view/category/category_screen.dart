@@ -54,16 +54,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
             icon: const Icon(Icons.search),
           ),
         ],
-        leading: IconButton(
-          onPressed: () {
-            if (kIsWeb) {
-              AppRoutes.backToHome();
-            } else {
-              Get.find<BottomNavController>().backToHome();
-            }
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
+        automaticallyImplyLeading: !(kIsWeb && MediaQuery.sizeOf(context).width >= 768),
+        leading: (kIsWeb && MediaQuery.sizeOf(context).width >= 768)
+            ? null
+            : IconButton(
+                onPressed: () {
+                  if (kIsWeb) {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      AppRoutes.backToHome();
+                    }
+                  } else {
+                    Get.find<BottomNavController>().backToHome();
+                  }
+                },
+                icon: const Icon(Icons.arrow_back_ios),
+              ),
       ),
       body: Column(
         children: [

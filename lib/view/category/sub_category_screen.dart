@@ -1,4 +1,5 @@
 import 'package:bdcalling_class/view/category/product_by_category_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,6 +33,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -44,10 +46,19 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-        ),
+        automaticallyImplyLeading: !isDesktopWeb,
+        leading: isDesktopWeb
+            ? null
+            : IconButton(
+                onPressed: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  } else {
+                    AppRoutes.backToHome();
+                  }
+                },
+                icon: const Icon(Icons.arrow_back_ios),
+              ),
         actions: [
           IconButton(
             tooltip: 'Search',
