@@ -56,7 +56,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           bottom: false,
           child: Column(
@@ -73,7 +73,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
                         'DELIVER TO',
                         style: AppTextStyles.badge.copyWith(
                           fontSize: 14,
-                          color: AppColors.navyDark,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -85,7 +85,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
                         'NEW ADDRESS FORM',
                         style: AppTextStyles.badge.copyWith(
                           fontSize: 14,
-                          color: AppColors.navyDark,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -106,9 +106,11 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(bottom: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).dividerColor),
+        ),
       ),
       child: Row(
         children: [
@@ -145,7 +147,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           border: Border.all(
             color: _isSavedAddressSelected
                 ? AppColors.primary
@@ -318,7 +320,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
           label,
           style: AppTextStyles.badge.copyWith(
             fontSize: 13,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 6),
@@ -332,11 +334,11 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
             style: AppTextStyles.body.copyWith(
               fontSize: 14,
               height: 1,
-              color: AppColors.navyDark,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: Theme.of(context).colorScheme.surface,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               border: _inputBorder(),
               enabledBorder: _inputBorder(),
@@ -359,7 +361,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
           'District/Zone',
           style: AppTextStyles.badge.copyWith(
             fontSize: 13,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 6),
@@ -370,7 +372,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
             height: 44,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               border: Border.all(color: AppColors.border),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -398,9 +400,9 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
   Widget _buildContinueButton() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
       ),
       child: SafeArea(
         top: false,
@@ -428,7 +430,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
     const districts = ['Uttara', 'Gulshan', 'Dhanmondi', 'Mirpur'];
     final selected = await showModalBottomSheet<String>(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -507,7 +509,7 @@ class CheckoutStepIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 56,
-      color: AppColors.surface,
+      color: Theme.of(context).colorScheme.surface,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
 import '../navigation/app_navigation.dart';
+import 'search_product_screen.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -35,12 +36,13 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
       appBar: AppBar(
         title: Text(
           widget.categoryName,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
         leading: IconButton(
           onPressed: () => Get.back(),
@@ -48,8 +50,12 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search, color: Colors.black),
+            tooltip: 'Search',
+            onPressed: () => AppRoutes.to<void>(
+              route: AppRoutes.search,
+              mobileBuilder: () => const SearchProductScreen(),
+            ),
+            icon: const Icon(Icons.search),
           ),
         ],
       ),

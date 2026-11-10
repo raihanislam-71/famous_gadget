@@ -18,6 +18,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.find<CartController>();
+    final isWideLayout = MediaQuery.sizeOf(context).width >= 900;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -27,11 +28,11 @@ class CartScreen extends StatelessWidget {
       ),
       child: GetBuilder<CartController>(
         builder: (controller) => Scaffold(
-          backgroundColor: AppColors.pageBackground,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: AppColors.surface,
-            foregroundColor: AppColors.navyDark,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            foregroundColor: Theme.of(context).colorScheme.onSurface,
             elevation: 0,
             scrolledUnderElevation: 0,
             toolbarHeight: 60,
@@ -60,12 +61,15 @@ class CartScreen extends StatelessWidget {
                 : _PopulatedCart(
                     controller: cartController,
                     items: controller.items,
+                    isWideLayout: isWideLayout,
                   ),
           ),
           bottomNavigationBar:
               controller.items.isEmpty ||
                   controller.isLoading ||
                   controller.errorMessage != null
+              ? null
+              : isWideLayout
               ? null
               : _CartSummary(controller: cartController),
         ),
@@ -194,14 +198,19 @@ class _CartLoadError extends StatelessWidget {
 }
 
 class _PopulatedCart extends StatelessWidget {
-  const _PopulatedCart({required this.controller, required this.items});
+  const _PopulatedCart({
+    required this.controller,
+    required this.items,
+    required this.isWideLayout,
+  });
 
   final CartController controller;
   final List<CartItem> items;
+  final bool isWideLayout;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    Widget itemList() => ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       itemCount: items.length,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
@@ -214,6 +223,22 @@ class _PopulatedCart extends StatelessWidget {
           onRemove: () => controller.removeProduct(item.id),
         );
       },
+    );
+
+    if (!isWideLayout) return itemList();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: itemList()),
+        SizedBox(
+          width: 360,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
+            child: _CartSummary(controller: controller),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -236,7 +261,7 @@ class _CartItemCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -251,7 +276,7 @@ class _CartItemCard extends StatelessWidget {
               errorBuilder: (_, _, _) => Container(
                 width: 88,
                 height: 88,
-                color: AppColors.pageBackground,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 child: const Icon(
                   Icons.devices_other,
                   color: AppColors.secondaryText,
@@ -330,7 +355,11 @@ class _QuantityButton extends StatelessWidget {
           color: AppColors.pageBackground,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(icon, size: 16, color: AppColors.navyDark),
+        child: Icon(
+          icon,
+          size: 16,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
       ),
     );
   }
@@ -347,9 +376,10 @@ class _CartSummary extends StatelessWidget {
       top: false,
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          border: Border(top: BorderSide(color: AppColors.border)),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border: Border.all(color: Theme.of(context).dividerColor),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

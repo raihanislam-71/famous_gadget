@@ -74,8 +74,12 @@ class AuthController extends GetxController {
   }) {
     _isAuthenticated = true;
     update();
-    for (var index = 0; index < routeCount; index++) {
-      Get.back<void>();
+    if (kIsWeb) {
+      Get.offAllNamed<void>(AppRoutes.home);
+    } else {
+      for (var index = 0; index < routeCount; index++) {
+        Get.back<void>();
+      }
     }
     onAuthenticated();
   }

@@ -7,6 +7,7 @@ import '../utils/assets_path.dart';
 import '../home/widgets/category_grid_card.dart';
 import 'sub_category_screen.dart';
 import '../navigation/app_navigation.dart';
+import 'search_product_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -33,16 +34,24 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Categories',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.circle_outlined, color: Colors.black),
+            tooltip: 'Search',
+            onPressed: () => AppRoutes.to<void>(
+              route: AppRoutes.search,
+              mobileBuilder: () => const SearchProductScreen(),
+            ),
+            icon: const Icon(Icons.search),
           ),
         ],
         leading: IconButton(
@@ -53,7 +62,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               Get.find<BottomNavController>().backToHome();
             }
           },
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
       ),
       body: Column(

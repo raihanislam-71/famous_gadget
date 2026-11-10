@@ -46,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Column(
             children: [
@@ -141,7 +141,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         textInputAction: TextInputAction.next,
         validator: (value) =>
             value == null || value.trim().isEmpty ? 'Required' : null,
-        style: AppTextStyles.body.copyWith(fontSize: 13, height: 1),
+        style: AppTextStyles.body.copyWith(
+          fontSize: 13,
+          height: 1,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         decoration: _inputDecoration(hintText: label),
       ),
     );
@@ -164,7 +168,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ? null
               : 'Enter a valid phone number';
         },
-        style: AppTextStyles.body.copyWith(fontSize: 13, height: 1),
+        style: AppTextStyles.body.copyWith(
+          fontSize: 13,
+          height: 1,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         decoration: _inputDecoration(
           prefixIcon: Padding(
             padding: const EdgeInsets.only(left: 14, right: 8),
@@ -200,7 +208,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ? null
               : 'Enter a valid email address';
         },
-        style: AppTextStyles.body.copyWith(fontSize: 13, height: 1),
+        style: AppTextStyles.body.copyWith(
+          fontSize: 13,
+          height: 1,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         decoration: _inputDecoration(hintText: 'example@gmail.com'),
       ),
     );
@@ -215,7 +227,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         textInputAction: TextInputAction.done,
         validator: (value) =>
             (value?.length ?? 0) >= 8 ? null : 'Use at least 8 characters',
-        style: AppTextStyles.body.copyWith(fontSize: 13, height: 1),
+        style: AppTextStyles.body.copyWith(
+          fontSize: 13,
+          height: 1,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         decoration: _inputDecoration(
           hintText: 'Enter password',
           suffixIcon: IconButton(
@@ -265,7 +281,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               Text(
                 'I agree to the Terms & Conditions and Privacy Policy',
-                style: AppTextStyles.body.copyWith(fontSize: 12, height: 1.2),
+                style: AppTextStyles.body.copyWith(
+                  fontSize: 12,
+                  height: 1.2,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
             ],
           ),
@@ -323,7 +343,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 44),
       suffixIcon: suffixIcon,
       filled: true,
-      fillColor: AppColors.surface,
+      fillColor: Theme.of(context).colorScheme.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14),
       border: border,
       enabledBorder: border,
@@ -379,7 +399,7 @@ class _RegisterField extends StatelessWidget {
           label,
           style: AppTextStyles.badge.copyWith(
             fontSize: 12,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 6),

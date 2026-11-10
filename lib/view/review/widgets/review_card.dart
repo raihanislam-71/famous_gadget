@@ -30,7 +30,7 @@ class ReviewCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 10,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF17191D),
                     ),
@@ -40,7 +40,7 @@ class ReviewCard extends StatelessWidget {
                 RatingBarIndicator(
                   rating: review.rating.toDouble(),
                   itemCount: 5,
-                  itemSize: 10,
+                  itemSize: 13,
                   unratedColor: const Color(0xFFE7E9ED),
                   itemBuilder: (context, index) =>
                       const Icon(Icons.star, color: Color(0xFFFF8A00)),
@@ -48,7 +48,10 @@ class ReviewCard extends StatelessWidget {
                 const SizedBox(width: 5),
                 Text(
                   DateFormat('dd MMM yyyy').format(review.date),
-                  style: const TextStyle(fontSize: 8, color: Color(0xFF777D87)),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF777D87),
+                  ),
                 ),
               ],
             ),
@@ -56,8 +59,8 @@ class ReviewCard extends StatelessWidget {
             Text(
               review.reviewText,
               style: const TextStyle(
-                fontSize: 10,
-                height: 1.4,
+                fontSize: 13,
+                height: 1.5,
                 color: Color(0xFF30343A),
               ),
             ),

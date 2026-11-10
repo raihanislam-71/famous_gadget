@@ -78,10 +78,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
           titleSpacing: 16,
@@ -218,7 +218,10 @@ class _OrderCard extends StatelessWidget {
                 children: [
                   Text(
                     order.number,
-                    style: AppTextStyles.badge.copyWith(fontSize: 15),
+                    style: AppTextStyles.badge.copyWith(
+                      fontSize: 15,
+                      color: AppColors.navyDark,
+                    ),
                   ),
                   _OrderStatusBadge(order: order),
                 ],
@@ -235,7 +238,10 @@ class _OrderCard extends StatelessWidget {
                     children: [
                       Text(
                         'Placed on ${order.date}',
-                        style: AppTextStyles.caption.copyWith(fontSize: 12),
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: 12,
+                          color: AppColors.secondaryText,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
@@ -245,6 +251,7 @@ class _OrderCard extends StatelessWidget {
                           fontSize: 13,
                           height: 1,
                           fontWeight: FontWeight.w500,
+                          color: AppColors.navyDark,
                         ),
                       ),
                     ],
@@ -254,7 +261,10 @@ class _OrderCard extends StatelessWidget {
                     children: [
                       Text(
                         'Total Amount',
-                        style: AppTextStyles.caption.copyWith(fontSize: 12),
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: 12,
+                          color: AppColors.secondaryText,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(

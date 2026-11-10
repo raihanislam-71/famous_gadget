@@ -72,13 +72,13 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
-          surfaceTintColor: AppColors.surface,
+          surfaceTintColor: Theme.of(context).colorScheme.surface,
           shape: const Border(bottom: BorderSide(color: AppColors.border)),
           toolbarHeight: 56,
           titleSpacing: 0,
@@ -191,7 +191,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           label,
           style: AppTextStyles.badge.copyWith(
             fontSize: 11,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 5),
@@ -202,12 +202,16 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           minLines: minLines,
           maxLines: maxLines,
           validator: validator ?? _requiredValidator,
-          style: AppTextStyles.body.copyWith(fontSize: 12, height: 1.2),
+          style: AppTextStyles.body.copyWith(
+            fontSize: 12,
+            height: 1.2,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: AppTextStyles.caption.copyWith(fontSize: 11),
             filled: true,
-            fillColor: AppColors.surface,
+            fillColor: Theme.of(context).colorScheme.surface,
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,
@@ -233,7 +237,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           'District / Zone',
           style: AppTextStyles.badge.copyWith(
             fontSize: 11,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 5),
@@ -241,10 +245,14 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           initialValue: _district,
           isExpanded: true,
           icon: const Icon(Icons.keyboard_arrow_down, size: 20),
-          style: AppTextStyles.body.copyWith(fontSize: 12, height: 1.2),
+          style: AppTextStyles.body.copyWith(
+            fontSize: 12,
+            height: 1.2,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             filled: true,
-            fillColor: AppColors.surface,
+            fillColor: Theme.of(context).colorScheme.surface,
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,
@@ -274,7 +282,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           'Set as default address',
           style: AppTextStyles.badge.copyWith(
             fontSize: 11,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         Switch(

@@ -10,6 +10,7 @@ import '../auth/register_screen.dart';
 import '../cart/cart_screen.dart';
 import '../category/category_screen.dart';
 import '../category/product_by_category_screen.dart';
+import '../category/product_list_screen.dart';
 import '../category/search_product_screen.dart';
 import '../category/sub_category_screen.dart';
 import '../checkout/checkout_confirmation_screen.dart';
@@ -51,31 +52,87 @@ class AppRoutePages {
       page: () => _webPage(const CategoryScreen()),
     ),
     GetPage<void>(
-      name: AppRoutes.subCategory,
+      name: '${AppRoutes.subCategory}/:categoryName',
       page: () => _webPage(
         SubCategoryScreen(categoryName: _stringArgument('categoryName')),
       ),
     ),
     GetPage<void>(
-      name: AppRoutes.products,
+      name: '${AppRoutes.products}/:categoryName',
       page: () => _webPage(
         ProductByCategoryScreen(categoryName: _stringArgument('categoryName')),
       ),
+    ),
+    GetPage<void>(
+      name: AppRoutes.products,
+      page: () => _webPage(const ProductListScreen(title: 'All Products')),
     ),
     GetPage<void>(
       name: AppRoutes.search,
       page: () => _webPage(const SearchProductScreen()),
     ),
     GetPage<void>(
+      name: '${AppRoutes.productDetails}/:productId',
+      page: () => _webPage(
+        ProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'anker-r50i'),
+        ),
+      ),
+    ),
+    GetPage<void>(
+      name: '/products/detail/:productId',
+      page: () => _webPage(
+        ProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'anker-r50i'),
+        ),
+      ),
+    ),
+    GetPage<void>(
       name: AppRoutes.productDetails,
       page: () => _webPage(
-        ProductDetailsScreen(productId: _stringArgument('productId')),
+        ProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'anker-r50i'),
+        ),
+      ),
+    ),
+    GetPage<void>(
+      name: '/products/detail',
+      page: () => _webPage(
+        ProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'anker-r50i'),
+        ),
+      ),
+    ),
+    GetPage<void>(
+      name: '${AppRoutes.outOfStockProduct}/:productId',
+      page: () => _webPage(
+        OutOfStockProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'sony-xm5'),
+        ),
+      ),
+    ),
+    GetPage<void>(
+      name: '/products/out-of-stock-details/:productId',
+      page: () => _webPage(
+        OutOfStockProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'sony-xm5'),
+        ),
       ),
     ),
     GetPage<void>(
       name: AppRoutes.outOfStockProduct,
       page: () => _webPage(
-        OutOfStockProductDetailsScreen(productId: _stringArgument('productId')),
+        OutOfStockProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'sony-xm5'),
+        ),
+      ),
+    ),
+    GetPage<void>(
+      name: '/products/out-of-stock-details',
+      page: () => _webPage(
+        OutOfStockProductDetailsScreen(
+          productId: _stringArgument('productId', fallback: 'sony-xm5'),
+        ),
       ),
     ),
     GetPage<void>(
@@ -143,7 +200,7 @@ class AppRoutePages {
           _webPage(MyOrdersScreen(isPreview: _boolArgument('isPreview'))),
     ),
     GetPage<void>(
-      name: AppRoutes.orderDetails,
+      name: '${AppRoutes.orderDetails}/:orderNumber',
       page: () => _webPage(
         OrderDetailScreen(
           orderNumber: _stringArgument('orderNumber'),
@@ -174,9 +231,19 @@ class AppRoutePages {
           _webPage(OrderSuccessScreen(isPreview: _boolArgument('isPreview'))),
     ),
     GetPage<void>(
+      name: '${AppRoutes.reviews}/:productId',
+      page: () =>
+          _webPage(ReviewScreen(productId: _stringArgument('productId', fallback: 'anker-r50i'))),
+    ),
+    GetPage<void>(
+      name: '/products/review/:productId',
+      page: () =>
+          _webPage(ReviewScreen(productId: _stringArgument('productId', fallback: 'anker-r50i'))),
+    ),
+    GetPage<void>(
       name: AppRoutes.reviews,
       page: () =>
-          _webPage(ReviewScreen(productId: _stringArgument('productId'))),
+          _webPage(ReviewScreen(productId: _stringArgument('productId', fallback: 'anker-r50i'))),
     ),
   ];
 
@@ -189,6 +256,8 @@ class AppRoutePages {
   }
 
   static String _stringArgument(String key, {String fallback = ''}) {
+    final parameter = Get.parameters[key];
+    if (parameter != null) return parameter;
     final value = _objectArgument(key);
     return value is String ? value : fallback;
   }

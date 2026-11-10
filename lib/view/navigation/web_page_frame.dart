@@ -14,7 +14,22 @@ class WebPageFrame extends StatelessWidget {
       body: Column(
         children: [
           const WebSiteHeader(),
-          Expanded(child: child),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final contentWidth = constraints.maxWidth > 1328
+                    ? 1280.0
+                    : constraints.maxWidth;
+                return Center(
+                  child: SizedBox(
+                    width: contentWidth,
+                    height: constraints.maxHeight,
+                    child: child,
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

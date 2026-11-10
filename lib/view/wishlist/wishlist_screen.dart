@@ -48,13 +48,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
-          surfaceTintColor: AppColors.surface,
+          surfaceTintColor: Theme.of(context).colorScheme.surface,
           shape: const Border(bottom: BorderSide(color: AppColors.border)),
           toolbarHeight: 60,
           leadingWidth: 52,
@@ -163,7 +163,7 @@ class _WishlistProductCard extends StatelessWidget {
       width: width,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -197,7 +197,7 @@ class _WishlistProductCard extends StatelessWidget {
                       width: 28,
                       height: 28,
                       child: Material(
-                        color: AppColors.surface,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(14),
                         child: InkWell(
                           onTap: onRemove,

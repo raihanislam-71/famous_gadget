@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Column(
             children: [
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           'Phone Number',
                           style: AppTextStyles.badge.copyWith(
                             fontSize: 13,
-                            color: AppColors.navyDark,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -138,7 +138,9 @@ class _LoginScreenState extends State<LoginScreen> {
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
         ],
-        style: AppTextStyles.body,
+        style: AppTextStyles.body.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         validator: (value) {
           final phone = value?.trim() ?? '';
           if (phone.length != 10 || !phone.startsWith('1')) {
@@ -157,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
             color: AppColors.secondaryText,
           ),
           filled: true,
-          fillColor: AppColors.surface,
+          fillColor: Theme.of(context).colorScheme.surface,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),

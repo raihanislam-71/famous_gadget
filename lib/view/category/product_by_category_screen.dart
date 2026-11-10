@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
+import '../utils/app_colors.dart';
 import '../widgets/product_card.dart';
 import 'search_product_screen.dart';
 import '../navigation/app_navigation.dart';
@@ -16,25 +16,23 @@ class ProductByCategoryScreen extends StatefulWidget {
 }
 
 class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
+  bool _sortAscending = true;
+  RangeValues _priceRange = const RangeValues(0, 100000);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.categoryName,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -43,7 +41,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
                 mobileBuilder: () => const SearchProductScreen(),
               );
             },
-            icon: const Icon(Icons.search, color: Colors.black),
+            icon: const Icon(Icons.search),
           ),
         ],
       ),
@@ -57,11 +55,14 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
             child: Row(
               children: [
                 OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: _showSortOptions,
                   icon: const Icon(Icons.sort, size: 16),
-                  label: const Text("Sort by: Popularity"),
+                  label: Text(
+                    _sortAscending ? 'Sort: Popularity' : 'Sort: Price',
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.black,
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -69,11 +70,11 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
                 ),
                 const SizedBox(width: 8),
                 OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: _showFilters,
                   icon: const Icon(Icons.filter_list, size: 16),
                   label: const Text("Filters (2)"),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.black,
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -85,21 +86,114 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.builder(
-                itemCount: 8,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 0.75,
-                ),
-                itemBuilder: (context, index) {
-                  return ProductCard(productId: index.toString());
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final columns = constraints.maxWidth < 560
+                      ? 2
+                      : constraints.maxWidth < 900
+                      ? 3
+                      : 4;
+                  return GridView.builder(
+                    itemCount: 8,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: columns,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: columns == 2
+                          ? 0.72
+                          : columns == 3
+                          ? 0.78
+                          : 0.82,
+                    ),
+                    itemBuilder: (context, index) {
+                      return ProductCard(
+                        productId: index.toString(),
+                        width: double.infinity,
+                      );
+                    },
+                  );
                 },
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showSortOptions() {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Popularity'),
+              trailing: _sortAscending
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              onTap: () {
+                setState(() => _sortAscending = true);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Price: low to high'),
+              trailing: !_sortAscending
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              onTap: () {
+                setState(() => _sortAscending = false);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showFilters() {
+    var selectedRange = _priceRange;
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setSheetState) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Filter by price',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                RangeSlider(
+                  values: selectedRange,
+                  min: 0,
+                  max: 100000,
+                  divisions: 20,
+                  labels: RangeLabels(
+                    '৳${selectedRange.start.round()}',
+                    '৳${selectedRange.end.round()}',
+                  ),
+                  onChanged: (range) =>
+                      setSheetState(() => selectedRange = range),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    setState(() => _priceRange = selectedRange);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Apply filters'),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

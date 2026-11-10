@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/auth_controller.dart';
 import '../../controllers/profile_controller.dart';
+import '../../controllers/theme_controller.dart';
 import '../checkout/my_orders_screen.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
@@ -37,15 +38,15 @@ class _GuestAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
-      appBar: _accountAppBar('My Profile'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: _accountAppBar(context, 'My Profile'),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 104),
         children: [
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
-            color: AppColors.surface,
+            color: Theme.of(context).colorScheme.surface,
             child: Column(
               children: [
                 Container(
@@ -190,7 +191,7 @@ class _GuestLockedItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surface,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -241,14 +242,14 @@ class _LoggedInAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
-      appBar: _accountAppBar('My Account'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: _accountAppBar(context, 'My Account'),
       body: GetBuilder<ProfileController>(
         builder: (profile) => ListView(
           padding: const EdgeInsets.only(bottom: 104),
           children: [
             Container(
-              color: AppColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               padding: const EdgeInsets.all(20),
               child: Row(
                 children: [
@@ -265,7 +266,7 @@ class _LoggedInAccount extends StatelessWidget {
                       style: AppTextStyles.h2.copyWith(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.surface,
+                        color: Theme.of(context).colorScheme.surface,
                       ),
                     ),
                   ),
@@ -371,7 +372,7 @@ class _LoggedInAccount extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   Material(
-                    color: AppColors.surface,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     child: InkWell(
                       onTap: _confirmLogout,
@@ -446,7 +447,7 @@ class _AccountMenuGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surface,
+      color: Theme.of(context).colorScheme.surface,
       child: Column(children: children),
     );
   }
@@ -495,11 +496,11 @@ class _AccountMenuItem extends StatelessWidget {
   }
 }
 
-AppBar _accountAppBar(String title) {
+AppBar _accountAppBar(BuildContext context, String title) {
   return AppBar(
     automaticallyImplyLeading: false,
-    backgroundColor: AppColors.surface,
-    foregroundColor: AppColors.navyDark,
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    foregroundColor: Theme.of(context).colorScheme.onSurface,
     elevation: 0,
     scrolledUnderElevation: 0,
     shape: const Border(bottom: BorderSide(color: AppColors.border)),
@@ -512,6 +513,19 @@ AppBar _accountAppBar(String title) {
         fontWeight: FontWeight.w700,
       ),
     ),
+    actions: [
+      GetBuilder<ThemeController>(
+        builder: (controller) => IconButton(
+          tooltip: controller.isDarkMode
+              ? 'Switch to light mode'
+              : 'Switch to dark mode',
+          onPressed: controller.toggleTheme,
+          icon: Icon(
+            controller.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+          ),
+        ),
+      ),
+    ],
   );
 }
 

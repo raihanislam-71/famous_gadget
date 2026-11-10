@@ -35,7 +35,10 @@ class AppRoutes {
     Object? arguments,
   }) {
     if (kIsWeb) {
-      return Get.toNamed<T>(route, arguments: arguments);
+      return Get.toNamed<T>(
+        _webRoute(route, arguments),
+        arguments: arguments,
+      );
     }
     return Get.to<T>(mobileBuilder);
   }
@@ -46,7 +49,10 @@ class AppRoutes {
     Object? arguments,
   }) {
     if (kIsWeb) {
-      return Get.offNamed<T>(route, arguments: arguments);
+      return Get.offNamed<T>(
+        _webRoute(route, arguments),
+        arguments: arguments,
+      );
     }
     return Get.off<T>(mobileBuilder);
   }
@@ -57,7 +63,10 @@ class AppRoutes {
     Object? arguments,
   }) {
     if (kIsWeb) {
-      return Get.offAllNamed<T>(route, arguments: arguments);
+      return Get.offAllNamed<T>(
+        _webRoute(route, arguments),
+        arguments: arguments,
+      );
     }
     return Get.offAll<T>(mobileBuilder);
   }
@@ -67,6 +76,31 @@ class AppRoutes {
       Get.offAllNamed<void>(home);
     } else {
       Get.back<void>();
+    }
+  }
+
+  static String _webRoute(String route, Object? arguments) {
+    final values = arguments is Map ? arguments : const <Object?, Object?>{};
+    String pathValue(String key) {
+      final value = values[key];
+      return Uri.encodeComponent(value is String ? value : '');
+    }
+
+    switch (route) {
+      case subCategory:
+        return '$subCategory/${pathValue('categoryName')}';
+      case products:
+        return '$products/${pathValue('categoryName')}';
+      case productDetails:
+        return '$productDetails/${pathValue('productId')}';
+      case outOfStockProduct:
+        return '$outOfStockProduct/${pathValue('productId')}';
+      case reviews:
+        return '$reviews/${pathValue('productId')}';
+      case orderDetails:
+        return '$orderDetails/${pathValue('orderNumber')}';
+      default:
+        return route;
     }
   }
 }

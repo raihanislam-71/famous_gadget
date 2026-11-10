@@ -59,13 +59,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
-          surfaceTintColor: AppColors.surface,
+          surfaceTintColor: Theme.of(context).colorScheme.surface,
           shape: const Border(bottom: BorderSide(color: AppColors.border)),
           toolbarHeight: 60,
           titleSpacing: 12,
@@ -173,7 +173,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           label,
           style: AppTextStyles.badge.copyWith(
             fontSize: 13,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 8),
@@ -184,10 +184,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             obscureText: !isVisible,
             validator: validator,
             onChanged: onChanged,
-            style: AppTextStyles.body.copyWith(fontSize: 14, height: 1),
+            style: AppTextStyles.body.copyWith(
+              fontSize: 14,
+              height: 1,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: Theme.of(context).colorScheme.surface,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               suffixIconConstraints: const BoxConstraints(minWidth: 52),
               suffixIcon: TextButton(
@@ -258,8 +262,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border.all(color: AppColors.border),
+        color: Theme.of(context).colorScheme.surface,
+        border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -269,7 +273,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             'Password Requirements',
             style: AppTextStyles.badge.copyWith(
               fontSize: 13,
-              color: AppColors.navyDark,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),

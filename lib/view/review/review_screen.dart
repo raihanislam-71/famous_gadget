@@ -24,7 +24,7 @@ class ReviewScreen extends StatelessWidget {
           Container(
             color: Colors.white,
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-            child: _buildRatingOverview(),
+            child: _buildRatingOverview(Get.find<ReviewController>()),
           ),
           Container(
             color: Colors.white,
@@ -55,15 +55,8 @@ class ReviewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingOverview() {
-    const breakdown = [
-      (stars: 5, percentage: 70),
-      (stars: 4, percentage: 18),
-      (stars: 3, percentage: 7),
-      (stars: 2, percentage: 3),
-      (stars: 1, percentage: 2),
-    ];
-
+  Widget _buildRatingOverview(ReviewController controller) {
+    final reviewCount = controller.reviews.length;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -79,9 +72,9 @@ class ReviewScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  '4.8',
-                  style: TextStyle(
+                Text(
+                  controller.averageRating.toStringAsFixed(1),
+                  style: const TextStyle(
                     fontSize: 34,
                     height: 1,
                     fontWeight: FontWeight.w700,
@@ -90,7 +83,7 @@ class ReviewScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 RatingBarIndicator(
-                  rating: 5,
+                  rating: controller.averageRating,
                   itemCount: 5,
                   itemSize: 13,
                   unratedColor: const Color(0xFFE7E9ED),
@@ -98,9 +91,12 @@ class ReviewScreen extends StatelessWidget {
                       const Icon(Icons.star, color: Color(0xFFFF8A00)),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  '142 Reviews',
-                  style: TextStyle(fontSize: 10, color: Color(0xFF777D87)),
+                Text(
+                  '$reviewCount Reviews',
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: Color(0xFF777D87),
+                  ),
                 ),
               ],
             ),
@@ -110,7 +106,7 @@ class ReviewScreen extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
-                for (final item in breakdown)
+                for (var stars = 5; stars >= 1; stars--)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 2),
                     child: Row(
@@ -118,7 +114,7 @@ class ReviewScreen extends StatelessWidget {
                         SizedBox(
                           width: 12,
                           child: Text(
-                            '${item.stars}',
+                            '$stars',
                             style: const TextStyle(
                               fontSize: 10,
                               color: Color(0xFF454A52),
@@ -135,7 +131,10 @@ class ReviewScreen extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(3),
                             child: LinearProgressIndicator(
-                              value: item.percentage / 100,
+                              value: reviewCount == 0
+                                  ? 0
+                                  : controller.getRatingCount(stars) /
+                                        reviewCount,
                               minHeight: 4,
                               backgroundColor: const Color(0xFFF0F1F3),
                               valueColor: const AlwaysStoppedAnimation(
@@ -147,7 +146,7 @@ class ReviewScreen extends StatelessWidget {
                         SizedBox(
                           width: 26,
                           child: Text(
-                            '${item.percentage}%',
+                            '${reviewCount == 0 ? 0 : (controller.getRatingCount(stars) * 100 / reviewCount).round()}%',
                             textAlign: TextAlign.end,
                             style: const TextStyle(
                               fontSize: 10,
