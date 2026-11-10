@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
@@ -41,6 +43,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: AppColors.pageBackground,
@@ -55,15 +58,24 @@ class _WishlistScreenState extends State<WishlistScreen> {
           elevation: 0,
           scrolledUnderElevation: 0,
           surfaceTintColor: Theme.of(context).colorScheme.surface,
-          shape: const Border(bottom: BorderSide(color: AppColors.border)),
+          shape: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
           toolbarHeight: 60,
-          leadingWidth: 52,
-          titleSpacing: 0,
-          leading: IconButton(
-            tooltip: 'Back',
-            onPressed: Get.back<void>,
-            icon: SvgPicture.asset(AssetsPath.wishlistBackArrow),
-          ),
+          leadingWidth: isDesktopWeb ? 0 : 52,
+          titleSpacing: isDesktopWeb ? 16 : 0,
+          automaticallyImplyLeading: !isDesktopWeb,
+          leading: isDesktopWeb
+              ? null
+              : IconButton(
+                  tooltip: 'Back',
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      AppRoutes.backToHome();
+                    }
+                  },
+                  icon: SvgPicture.asset(AssetsPath.wishlistBackArrow),
+                ),
           title: Text(
             'My Wishlist (${_items.length})',
             style: AppTextStyles.h2.copyWith(
