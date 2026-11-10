@@ -9,7 +9,12 @@ import '../utils/assets_path.dart';
 import 'app_navigation.dart';
 
 class WebSiteHeader extends StatelessWidget {
-  const WebSiteHeader({super.key});
+  const WebSiteHeader({
+    super.key,
+    this.isHome = true,
+  });
+
+  final bool isHome;
 
   @override
   Widget build(BuildContext context) {
@@ -17,80 +22,107 @@ class WebSiteHeader extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final foreground = theme.colorScheme.onSurface;
 
+    // For inner pages (isHome == false) on mobile screens, hide completely
+    // so it doesn't duplicate the mobile screen's own AppBar.
+    if (!isHome && MediaQuery.sizeOf(context).width < 768) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       children: [
-        Container(
-          width: double.infinity,
-          color: AppColors.primary,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1280),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      'Gadgets you love. Cash on Delivery BD.',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+        // Top orange announcement bar: ONLY shown on the Home page
+        if (isHome)
+          Container(
+            width: double.infinity,
+            color: AppColors.primary,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1280),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Gadgets you love. Cash on Delivery BD.',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
                     ),
-                  ),
-                  if (MediaQuery.sizeOf(context).width > 650)
-                    const Text(
-                      'Track Order     Store Locator     Support: 09612-FAMOUS',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                ],
+                    if (MediaQuery.sizeOf(context).width > 650)
+                      const Text(
+                        'Track Order     Store Locator     Support: 09612-FAMOUS',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+
+        // Navigation Bar:
+        // - On Home page: Full search bar and category menu links.
+        // - On Inner pages: Clean minimal header (Logo on left, utility actions on right).
         Container(
           color: theme.colorScheme.surface,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1280),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final compact = constraints.maxWidth < 850;
-                  final veryCompact = constraints.maxWidth < 440;
-                  final logo = _buildLogo(width: veryCompact ? 112 : 156);
-                  final search = _buildSearch(context);
-                  final actions = _buildActions(
-                    context,
-                    foreground,
-                    showWishlist: !veryCompact,
-                  );
+              child: isHome
+                  ? LayoutBuilder(
+                      builder: (context, constraints) {
+                        final compact = constraints.maxWidth < 850;
+                        final veryCompact = constraints.maxWidth < 440;
+                        final logo = _buildLogo(width: veryCompact ? 112 : 156);
+                        final search = _buildSearch(context);
+                        final actions = _buildActions(
+                          context,
+                          foreground,
+                          showWishlist: !veryCompact,
+                        );
 
-                  if (compact) {
-                    return Column(
+                        if (compact) {
+                          return Column(
+                            children: [
+                              Row(children: [logo, const Spacer(), actions]),
+                              const SizedBox(height: 10),
+                              search,
+                              const SizedBox(height: 10),
+                              _buildLinks(context, foreground),
+                            ],
+                          );
+                        }
+
+                        return Row(
+                          children: [
+                            logo,
+                            const SizedBox(width: 32),
+                            Expanded(child: search),
+                            const SizedBox(width: 24),
+                            _buildLinks(context, foreground),
+                            const SizedBox(width: 12),
+                            actions,
+                          ],
+                        );
+                      },
+                    )
+                  : Row(
                       children: [
-                        Row(children: [logo, const Spacer(), actions]),
-                        const SizedBox(height: 10),
-                        search,
-                        const SizedBox(height: 10),
-                        _buildLinks(context, foreground),
+                        _buildLogo(width: 156),
+                        const Spacer(),
+                        _buildActions(
+                          context,
+                          foreground,
+                          showWishlist: true,
+                        ),
                       ],
-                    );
-                  }
-
-                  return Row(
-                    children: [
-                      logo,
-                      const SizedBox(width: 32),
-                      Expanded(child: search),
-                      const SizedBox(width: 24),
-                      _buildLinks(context, foreground),
-                      const SizedBox(width: 12),
-                      actions,
-                    ],
-                  );
-                },
-              ),
+                    ),
             ),
           ),
         ),
-        if (isDark) const Divider(height: 1, color: AppColors.border),
+        Divider(
+          height: 1,
+          color: isDark ? AppColors.border : theme.dividerColor,
+        ),
       ],
     );
   }
