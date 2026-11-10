@@ -1,11 +1,9 @@
 import 'package:bdcalling_class/view/category/product_by_category_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../utils/app_colors.dart';
 import '../navigation/app_navigation.dart';
-import 'search_product_screen.dart';
+import '../utils/app_colors.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -17,7 +15,11 @@ class SubCategoryScreen extends StatefulWidget {
 }
 
 class _SubCategoryScreenState extends State<SubCategoryScreen> {
-  final List<Map<String, dynamic>> subCategories = [
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  bool _isSearching = false;
+
+  final List<Map<String, dynamic>> _subCategories = [
     {'name': 'Flagship Phones', 'items': 28, 'icon': Icons.phone_android},
     {'name': 'Mid-Range Smartphones', 'items': 45, 'icon': Icons.phone_iphone},
     {'name': 'Budget Phones', 'items': 32, 'icon': Icons.smartphone},
@@ -31,18 +33,77 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
     {'name': 'Chargers & Cables', 'items': 41, 'icon': Icons.bolt},
   ];
 
+  List<Map<String, dynamic>> _filteredSubCategories = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredSubCategories = List<Map<String, dynamic>>.from(_subCategories);
+  }
+
+  void _filterSubCategories(String query) {
+    setState(() {
+      final trimmedQuery = query.trim().toLowerCase();
+      if (trimmedQuery.isEmpty) {
+        _filteredSubCategories = List<Map<String, dynamic>>.from(
+          _subCategories,
+        );
+      } else {
+        _filteredSubCategories = _subCategories
+            .where(
+              (item) =>
+                  (item['name'] as String).toLowerCase().contains(trimmedQuery),
+            )
+            .toList();
+      }
+    });
+  }
+
+  void _startSearch() {
+    setState(() => _isSearching = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _searchFocusNode.requestFocus();
+    });
+  }
+
+  void _stopSearch() {
+    _searchController.clear();
+    _filterSubCategories('');
+    setState(() => _isSearching = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.categoryName,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                textInputAction: TextInputAction.search,
+                onChanged: _filterSubCategories,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search sub-categories',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  border: InputBorder.none,
+                  isDense: true,
+                ),
+              )
+            : Text(
+                widget.categoryName,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
@@ -61,20 +122,18 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
               ),
         actions: [
           IconButton(
-            tooltip: 'Search',
-            onPressed: () => AppRoutes.to<void>(
-              route: AppRoutes.search,
-              mobileBuilder: () => const SearchProductScreen(),
-            ),
-            icon: const Icon(Icons.search),
+            tooltip: 'Search sub-categories',
+            onPressed: _isSearching ? _stopSearch : _startSearch,
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
           ),
         ],
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
-        itemCount: subCategories.length,
+        itemCount: _filteredSubCategories.length,
         separatorBuilder: (context, index) => const Divider(),
         itemBuilder: (context, index) {
+          final item = _filteredSubCategories[index];
           return ListTile(
             leading: Container(
               padding: const EdgeInsets.all(8),
@@ -82,19 +141,16 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                 color: AppColors.themeColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                subCategories[index]['icon'],
-                color: AppColors.themeColor,
-              ),
+              child: Icon(item['icon'], color: AppColors.themeColor),
             ),
             title: Text(
-              subCategories[index]['name'],
+              item['name'],
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('${subCategories[index]['items']} items'),
+            subtitle: Text('${item['items']} items'),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              final categoryName = subCategories[index]['name'] as String;
+              final categoryName = item['name'] as String;
               AppRoutes.to<void>(
                 route: AppRoutes.products,
                 arguments: {'categoryName': categoryName},
@@ -106,5 +162,12 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
   }
 }

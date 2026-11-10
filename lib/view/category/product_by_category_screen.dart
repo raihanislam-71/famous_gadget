@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/product.dart';
 import '../utils/app_colors.dart';
 import '../widgets/product_card.dart';
-import 'search_product_screen.dart';
 import '../navigation/app_navigation.dart';
 
 class ProductByCategoryScreen extends StatefulWidget {
@@ -19,19 +19,71 @@ class ProductByCategoryScreen extends StatefulWidget {
 class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
   bool _sortAscending = true;
   RangeValues _priceRange = const RangeValues(0, 100000);
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  bool _isSearching = false;
+  String _searchQuery = '';
+
+  List<String> get _visibleProductIds =>
+      List.generate(8, (index) => '$index').where((productId) {
+        final productName = Product.demoForId(productId).name.toLowerCase();
+        return productName.contains(_searchQuery.trim().toLowerCase());
+      }).toList();
+
+  void _startSearch() {
+    setState(() => _isSearching = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _searchFocusNode.requestFocus();
+    });
+  }
+
+  void _stopSearch() {
+    _searchController.clear();
+    setState(() {
+      _isSearching = false;
+      _searchQuery = '';
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
+    final visibleProductIds = _visibleProductIds;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.categoryName,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                onChanged: (query) => setState(() => _searchQuery = query),
+                textInputAction: TextInputAction.search,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search products',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  border: InputBorder.none,
+                  isDense: true,
+                ),
+              )
+            : Text(
+                widget.categoryName,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
@@ -50,13 +102,9 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
               ),
         actions: [
           IconButton(
-            onPressed: () {
-              AppRoutes.to<void>(
-                route: AppRoutes.search,
-                mobileBuilder: () => const SearchProductScreen(),
-              );
-            },
-            icon: const Icon(Icons.search),
+            tooltip: _isSearching ? 'Clear search' : 'Search products',
+            onPressed: _isSearching ? _stopSearch : _startSearch,
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
           ),
         ],
       ),
@@ -103,26 +151,36 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: LayoutBuilder(
                 builder: (context, constraints) {
+                  if (visibleProductIds.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No products found',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    );
+                  }
                   final columns = constraints.maxWidth < 560
                       ? 2
                       : constraints.maxWidth < 900
                       ? 3
                       : 4;
+                  final itemWidth =
+                      (constraints.maxWidth - 16 * (columns - 1)) / columns;
+                  final childAspectRatio = itemWidth < 228
+                      ? itemWidth / 240
+                      : 0.95;
                   return GridView.builder(
-                    itemCount: 8,
+                    itemCount: visibleProductIds.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: columns,
                       mainAxisSpacing: 16,
                       crossAxisSpacing: 16,
-                      childAspectRatio: columns == 2
-                          ? 0.72
-                          : columns == 3
-                          ? 0.78
-                          : 0.82,
+                      childAspectRatio: childAspectRatio,
                     ),
                     itemBuilder: (context, index) {
+                      final productId = visibleProductIds[index];
                       return ProductCard(
-                        productId: index.toString(),
+                        productId: productId,
                         width: double.infinity,
                       );
                     },

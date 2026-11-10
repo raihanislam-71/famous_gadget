@@ -7,7 +7,7 @@ import '../utils/assets_path.dart';
 import '../home/widgets/category_grid_card.dart';
 import 'sub_category_screen.dart';
 import '../navigation/app_navigation.dart';
-import 'search_product_screen.dart';
+import 'product_list_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -49,12 +49,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
             tooltip: 'Search',
             onPressed: () => AppRoutes.to<void>(
               route: AppRoutes.search,
-              mobileBuilder: () => const SearchProductScreen(),
+              mobileBuilder: () => const ProductListScreen(
+                title: 'Search Products',
+                initialSearchActive: true,
+              ),
             ),
             icon: const Icon(Icons.search),
           ),
         ],
-        automaticallyImplyLeading: !(kIsWeb && MediaQuery.sizeOf(context).width >= 768),
+        automaticallyImplyLeading:
+            !(kIsWeb && MediaQuery.sizeOf(context).width >= 768),
         leading: (kIsWeb && MediaQuery.sizeOf(context).width >= 768)
             ? null
             : IconButton(
