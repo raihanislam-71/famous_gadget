@@ -429,7 +429,9 @@ class WebHomeScreen extends StatelessWidget {
                     : constraints.maxWidth < 900
                     ? 3
                     : 4;
-                final aspectRatio = columns == 2 ? 0.62 : 0.96;
+                final itemWidth =
+                    (constraints.maxWidth - 16 * (columns - 1)) / columns;
+                final aspectRatio = itemWidth < 265 ? itemWidth / 270 : 0.98;
                 return GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -1023,9 +1025,9 @@ class _WebProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 6),
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

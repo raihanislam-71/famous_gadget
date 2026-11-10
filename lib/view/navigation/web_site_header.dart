@@ -6,15 +6,26 @@ import '../../controllers/auth_controller.dart';
 import '../../controllers/theme_controller.dart';
 import '../utils/app_colors.dart';
 import '../utils/assets_path.dart';
+import '../category/product_list_screen.dart';
 import 'app_navigation.dart';
 
-class WebSiteHeader extends StatelessWidget {
-  const WebSiteHeader({
-    super.key,
-    this.isHome = true,
-  });
+class WebSiteHeader extends StatefulWidget {
+  const WebSiteHeader({super.key, this.isHome = true});
 
   final bool isHome;
+
+  @override
+  State<WebSiteHeader> createState() => _WebSiteHeaderState();
+}
+
+class _WebSiteHeaderState extends State<WebSiteHeader> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +35,14 @@ class WebSiteHeader extends StatelessWidget {
 
     // For inner pages (isHome == false) on mobile screens, hide completely
     // so it doesn't duplicate the mobile screen's own AppBar.
-    if (!isHome && MediaQuery.sizeOf(context).width < 768) {
+    if (!widget.isHome && MediaQuery.sizeOf(context).width < 768) {
       return const SizedBox.shrink();
     }
 
     return Column(
       children: [
         // Top orange announcement bar: ONLY shown on the Home page
-        if (isHome)
+        if (widget.isHome)
           Container(
             width: double.infinity,
             color: AppColors.primary,
@@ -67,7 +78,7 @@ class WebSiteHeader extends StatelessWidget {
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1280),
-              child: isHome
+              child: widget.isHome
                   ? LayoutBuilder(
                       builder: (context, constraints) {
                         final compact = constraints.maxWidth < 850;
@@ -109,11 +120,7 @@ class WebSiteHeader extends StatelessWidget {
                       children: [
                         _buildLogo(width: 156),
                         const Spacer(),
-                        _buildActions(
-                          context,
-                          foreground,
-                          showWishlist: true,
-                        ),
+                        _buildActions(context, foreground, showWishlist: true),
                       ],
                     ),
             ),
@@ -161,21 +168,16 @@ class WebSiteHeader extends StatelessWidget {
     return SizedBox(
       height: 44,
       child: TextField(
+        controller: _searchController,
         textInputAction: TextInputAction.search,
-        onSubmitted: (_) => AppRoutes.to<void>(
-          route: AppRoutes.search,
-          mobileBuilder: () => const SizedBox.shrink(),
-        ),
+        onSubmitted: _openProductSearch,
         decoration: InputDecoration(
           hintText: 'Search authentic smart watches, earbuds, gimbals...',
           prefixIcon: const Icon(Icons.search, size: 20),
           suffixIcon: Padding(
             padding: const EdgeInsets.all(4),
             child: FilledButton(
-              onPressed: () => AppRoutes.to<void>(
-                route: AppRoutes.search,
-                mobileBuilder: () => const SizedBox.shrink(),
-              ),
+              onPressed: () => _openProductSearch(_searchController.text),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 minimumSize: Size.zero,
@@ -195,6 +197,18 @@ class WebSiteHeader extends StatelessWidget {
             borderSide: BorderSide(color: Theme.of(context).dividerColor),
           ),
         ),
+      ),
+    );
+  }
+
+  void _openProductSearch(String query) {
+    AppRoutes.to<void>(
+      route: AppRoutes.search,
+      arguments: {'searchQuery': query},
+      mobileBuilder: () => ProductListScreen(
+        title: 'Search Products',
+        initialSearchActive: true,
+        initialSearchQuery: query,
       ),
     );
   }
@@ -287,10 +301,7 @@ class WebSiteHeader extends StatelessWidget {
               ),
               const PopupMenuItem(
                 value: _ProfileMenuAction.logout,
-                child: _ProfileMenuLabel(
-                  icon: Icons.logout,
-                  label: 'Log out',
-                ),
+                child: _ProfileMenuLabel(icon: Icons.logout, label: 'Log out'),
               ),
             ] else ...[
               const PopupMenuItem(
@@ -302,10 +313,7 @@ class WebSiteHeader extends StatelessWidget {
               ),
               const PopupMenuItem(
                 value: _ProfileMenuAction.login,
-                child: _ProfileMenuLabel(
-                  icon: Icons.login,
-                  label: 'Log in',
-                ),
+                child: _ProfileMenuLabel(icon: Icons.login, label: 'Log in'),
               ),
               const PopupMenuItem(
                 value: _ProfileMenuAction.register,
@@ -423,11 +431,7 @@ class _ProfileMenuLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        Icon(icon, size: 18),
-        const SizedBox(width: 12),
-        Text(label),
-      ],
+      children: [Icon(icon, size: 18), const SizedBox(width: 12), Text(label)],
     );
   }
 }

@@ -68,22 +68,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           surfaceTintColor: Theme.of(context).colorScheme.surface,
           shape: const Border(bottom: BorderSide(color: AppColors.border)),
           toolbarHeight: 60,
-          titleSpacing: 12,
-          leadingWidth: 56,
-          leading: IconButton(
-            tooltip: 'Back',
-            onPressed: Get.back<void>,
-            icon: Container(
-              width: 36,
-              height: 36,
-              decoration: const BoxDecoration(
-                color: AppColors.pageBackground,
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center,
-              child: SvgPicture.asset(AssetsPath.accountBackArrow),
-            ),
-          ),
+          automaticallyImplyLeading: false,
+          titleSpacing: 16,
           title: Text(
             'Change Password',
             style: AppTextStyles.h2.copyWith(

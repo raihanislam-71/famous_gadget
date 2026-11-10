@@ -11,7 +11,6 @@ import '../cart/cart_screen.dart';
 import '../category/category_screen.dart';
 import '../category/product_by_category_screen.dart';
 import '../category/product_list_screen.dart';
-import '../category/search_product_screen.dart';
 import '../category/sub_category_screen.dart';
 import '../checkout/checkout_confirmation_screen.dart';
 import '../checkout/checkout_delivery_screen.dart';
@@ -69,7 +68,13 @@ class AppRoutePages {
     ),
     GetPage<void>(
       name: AppRoutes.search,
-      page: () => _webPage(const SearchProductScreen()),
+      page: () => _webPage(
+        ProductListScreen(
+          title: 'Search Products',
+          initialSearchActive: true,
+          initialSearchQuery: _stringArgument('searchQuery'),
+        ),
+      ),
     ),
     GetPage<void>(
       name: '${AppRoutes.productDetails}/:productId',
@@ -232,18 +237,27 @@ class AppRoutePages {
     ),
     GetPage<void>(
       name: '${AppRoutes.reviews}/:productId',
-      page: () =>
-          _webPage(ReviewScreen(productId: _stringArgument('productId', fallback: 'anker-r50i'))),
+      page: () => _webPage(
+        ReviewScreen(
+          productId: _stringArgument('productId', fallback: 'anker-r50i'),
+        ),
+      ),
     ),
     GetPage<void>(
       name: '/products/review/:productId',
-      page: () =>
-          _webPage(ReviewScreen(productId: _stringArgument('productId', fallback: 'anker-r50i'))),
+      page: () => _webPage(
+        ReviewScreen(
+          productId: _stringArgument('productId', fallback: 'anker-r50i'),
+        ),
+      ),
     ),
     GetPage<void>(
       name: AppRoutes.reviews,
-      page: () =>
-          _webPage(ReviewScreen(productId: _stringArgument('productId', fallback: 'anker-r50i'))),
+      page: () => _webPage(
+        ReviewScreen(
+          productId: _stringArgument('productId', fallback: 'anker-r50i'),
+        ),
+      ),
     ),
   ];
 

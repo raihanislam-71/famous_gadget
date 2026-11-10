@@ -1,3 +1,4 @@
+import 'package:bdcalling_class/view/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -480,7 +481,17 @@ class _AccountMenuItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            SvgPicture.asset(iconPath, width: 20, height: 20),
+            SvgPicture.asset(
+              iconPath,
+              width: 20,
+              height: 20,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.surface
+                    : AppColors.navyDark,
+                BlendMode.srcIn,
+              ),
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -488,7 +499,17 @@ class _AccountMenuItem extends StatelessWidget {
                 style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
               ),
             ),
-            SvgPicture.asset(AssetsPath.accountChevron, width: 16, height: 16),
+            SvgPicture.asset(
+              AssetsPath.accountChevron,
+              width: 20,
+              height: 20,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black,
+                BlendMode.srcIn,
+              ),
+            ),
           ],
         ),
       ),

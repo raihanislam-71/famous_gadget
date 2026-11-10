@@ -65,7 +65,9 @@ class AssetsPath {
   static const String accountLock = '$_images/figma_account/lock.svg';
   static const String accountChevron =
       '$_images/figma_account/chevron_right.svg';
+
   static const String accountMapPin = '$_images/figma_account/map_pin.svg';
+
   static const String accountPackage = '$_images/figma_account/package.svg';
   static const String accountHeart = '$_images/figma_account/heart.svg';
   static const String accountSettings = '$_images/figma_account/settings.svg';
@@ -78,5 +80,5 @@ class AssetsPath {
       '$_images/figma_account/verified_check.svg';
   static const String passwordInvalid =
       '$_images/figma_account/invalid_check.svg';
-  static const String webHeroWatch = '$_images/figma_web/hero_watch.png';
+  static const String webHeroWatch = '$_images/figma_web/hero_watch.jpg';
 }
