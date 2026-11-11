@@ -10,6 +10,7 @@ import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 import 'my_orders_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class OrderSuccessScreen extends StatelessWidget {
   const OrderSuccessScreen({super.key, this.isPreview = false});
@@ -246,8 +247,11 @@ class OrderSuccessScreen extends StatelessWidget {
             width: double.infinity,
             height: 52,
             child: OutlinedButton(
-              onPressed: () =>
-                  Get.to<void>(() => MyOrdersScreen(isPreview: isPreview)),
+              onPressed: () => AppRoutes.to<void>(
+                route: AppRoutes.orders,
+                arguments: {'isPreview': isPreview},
+                mobileBuilder: () => MyOrdersScreen(isPreview: isPreview),
+              ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.surface,
                 side: const BorderSide(color: AppColors.surface),
@@ -264,6 +268,9 @@ class OrderSuccessScreen extends StatelessWidget {
 
   void _continueShopping() {
     Get.find<BottomNavController>().changeIndex(0);
-    Get.offAll<void>(() => const MainBottomNavScreen());
+    AppRoutes.offAll<void>(
+      route: AppRoutes.home,
+      mobileBuilder: () => const MainBottomNavScreen(),
+    );
   }
 }

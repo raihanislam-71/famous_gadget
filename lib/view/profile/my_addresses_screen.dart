@@ -46,15 +46,16 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
-          surfaceTintColor: AppColors.surface,
+          surfaceTintColor: Theme.of(context).colorScheme.surface,
           shape: const Border(bottom: BorderSide(color: AppColors.border)),
           toolbarHeight: 60,
+          automaticallyImplyLeading: false,
           titleSpacing: 0,
           title: Text(
             'My Addresses',
@@ -99,6 +100,7 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
   Future<void> _openAddressForm([SavedAddress? address]) async {
     final updatedAddress = await Get.to<SavedAddress>(
       () => AddAddressScreen(address: address),
+      preventDuplicates: false,
     );
     if (!mounted || updatedAddress == null) return;
 
@@ -130,13 +132,14 @@ class _AddressCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Flexible(
                 child: Text(
@@ -145,7 +148,7 @@ class _AddressCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.badge.copyWith(
                     fontSize: 12,
-                    color: AppColors.navyDark,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -169,7 +172,7 @@ class _AddressCard extends StatelessWidget {
                   ),
                 ),
               ],
-              const Spacer(),
+              //const Spacer(),
               IconButton(
                 onPressed: onEdit,
                 tooltip: 'Edit address',

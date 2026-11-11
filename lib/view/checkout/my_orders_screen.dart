@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import 'order_detail_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key, this.isPreview = false});
@@ -67,23 +67,27 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final visibleOrders = _selectedFilter == 'All'
         ? _orders
         : _orders.where((order) => order.status == _selectedFilter).toList();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.pageBackground,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDarkMode
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
+          automaticallyImplyLeading: false,
           titleSpacing: 16,
           title: Text(
             'My Orders',
@@ -99,7 +103,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                       child: Text(
                         'No ${_selectedFilter.toLowerCase()} orders',
                         style: AppTextStyles.body.copyWith(
-                          color: AppColors.secondaryText,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     )
@@ -111,8 +115,14 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                         final order = visibleOrders[index];
                         return _OrderCard(
                           order: order,
-                          onTap: () => Get.to<void>(
-                            () => OrderDetailScreen(
+                          onTap: () => AppRoutes.to<void>(
+                            route: AppRoutes.orderDetails,
+                            arguments: {
+                              'orderNumber': order.number,
+                              'status': order.status,
+                              'isPreview': widget.isPreview,
+                            },
+                            mobileBuilder: () => OrderDetailScreen(
                               orderNumber: order.number,
                               status: order.status,
                               isPreview: widget.isPreview,
@@ -149,7 +159,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   Widget _buildFilterChip(String label) {
     final isSelected = _selectedFilter == label;
     return Material(
-      color: isSelected ? AppColors.primary : AppColors.surface,
+      color: isSelected
+          ? AppColors.primary
+          : Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: () => setState(() => _selectedFilter = label),
@@ -160,7 +172,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
             label,
             style: AppTextStyles.badge.copyWith(
               fontSize: 13,
-              color: isSelected ? AppColors.surface : AppColors.navyDark,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.onPrimary
+                  : Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
@@ -197,8 +211,9 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Material(
-      color: AppColors.surface,
+      color: colorScheme.surface,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -212,14 +227,20 @@ class _OrderCard extends StatelessWidget {
                 children: [
                   Text(
                     order.number,
-                    style: AppTextStyles.badge.copyWith(fontSize: 15),
+                    style: AppTextStyles.badge.copyWith(
+                      fontSize: 15,
+                      color: colorScheme.onSurface,
+                    ),
                   ),
                   _OrderStatusBadge(order: order),
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, color: AppColors.border),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Divider(
+                  height: 1,
+                  color: Theme.of(context).dividerColor,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -229,7 +250,10 @@ class _OrderCard extends StatelessWidget {
                     children: [
                       Text(
                         'Placed on ${order.date}',
-                        style: AppTextStyles.caption.copyWith(fontSize: 12),
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: 12,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(
@@ -239,6 +263,7 @@ class _OrderCard extends StatelessWidget {
                           fontSize: 13,
                           height: 1,
                           fontWeight: FontWeight.w500,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -248,7 +273,10 @@ class _OrderCard extends StatelessWidget {
                     children: [
                       Text(
                         'Total Amount',
-                        style: AppTextStyles.caption.copyWith(fontSize: 12),
+                        style: AppTextStyles.caption.copyWith(
+                          fontSize: 12,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Text(

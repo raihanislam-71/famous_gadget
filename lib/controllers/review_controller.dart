@@ -50,27 +50,6 @@ class ReviewController extends GetxController {
     ),
   ];
 
-  final List<Review> previewReviews = [
-    Review(
-      name: 'Aisha Rahman',
-      rating: 5,
-      reviewText: 'These are hands-down the best over-ears I have owned. The sound is incredibly detailed, noise cancellation is almost silent, and they stay comfortable even after a full day of travel.',
-      date: DateTime(2026, 3, 12),
-    ),
-    Review(
-      name: 'Omar Khan',
-      rating: 5,
-      reviewText: 'Great overall, but the case feels a bit larger than I expected. The sound quality and touch controls are worth it.',
-      date: DateTime(2026, 3, 8),
-    ),
-    Review(
-      name: 'Priya Sengupta',
-      rating: 5,
-      reviewText: 'Perfect for long flights. The ANC is incredible in loud environments and the battery life easily lasts a full day.',
-      date: DateTime(2026, 3, 2),
-    ),
-  ];
-
   List<Review> get sortedReviews {
     final sorted = [...reviews];
     switch (selectedSort) {
@@ -83,6 +62,17 @@ class ReviewController extends GetxController {
     }
     return sorted;
   }
+
+  List<Review> get previewReviews => sortedReviews.take(3).toList();
+
+  double get averageRating {
+    if (reviews.isEmpty) return 0;
+    return reviews.fold<int>(0, (total, review) => total + review.rating) /
+        reviews.length;
+  }
+
+  int getRatingCount(int rating) =>
+      reviews.where((review) => review.rating == rating).length;
 
   void setSortOption(String value) {
     selectedSort = value;

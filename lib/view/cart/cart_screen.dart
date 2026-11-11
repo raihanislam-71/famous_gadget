@@ -7,6 +7,7 @@ import '../../controllers/bottom_nav_controller.dart';
 import '../../controllers/cart_controller.dart';
 import '../../models/cart_item.dart';
 import '../checkout/checkout_delivery_screen.dart';
+import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
@@ -17,20 +18,23 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.find<CartController>();
+    final isWideLayout = MediaQuery.sizeOf(context).width >= 900;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.pageBackground,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+      value: SystemUiOverlayStyle(
+        statusBarColor: theme.scaffoldBackgroundColor,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: GetBuilder<CartController>(
         builder: (controller) => Scaffold(
-          backgroundColor: AppColors.pageBackground,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            backgroundColor: AppColors.surface,
-            foregroundColor: AppColors.navyDark,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            foregroundColor: Theme.of(context).colorScheme.onSurface,
             elevation: 0,
             scrolledUnderElevation: 0,
             toolbarHeight: 60,
@@ -59,12 +63,15 @@ class CartScreen extends StatelessWidget {
                 : _PopulatedCart(
                     controller: cartController,
                     items: controller.items,
+                    isWideLayout: isWideLayout,
                   ),
           ),
           bottomNavigationBar:
               controller.items.isEmpty ||
                   controller.isLoading ||
                   controller.errorMessage != null
+              ? null
+              : isWideLayout
               ? null
               : _CartSummary(controller: cartController),
         ),
@@ -131,7 +138,10 @@ class _EmptyCart extends StatelessWidget {
               width: 280,
               child: OutlinedButton(
                 onPressed: () {
-                  Get.to<void>(() => const CheckoutDeliveryScreen());
+                  AppRoutes.to<void>(
+                    route: AppRoutes.checkoutDelivery,
+                    mobileBuilder: () => const CheckoutDeliveryScreen(),
+                  );
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,
@@ -190,14 +200,19 @@ class _CartLoadError extends StatelessWidget {
 }
 
 class _PopulatedCart extends StatelessWidget {
-  const _PopulatedCart({required this.controller, required this.items});
+  const _PopulatedCart({
+    required this.controller,
+    required this.items,
+    required this.isWideLayout,
+  });
 
   final CartController controller;
   final List<CartItem> items;
+  final bool isWideLayout;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    Widget itemList() => ListView.separated(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       itemCount: items.length,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
@@ -210,6 +225,22 @@ class _PopulatedCart extends StatelessWidget {
           onRemove: () => controller.removeProduct(item.id),
         );
       },
+    );
+
+    if (!isWideLayout) return itemList();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: itemList()),
+        SizedBox(
+          width: 360,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
+            child: _CartSummary(controller: controller),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -232,7 +263,7 @@ class _CartItemCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -247,7 +278,7 @@ class _CartItemCard extends StatelessWidget {
               errorBuilder: (_, _, _) => Container(
                 width: 88,
                 height: 88,
-                color: AppColors.pageBackground,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 child: const Icon(
                   Icons.devices_other,
                   color: AppColors.secondaryText,
@@ -316,6 +347,7 @@ class _QuantityButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onPressed,
       borderRadius: BorderRadius.circular(8),
@@ -323,10 +355,14 @@ class _QuantityButton extends StatelessWidget {
         width: 28,
         height: 28,
         decoration: BoxDecoration(
-          color: AppColors.pageBackground,
+          color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(icon, size: 16, color: AppColors.navyDark),
+        child: Icon(
+          icon,
+          size: 16,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
       ),
     );
   }
@@ -343,9 +379,10 @@ class _CartSummary extends StatelessWidget {
       top: false,
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          border: Border(top: BorderSide(color: AppColors.border)),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border: Border.all(color: Theme.of(context).dividerColor),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -365,7 +402,10 @@ class _CartSummary extends StatelessWidget {
               label: 'Checkout (Cash on Delivery)',
               height: 48,
               onPressed: () {
-                Get.to<void>(() => const CheckoutDeliveryScreen());
+                AppRoutes.to<void>(
+                  route: AppRoutes.checkoutDelivery,
+                  mobileBuilder: () => const CheckoutDeliveryScreen(),
+                );
               },
             ),
             const SizedBox(height: 4),

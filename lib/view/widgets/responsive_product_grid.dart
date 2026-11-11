@@ -18,7 +18,11 @@ class ResponsiveProductGrid extends StatelessWidget {
         : screenWidth > 600
         ? 3
         : 2;
-    final childAspectRatio = screenWidth < 380 ? 0.8 : 0.9;
+    final horizontalSpacing = 12.0;
+    final availableWidth =
+        screenWidth - 24 - horizontalSpacing * (crossAxisCount - 1);
+    final itemWidth = availableWidth / crossAxisCount;
+    final childAspectRatio = itemWidth < 228 ? itemWidth / 240 : 0.95;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -28,7 +32,7 @@ class ResponsiveProductGrid extends StatelessWidget {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
+        crossAxisSpacing: horizontalSpacing,
         childAspectRatio: childAspectRatio,
       ),
       itemBuilder: itemBuilder,

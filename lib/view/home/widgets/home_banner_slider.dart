@@ -203,7 +203,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
           valueListenable: _selectedIndex,
           builder: (context, currentIndex, _) {
             return Positioned(
-              bottom: 10,
+              bottom: 0,
               left: 0,
               right: 0,
               child: Row(
@@ -300,7 +300,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
                           backgroundColor: AppColors.themeColor,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
-                            vertical: 12,
+                            vertical: 8,
                           ),
                           minimumSize: Size.zero,
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,

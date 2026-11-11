@@ -18,14 +18,15 @@ class CategoryGridCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: colorScheme.outlineVariant),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,8 +47,8 @@ class CategoryGridCard extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.black,
+              style: TextStyle(
+                color: colorScheme.onSurface,
                 fontWeight: FontWeight.w600,
                 fontSize: 11,
                 height: 1.15,
@@ -59,7 +60,10 @@ class CategoryGridCard extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 9),
+              style: TextStyle(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 9,
+              ),
             ),
           ],
         ),

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/auth_controller.dart';
 import '../../controllers/profile_controller.dart';
+import '../../controllers/theme_controller.dart';
 import '../checkout/my_orders_screen.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
@@ -12,6 +13,7 @@ import '../wishlist/wishlist_screen.dart';
 import 'change_password_screen.dart';
 import 'edit_profile_screen.dart';
 import 'my_addresses_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -36,15 +38,15 @@ class _GuestAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
-      appBar: _accountAppBar('My Profile'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: _accountAppBar(context, 'My Profile'),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 104),
         children: [
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(24),
-            color: AppColors.surface,
+            color: Theme.of(context).colorScheme.surface,
             child: Column(
               children: [
                 Container(
@@ -114,8 +116,11 @@ class _GuestAccount extends StatelessWidget {
                   title: 'My Orders',
                   subtitle: 'Track active & past shipments',
                   onTap: () => _requireLogin(
-                    () => Get.to<void>(
-                      () => const MyOrdersScreen(isPreview: true),
+                    () => AppRoutes.to<void>(
+                      route: AppRoutes.orders,
+                      arguments: const {'isPreview': true},
+                      mobileBuilder: () =>
+                          const MyOrdersScreen(isPreview: true),
                     ),
                   ),
                 ),
@@ -124,7 +129,10 @@ class _GuestAccount extends StatelessWidget {
                   title: 'Wishlist',
                   subtitle: 'View saved items to buy later',
                   onTap: () => _requireLogin(
-                    () => Get.to<void>(() => const WishlistScreen()),
+                    () => AppRoutes.to<void>(
+                      route: AppRoutes.wishlist,
+                      mobileBuilder: () => const WishlistScreen(),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -132,7 +140,10 @@ class _GuestAccount extends StatelessWidget {
                   title: 'Saved Addresses',
                   subtitle: 'Manage Dhaka delivery zones',
                   onTap: () => _requireLogin(
-                    () => Get.to<void>(() => const MyAddressesScreen()),
+                    () => AppRoutes.to<void>(
+                      route: AppRoutes.addresses,
+                      mobileBuilder: () => const MyAddressesScreen(),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -180,7 +191,7 @@ class _GuestLockedItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surface,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -231,14 +242,14 @@ class _LoggedInAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.pageBackground,
-      appBar: _accountAppBar('My Account'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: _accountAppBar(context, 'My Account'),
       body: GetBuilder<ProfileController>(
         builder: (profile) => ListView(
           padding: const EdgeInsets.only(bottom: 104),
           children: [
             Container(
-              color: AppColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               padding: const EdgeInsets.all(20),
               child: Row(
                 children: [
@@ -255,7 +266,7 @@ class _LoggedInAccount extends StatelessWidget {
                       style: AppTextStyles.h2.copyWith(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.surface,
+                        color: Theme.of(context).colorScheme.surface,
                       ),
                     ),
                   ),
@@ -301,33 +312,45 @@ class _LoggedInAccount extends StatelessWidget {
                       _AccountMenuItem(
                         title: 'Edit Profile',
                         iconPath: AssetsPath.accountGuestUser,
-                        onTap: () =>
-                            Get.to<void>(() => const EditProfileScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.editProfile,
+                          mobileBuilder: () => const EditProfileScreen(),
+                        ),
                       ),
                       _AccountMenuItem(
                         title: 'Change Password',
                         iconPath: AssetsPath.accountLock,
-                        onTap: () =>
-                            Get.to<void>(() => const ChangePasswordScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.changePassword,
+                          mobileBuilder: () => const ChangePasswordScreen(),
+                        ),
                       ),
                       _AccountMenuItem(
                         title: 'My Addresses',
                         iconPath: AssetsPath.accountMapPin,
-                        onTap: () =>
-                            Get.to<void>(() => const MyAddressesScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.addresses,
+                          mobileBuilder: () => const MyAddressesScreen(),
+                        ),
                       ),
                       _AccountMenuItem(
                         title: 'My Orders',
                         iconPath: AssetsPath.accountPackage,
-                        onTap: () => Get.to<void>(
-                          () => const MyOrdersScreen(isPreview: true),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.orders,
+                          arguments: const {'isPreview': true},
+                          mobileBuilder: () =>
+                              const MyOrdersScreen(isPreview: true),
                         ),
                       ),
                       _AccountMenuItem(
                         title: 'My Wishlist',
                         iconPath: AssetsPath.accountHeart,
                         isLast: true,
-                        onTap: () => Get.to<void>(() => const WishlistScreen()),
+                        onTap: () => AppRoutes.to<void>(
+                          route: AppRoutes.wishlist,
+                          mobileBuilder: () => const WishlistScreen(),
+                        ),
                       ),
                     ],
                   ),
@@ -349,7 +372,7 @@ class _LoggedInAccount extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   Material(
-                    color: AppColors.surface,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     child: InkWell(
                       onTap: _confirmLogout,
@@ -424,7 +447,7 @@ class _AccountMenuGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surface,
+      color: Theme.of(context).colorScheme.surface,
       child: Column(children: children),
     );
   }
@@ -457,7 +480,17 @@ class _AccountMenuItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            SvgPicture.asset(iconPath, width: 20, height: 20),
+            SvgPicture.asset(
+              iconPath,
+              width: 20,
+              height: 20,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.surface
+                    : AppColors.navyDark,
+                BlendMode.srcIn,
+              ),
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -465,7 +498,17 @@ class _AccountMenuItem extends StatelessWidget {
                 style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
               ),
             ),
-            SvgPicture.asset(AssetsPath.accountChevron, width: 16, height: 16),
+            SvgPicture.asset(
+              AssetsPath.accountChevron,
+              width: 20,
+              height: 20,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.surface
+                    : AppColors.navyDark,
+                BlendMode.srcIn,
+              ),
+            ),
           ],
         ),
       ),
@@ -473,11 +516,11 @@ class _AccountMenuItem extends StatelessWidget {
   }
 }
 
-AppBar _accountAppBar(String title) {
+AppBar _accountAppBar(BuildContext context, String title) {
   return AppBar(
     automaticallyImplyLeading: false,
-    backgroundColor: AppColors.surface,
-    foregroundColor: AppColors.navyDark,
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    foregroundColor: Theme.of(context).colorScheme.onSurface,
     elevation: 0,
     scrolledUnderElevation: 0,
     shape: const Border(bottom: BorderSide(color: AppColors.border)),
@@ -490,6 +533,19 @@ AppBar _accountAppBar(String title) {
         fontWeight: FontWeight.w700,
       ),
     ),
+    actions: [
+      GetBuilder<ThemeController>(
+        builder: (controller) => IconButton(
+          tooltip: controller.isDarkMode
+              ? 'Switch to light mode'
+              : 'Switch to dark mode',
+          onPressed: controller.toggleTheme,
+          icon: Icon(
+            controller.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+          ),
+        ),
+      ),
+    ],
   );
 }
 

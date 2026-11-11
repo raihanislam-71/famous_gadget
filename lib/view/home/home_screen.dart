@@ -1,11 +1,12 @@
-import 'package:bdcalling_class/view/category/category_screen.dart';
-import 'package:bdcalling_class/view/widgets/recommended_for_you_grid_card.dart';
 import 'package:bdcalling_class/view/widgets/section_header.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 
+import '../../controllers/theme_controller.dart';
+import '../navigation/app_navigation.dart';
+import '../category/category_screen.dart';
 import '../utils/assets_path.dart';
-import '../widgets/hot_deal_grid_card.dart';
+import '../widgets/product_card.dart';
 import 'widgets/home_banner_slider.dart';
 import 'widgets/horizontal_category_list_view.dart';
 import 'widgets/horizontal_product_list_view.dart';
@@ -22,7 +23,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: _buildAppBar(),
-      backgroundColor: const Color(0xFFF3F5FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -36,7 +37,10 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 16),
               SectionHeader(
                 title: 'Category',
-                onTap: () => Get.to(() => const CategoryScreen()),
+                onTap: () => AppRoutes.to<void>(
+                  route: AppRoutes.categories,
+                  mobileBuilder: () => const CategoryScreen(),
+                ),
               ),
               const SizedBox(height: 16),
               _buildCategoriesSection(),
@@ -95,11 +99,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   static Widget _buildRecommendedProduct(BuildContext context, int index) {
-    return const RecommendedForYouGridCard();
+    return ProductCard(productId: '$index', width: double.infinity);
   }
 
   static Widget _buildHotDealProduct(BuildContext context, int index) {
-    return const HotDealGridCard();
+    return ProductCard(productId: '${index + 4}', width: double.infinity);
   }
 
   Widget _buildFeaturedProductSection() {
@@ -108,12 +112,16 @@ class HomeScreen extends StatelessWidget {
 
   AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
+      backgroundColor: Get.theme.colorScheme.surface,
+      foregroundColor: Get.theme.colorScheme.onSurface,
+      surfaceTintColor: Get.theme.colorScheme.surface,
       title: Row(
         children: [
           Image.asset(AssetsPath.appLogo),
-          Image.asset(AssetsPath.appName, color: Colors.black),
+          Image.asset(
+            AssetsPath.appName,
+            color: Get.theme.colorScheme.onSurface,
+          ),
         ],
       ),
       actions: [
@@ -121,6 +129,17 @@ class HomeScreen extends StatelessWidget {
         IconButton(
           onPressed: () {},
           icon: const Icon(Icons.notifications, size: 32),
+        ),
+        GetBuilder<ThemeController>(
+          builder: (controller) => IconButton(
+            tooltip: controller.isDarkMode
+                ? 'Switch to light mode'
+                : 'Switch to dark mode',
+            onPressed: controller.toggleTheme,
+            icon: Icon(
+              controller.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+            ),
+          ),
         ),
       ],
     );

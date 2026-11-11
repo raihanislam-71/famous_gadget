@@ -10,13 +10,14 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: const Color(0xFFE6E8EC)),
+          color: theme.colorScheme.surface,
+          border: Border.all(color: theme.dividerColor),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -29,10 +30,10 @@ class ReviewCard extends StatelessWidget {
                     review.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 10,
+                    style: TextStyle(
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF17191D),
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -40,25 +41,28 @@ class ReviewCard extends StatelessWidget {
                 RatingBarIndicator(
                   rating: review.rating.toDouble(),
                   itemCount: 5,
-                  itemSize: 10,
-                  unratedColor: const Color(0xFFE7E9ED),
+                  itemSize: 14,
+                  unratedColor: theme.colorScheme.surfaceContainerHighest,
                   itemBuilder: (context, index) =>
                       const Icon(Icons.star, color: Color(0xFFFF8A00)),
                 ),
                 const SizedBox(width: 5),
                 Text(
                   DateFormat('dd MMM yyyy').format(review.date),
-                  style: const TextStyle(fontSize: 8, color: Color(0xFF777D87)),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 7),
             Text(
               review.reviewText,
-              style: const TextStyle(
-                fontSize: 10,
-                height: 1.4,
-                color: Color(0xFF30343A),
+              style: TextStyle(
+                fontSize: 14,
+                height: 1.5,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ],

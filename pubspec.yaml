@@ -70,6 +70,7 @@ flutter:
     - assets/images/figma_checkout/
     - assets/images/figma_wishlist/
     - assets/images/figma_account/
+    - assets/images/figma_web/
 
   fonts:
     - family: Outfit
