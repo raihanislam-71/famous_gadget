@@ -138,9 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
         ],
-        style: AppTextStyles.body.copyWith(
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
+        style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
         validator: (value) {
           final phone = value?.trim() ?? '';
           if (phone.length != 10 || !phone.startsWith('1')) {
@@ -150,9 +148,27 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         onFieldSubmitted: (_) => _submit(),
         decoration: InputDecoration(
-          prefixText: '+880 ',
-          prefixStyle: AppTextStyles.body.copyWith(
-            color: AppColors.secondaryText,
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 14, right: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '+880',
+                  style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  width: 1,
+                  height: 18,
+                  color: Theme.of(context).dividerColor,
+                ),
+              ],
+            ),
+          ),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 48,
           ),
           hintText: '1XXXXXXXXX',
           hintStyle: AppTextStyles.body.copyWith(

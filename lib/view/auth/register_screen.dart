@@ -28,16 +28,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
 
   @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -139,10 +129,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         controller: controller,
         textCapitalization: TextCapitalization.words,
         textInputAction: TextInputAction.next,
+        
         validator: (value) =>
             value == null || value.trim().isEmpty ? 'Required' : null,
         style: AppTextStyles.body.copyWith(
-          fontSize: 13,
+          fontSize: 15,
           height: 1,
           color: Theme.of(context).colorScheme.onSurface,
         ),
@@ -162,17 +153,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
         ],
+        style: AppTextStyles.body.copyWith(
+          fontSize: 15,
+          height: 1,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         validator: (value) {
           final phone = value?.trim() ?? '';
           return phone.length == 10 && phone.startsWith('1')
               ? null
               : 'Enter a valid phone number';
         },
-        style: AppTextStyles.body.copyWith(
-          fontSize: 13,
-          height: 1,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
         decoration: _inputDecoration(
           prefixIcon: Padding(
             padding: const EdgeInsets.only(left: 14, right: 8),
@@ -181,11 +172,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Text(
                   '+880',
-                  style: AppTextStyles.uiSemibold.copyWith(fontSize: 13),
+                  style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
                 ),
                 const SizedBox(width: 8),
-                Container(width: 1, height: 18, color: AppColors.border),
-                const SizedBox(width: 8),
+                Container(
+                  width: 1,
+                  height: 18,
+                  color: Theme.of(context).dividerColor,
+                ),
               ],
             ),
           ),
@@ -209,7 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               : 'Enter a valid email address';
         },
         style: AppTextStyles.body.copyWith(
-          fontSize: 13,
+          fontSize: 15,
           height: 1,
           color: Theme.of(context).colorScheme.onSurface,
         ),
@@ -228,7 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: (value) =>
             (value?.length ?? 0) >= 8 ? null : 'Use at least 8 characters',
         style: AppTextStyles.body.copyWith(
-          fontSize: 13,
+          fontSize: 15,
           height: 1,
           color: Theme.of(context).colorScheme.onSurface,
         ),
@@ -334,11 +328,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return InputDecoration(
       constraints: const BoxConstraints(minHeight: 44),
       hintText: hintText,
-      hintStyle: AppTextStyles.body.copyWith(
-        fontSize: 13,
-        height: 1,
-        color: AppColors.secondaryText,
-      ),
+      hintStyle: AppTextStyles.body.copyWith(color: AppColors.secondaryText),
       prefixIcon: prefixIcon,
       prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 44),
       suffixIcon: suffixIcon,
@@ -381,6 +371,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         onVerified: widget.onRegisterSuccess,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
 
