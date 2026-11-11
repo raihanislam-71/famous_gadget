@@ -479,7 +479,12 @@ class _HeaderIconButton extends StatelessWidget {
       padding: EdgeInsets.zero,
       icon: Badge(
         isLabelVisible: badge > 0,
-        label: Text('$badge'),
+        backgroundColor: AppColors.dangerRed,
+        textColor: AppColors.pageBackground,
+        label: Text(
+          '$badge',
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
         child: Icon(icon),
       ),
     );
