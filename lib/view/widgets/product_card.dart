@@ -1,5 +1,5 @@
-import 'package:bdcalling_class/view/product_details/out_of_stock_product_details_screen.dart';
-import 'package:bdcalling_class/view/product_details/product_details_screen.dart';
+import 'package:famous_gadget/view/product_details/out_of_stock_product_details_screen.dart';
+import 'package:famous_gadget/view/product_details/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/product.dart';

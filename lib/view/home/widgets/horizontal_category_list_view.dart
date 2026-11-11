@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/view/utils/assets_path.dart';
+import 'package:famous_gadget/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 
 import '../../category/sub_category_screen.dart';

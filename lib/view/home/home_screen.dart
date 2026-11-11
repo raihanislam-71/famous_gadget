@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/view/widgets/section_header.dart';
+import 'package:famous_gadget/view/widgets/section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

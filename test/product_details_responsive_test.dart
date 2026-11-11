@@ -1,9 +1,9 @@
-import 'package:bdcalling_class/controllers/product_cart_button_controller.dart';
-import 'package:bdcalling_class/controllers/review_controller.dart';
-import 'package:bdcalling_class/view/product_details/out_of_stock_product_details_screen.dart';
-import 'package:bdcalling_class/view/product_details/product_details_screen.dart';
-import 'package:bdcalling_class/view/navigation/app_routes.dart';
-import 'package:bdcalling_class/view/utils/app_theme.dart';
+import 'package:famous_gadget/controllers/product_cart_button_controller.dart';
+import 'package:famous_gadget/controllers/review_controller.dart';
+import 'package:famous_gadget/view/product_details/out_of_stock_product_details_screen.dart';
+import 'package:famous_gadget/view/product_details/product_details_screen.dart';
+import 'package:famous_gadget/view/navigation/app_routes.dart';
+import 'package:famous_gadget/view/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';

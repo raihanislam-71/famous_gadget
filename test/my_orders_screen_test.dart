@@ -1,6 +1,6 @@
-import 'package:bdcalling_class/view/checkout/my_orders_screen.dart';
-import 'package:bdcalling_class/view/utils/app_colors.dart';
-import 'package:bdcalling_class/view/utils/app_theme.dart';
+import 'package:famous_gadget/view/checkout/my_orders_screen.dart';
+import 'package:famous_gadget/view/utils/app_colors.dart';
+import 'package:famous_gadget/view/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

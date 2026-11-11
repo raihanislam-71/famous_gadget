@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:bdcalling_class/controllers/review_controller.dart';
+import 'package:famous_gadget/controllers/review_controller.dart';
 import 'package:get/get.dart';
 
 import '../navigation/app_navigation.dart';

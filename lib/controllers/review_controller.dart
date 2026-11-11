@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/models/review.dart';
+import 'package:famous_gadget/models/review.dart';
 import 'package:get/get.dart';
 
 class ReviewController extends GetxController {

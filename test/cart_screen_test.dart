@@ -1,8 +1,8 @@
-import 'package:bdcalling_class/controllers/bottom_nav_controller.dart';
-import 'package:bdcalling_class/controllers/cart_controller.dart';
-import 'package:bdcalling_class/view/cart/cart_screen.dart';
-import 'package:bdcalling_class/view/navigation/main_bottom_nav_screen.dart';
-import 'package:bdcalling_class/view/utils/app_theme.dart';
+import 'package:famous_gadget/controllers/bottom_nav_controller.dart';
+import 'package:famous_gadget/controllers/cart_controller.dart';
+import 'package:famous_gadget/view/cart/cart_screen.dart';
+import 'package:famous_gadget/view/navigation/main_bottom_nav_screen.dart';
+import 'package:famous_gadget/view/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';

@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/models/product.dart';
+import 'package:famous_gadget/models/product.dart';
 import 'package:get/get.dart';
 
 import 'auth_controller.dart';
