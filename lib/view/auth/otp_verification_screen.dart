@@ -58,7 +58,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Column(
             children: [
@@ -138,7 +138,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           TextSpan(
             text: '+880 ${widget.phoneNumber}',
             style: AppTextStyles.body.copyWith(
-              color: AppColors.navyDark,
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w700,
               height: 1.5,
             ),
@@ -156,10 +156,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       textStyle: AppTextStyles.h2.copyWith(
         fontSize: 22,
         fontWeight: FontWeight.w700,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border.all(color: AppColors.border),
+        color: Theme.of(context).colorScheme.surface,
+        border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(12),
       ),
     );
@@ -176,7 +177,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       submittedPinTheme: defaultTheme,
       focusedPinTheme: defaultTheme.copyWith(
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: Theme.of(context).colorScheme.surface,
           border: Border.all(color: AppColors.primary, width: 2),
           borderRadius: BorderRadius.circular(12),
         ),

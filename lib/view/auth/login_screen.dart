@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
+import '../navigation/app_navigation.dart';
 import 'otp_verification_screen.dart';
 import 'register_screen.dart';
 
@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Column(
             children: [
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           'Phone Number',
                           style: AppTextStyles.badge.copyWith(
                             fontSize: 13,
-                            color: AppColors.navyDark,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(10),
         ],
-        style: AppTextStyles.body,
+        style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
         validator: (value) {
           final phone = value?.trim() ?? '';
           if (phone.length != 10 || !phone.startsWith('1')) {
@@ -148,16 +148,34 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         onFieldSubmitted: (_) => _submit(),
         decoration: InputDecoration(
-          prefixText: '+880 ',
-          prefixStyle: AppTextStyles.body.copyWith(
-            color: AppColors.secondaryText,
+          prefixIcon: Padding(
+            padding: const EdgeInsets.only(left: 14, right: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '+880',
+                  style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  width: 1,
+                  height: 18,
+                  color: Theme.of(context).dividerColor,
+                ),
+              ],
+            ),
+          ),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 48,
           ),
           hintText: '1XXXXXXXXX',
           hintStyle: AppTextStyles.body.copyWith(
             color: AppColors.secondaryText,
           ),
           filled: true,
-          fillColor: AppColors.surface,
+          fillColor: Theme.of(context).colorScheme.surface,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
@@ -188,8 +206,11 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         TextButton(
           onPressed: () {
-            Get.to<void>(
-              () => RegisterScreen(onRegisterSuccess: widget.onRegisterSuccess),
+            AppRoutes.to<void>(
+              route: AppRoutes.register,
+              arguments: {'onRegisterSuccess': widget.onRegisterSuccess},
+              mobileBuilder: () =>
+                  RegisterScreen(onRegisterSuccess: widget.onRegisterSuccess),
             );
           },
           style: TextButton.styleFrom(
@@ -216,9 +237,15 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    Get.to<void>(
-      () => OtpVerificationScreen(
-        phoneNumber: _phoneController.text.trim(),
+    final phoneNumber = _phoneController.text.trim();
+    AppRoutes.to<void>(
+      route: AppRoutes.otp,
+      arguments: {
+        'phoneNumber': phoneNumber,
+        'onVerified': widget.onLoginSuccess,
+      },
+      mobileBuilder: () => OtpVerificationScreen(
+        phoneNumber: phoneNumber,
         onVerified: widget.onLoginSuccess,
       ),
     );

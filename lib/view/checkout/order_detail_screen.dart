@@ -21,20 +21,24 @@ class OrderDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCurrent = status == 'Processing';
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.pageBackground,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDarkMode
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
+          automaticallyImplyLeading: false,
           titleSpacing: 16,
           title: Text(
             'Order $orderNumber',
@@ -44,24 +48,24 @@ class OrderDetailScreen extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _buildStatusCard(isCurrent),
+            _buildStatusCard(context, isCurrent),
             const SizedBox(height: 16),
-            _buildTrackingCard(),
+            _buildTrackingCard(context),
             const SizedBox(height: 16),
-            _buildDeliveryCard(),
+            _buildDeliveryCard(context),
             const SizedBox(height: 16),
-            _buildItemsCard(),
+            _buildItemsCard(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStatusCard(bool isCurrent) {
+  Widget _buildStatusCard(BuildContext context, bool isCurrent) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -100,11 +104,11 @@ class OrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTrackingCard() {
+  Widget _buildTrackingCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -118,10 +122,20 @@ class OrderDetailScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTrackingStep('Ordered', 'Mar 15, 2024', isComplete: true),
-              _buildTrackingStep('Confirmed', 'Mar 15, 2024', isComplete: true),
-              _buildTrackingStep('Shipped', 'Pending'),
-              _buildTrackingStep('Delivered', 'Pending'),
+              _buildTrackingStep(
+                context,
+                'Ordered',
+                'Mar 15, 2024',
+                isComplete: true,
+              ),
+              _buildTrackingStep(
+                context,
+                'Confirmed',
+                'Mar 15, 2024',
+                isComplete: true,
+              ),
+              _buildTrackingStep(context, 'Shipped', 'Pending'),
+              _buildTrackingStep(context, 'Delivered', 'Pending'),
             ],
           ),
         ],
@@ -130,11 +144,14 @@ class OrderDetailScreen extends StatelessWidget {
   }
 
   Widget _buildTrackingStep(
+    BuildContext context,
     String title,
     String date, {
     bool isComplete = false,
   }) {
-    final color = isComplete ? AppColors.primary : AppColors.border;
+    final color = isComplete
+        ? AppColors.primary
+        : Theme.of(context).dividerColor;
     return SizedBox(
       width: 68,
       child: Column(
@@ -164,7 +181,9 @@ class OrderDetailScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.badge.copyWith(
               fontSize: 12,
-              color: isComplete ? AppColors.navyDark : AppColors.secondaryText,
+              color: isComplete
+                  ? Theme.of(context).colorScheme.onSurface
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 4),
@@ -175,9 +194,7 @@ class OrderDetailScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.caption.copyWith(
               fontSize: 9,
-              color: isComplete
-                  ? AppColors.secondaryText
-                  : AppColors.secondaryText,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -185,11 +202,11 @@ class OrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDeliveryCard() {
+  Widget _buildDeliveryCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -210,7 +227,7 @@ class OrderDetailScreen extends StatelessWidget {
             style: AppTextStyles.body.copyWith(
               fontSize: 13,
               height: 1.3,
-              color: AppColors.secondaryText,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           Text(
@@ -218,18 +235,23 @@ class OrderDetailScreen extends StatelessWidget {
             style: AppTextStyles.body.copyWith(
               fontSize: 13,
               height: 1.5,
-              color: AppColors.secondaryText,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
-            child: Divider(height: 1, color: AppColors.border),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Divider(height: 1, color: Theme.of(context).dividerColor),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildDeliveryInfo('Shipping Option', 'Standard Delivery'),
               _buildDeliveryInfo(
+                context,
+                'Shipping Option',
+                'Standard Delivery',
+              ),
+              _buildDeliveryInfo(
+                context,
                 'Payment Method',
                 'Cash on Delivery',
                 alignEnd: true,
@@ -242,6 +264,7 @@ class OrderDetailScreen extends StatelessWidget {
   }
 
   Widget _buildDeliveryInfo(
+    BuildContext context,
     String label,
     String value, {
     bool alignEnd = false,
@@ -258,11 +281,11 @@ class OrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildItemsCard() {
+  Widget _buildItemsCard(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(

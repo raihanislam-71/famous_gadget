@@ -1,8 +1,8 @@
 import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../category/sub_category_screen.dart';
+import '../../navigation/app_navigation.dart';
 import 'category_card.dart';
 
 class HorizontalCategoriesListView extends StatelessWidget {
@@ -35,7 +35,12 @@ class HorizontalCategoriesListView extends StatelessWidget {
           imagePath: _categoryImagePath[index],
           categoryName: _categoryName[index],
           onTap: () {
-            Get.to(() => SubCategoryScreen(categoryName: _categoryName[index]));
+            AppRoutes.to<void>(
+              route: AppRoutes.subCategory,
+              arguments: {'categoryName': _categoryName[index]},
+              mobileBuilder: () =>
+                  SubCategoryScreen(categoryName: _categoryName[index]),
+            );
           },
         );
       },

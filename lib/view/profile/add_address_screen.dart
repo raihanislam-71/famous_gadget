@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -24,17 +25,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   late final TextEditingController _streetController;
   late final TextEditingController _cityController;
   late final TextEditingController _postCodeController;
-  late String _district;
+  late final TextEditingController _districtController;
   late bool _isDefault;
-
-  static const _districts = [
-    'Uttara',
-    'Dhanmondi',
-    'Mirpur',
-    'Gulshan',
-    'Banani',
-    'Bashundhara',
-  ];
 
   @override
   void initState() {
@@ -48,128 +40,161 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     );
     _cityController = TextEditingController(text: address?.city ?? '');
     _postCodeController = TextEditingController(text: address?.postCode ?? '');
-    _district = address?.district ?? _districts.first;
+    _districtController = TextEditingController(text: address?.district ?? '');
     _isDefault = address?.isDefault ?? false;
   }
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
-    _streetController.dispose();
-    _cityController.dispose();
-    _postCodeController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.pageBackground,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDarkMode
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
-        appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          surfaceTintColor: AppColors.surface,
-          shape: const Border(bottom: BorderSide(color: AppColors.border)),
-          toolbarHeight: 56,
-          titleSpacing: 0,
-          title: Text(
-            widget.address == null ? 'Add New Address' : 'Edit Address',
-            style: AppTextStyles.h2.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
+        // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        // appBar: AppBar(
+        //   backgroundColor: Theme.of(context).colorScheme.surface,
+        //   foregroundColor: Theme.of(context).colorScheme.onSurface,
+        //   elevation: 0,
+        //   scrolledUnderElevation: 0,
+        //   surfaceTintColor: Theme.of(context).colorScheme.surface,
+        //   shape: const Border(bottom: BorderSide(color: AppColors.border)),
+        //   toolbarHeight: 60,
+        //   automaticallyImplyLeading: false,
+        //   titleSpacing: 0,
+        //   title: Text(
+        //     widget.address == null ? 'Add New Address' : 'Edit Address',
+        //     style: AppTextStyles.h2.copyWith(
+        //       fontSize: 18,
+        //       fontWeight: FontWeight.w700,
+        //     ),
+        //   ),
+        // ),
         body: SafeArea(
           top: false,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                    child: Column(
-                      children: [
-                        _buildTextField(
-                          label: 'Full Name',
-                          controller: _nameController,
-                          capitalization: TextCapitalization.words,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 920),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 760),
+                        child: Container(
+                          margin: const EdgeInsets.all(kIsWeb ? 20 : 0),
+                          decoration: kIsWeb
+                              ? BoxDecoration(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: Theme.of(context).dividerColor,
+                                  ),
+                                )
+                              : null,
+                          child: Padding(
+                            padding: const EdgeInsets.all(kIsWeb ? 24 : 0),
+                            child: _buildAddressForm(context),
+                          ),
                         ),
-                        const SizedBox(height: 12),
-                        _buildTextField(
-                          label: 'Phone Number',
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildTextField(
-                          label: 'Email (Optional)',
-                          controller: _emailController,
-                          hintText: 'e.g. arif@gmail.com',
-                          keyboardType: TextInputType.emailAddress,
-                          validator: _validateEmail,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildTextField(
-                          label: 'Street Address',
-                          controller: _streetController,
-                          hintText: 'House, road, area',
-                          capitalization: TextCapitalization.sentences,
-                          maxLines: 2,
-                          minLines: 2,
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: _buildTextField(
-                                label: 'City',
-                                controller: _cityController,
-                                capitalization: TextCapitalization.words,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _buildTextField(
-                                label: 'Postcode',
-                                controller: _postCodeController,
-                                keyboardType: TextInputType.number,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        _buildDistrictDropdown(),
-                        const SizedBox(height: 8),
-                        _buildDefaultSwitch(),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                  child: AppPrimaryButton(
-                    label: 'Save Address',
-                    height: 48,
-                    onPressed: _saveAddress,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildAddressForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              child: Column(
+                children: [
+                  _buildTextField(
+                    label: 'Full Name',
+                    controller: _nameController,
+                    capitalization: TextCapitalization.words,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildTextField(
+                    label: 'Phone Number',
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildTextField(
+                    label: 'Email (Optional)',
+                    controller: _emailController,
+                    hintText: 'e.g. arif@gmail.com',
+                    keyboardType: TextInputType.emailAddress,
+                    validator: _validateEmail,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildTextField(
+                    label: 'Street Address',
+                    controller: _streetController,
+                    hintText: 'House, road, area',
+                    capitalization: TextCapitalization.sentences,
+                    maxLines: 2,
+                    minLines: 2,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: _buildTextField(
+                          label: 'City',
+                          controller: _cityController,
+                          capitalization: TextCapitalization.words,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildTextField(
+                          label: 'Postcode',
+                          controller: _postCodeController,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  _buildTextField(
+                    label: 'District / Zone',
+                    controller: _districtController,
+                    hintText: 'e.g. Uttara, Mirpur',
+                    capitalization: TextCapitalization.words,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildDefaultSwitch(),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+            child: AppPrimaryButton(
+              label: 'Save Address',
+              height: 48,
+              onPressed: _saveAddress,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -191,7 +216,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           label,
           style: AppTextStyles.badge.copyWith(
             fontSize: 11,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 5),
@@ -202,12 +227,16 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           minLines: minLines,
           maxLines: maxLines,
           validator: validator ?? _requiredValidator,
-          style: AppTextStyles.body.copyWith(fontSize: 12, height: 1.2),
+          style: AppTextStyles.body.copyWith(
+            fontSize: 12,
+            height: 1.2,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: AppTextStyles.caption.copyWith(fontSize: 11),
             filled: true,
-            fillColor: AppColors.surface,
+            fillColor: Theme.of(context).colorScheme.surface,
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,
@@ -225,47 +254,6 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     );
   }
 
-  Widget _buildDistrictDropdown() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          'District / Zone',
-          style: AppTextStyles.badge.copyWith(
-            fontSize: 11,
-            color: AppColors.navyDark,
-          ),
-        ),
-        const SizedBox(height: 5),
-        DropdownButtonFormField<String>(
-          initialValue: _district,
-          isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, size: 20),
-          style: AppTextStyles.body.copyWith(fontSize: 12, height: 1.2),
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: AppColors.surface,
-            isDense: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 12,
-            ),
-            border: _inputBorder(),
-            enabledBorder: _inputBorder(),
-            focusedBorder: _inputBorder(color: AppColors.primary),
-          ),
-          items: [
-            for (final district in _districts)
-              DropdownMenuItem(value: district, child: Text(district)),
-          ],
-          onChanged: (value) {
-            if (value != null) setState(() => _district = value);
-          },
-        ),
-      ],
-    );
-  }
-
   Widget _buildDefaultSwitch() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,7 +262,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           'Set as default address',
           style: AppTextStyles.badge.copyWith(
             fontSize: 11,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         Switch(
@@ -316,10 +304,22 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         streetAddress: _streetController.text.trim(),
         city: _cityController.text.trim(),
         postCode: _postCodeController.text.trim(),
-        district: _district,
+        district: _districtController.text.trim(),
         isDefault: _isDefault,
         type: widget.address?.type ?? 'Home',
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _streetController.dispose();
+    _cityController.dispose();
+    _postCodeController.dispose();
+    _districtController.dispose();
+    super.dispose();
   }
 }
