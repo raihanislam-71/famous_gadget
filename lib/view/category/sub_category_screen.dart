@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/view/category/product_by_category_screen.dart';
+import 'package:famous_gadget/view/category/product_by_category_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
