@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -115,18 +117,19 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
       child: Row(
         children: [
           InkWell(
-            onTap: () => Get.back<void>(),
+            onTap: kIsWeb ? null : () => Get.back<void>(),
             borderRadius: BorderRadius.circular(20),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               child: Row(
                 children: [
-                  SvgPicture.asset(
-                    AssetsPath.checkoutBackArrow,
-                    width: 24,
-                    height: 24,
-                  ),
-                  const SizedBox(width: 12),
+                  if (!kIsWeb) ...[
+                    Icon(
+                      CupertinoIcons.back,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    const SizedBox(width: 12),
+                  ],
                   Text(
                     'Checkout',
                     style: AppTextStyles.h2.copyWith(fontSize: 18),

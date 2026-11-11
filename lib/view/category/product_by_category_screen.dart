@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +55,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
+    final isWeb = kIsWeb;
     final visibleProductIds = _visibleProductIds;
     return Scaffold(
       appBar: AppBar(
@@ -87,8 +88,8 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
-        automaticallyImplyLeading: !isDesktopWeb,
-        leading: isDesktopWeb
+        automaticallyImplyLeading: !isWeb,
+        leading: isWeb
             ? null
             : IconButton(
                 onPressed: () {
@@ -98,7 +99,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
                     AppRoutes.backToHome();
                   }
                 },
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: const Icon(CupertinoIcons.back),
               ),
         actions: [
           IconButton(

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -83,24 +85,27 @@ class _CheckoutConfirmationScreenState
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).dividerColor),
+        ),
       ),
       child: Align(
         alignment: Alignment.centerLeft,
         child: InkWell(
-          onTap: () => Get.back<void>(),
+          onTap: kIsWeb ? null : () => Get.back<void>(),
           borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SvgPicture.asset(
-                  AssetsPath.checkoutBackArrow,
-                  width: 24,
-                  height: 24,
-                ),
-                const SizedBox(width: 12),
+                if (!kIsWeb) ...[
+                  Icon(
+                    CupertinoIcons.back,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  const SizedBox(width: 12),
+                ],
                 Text(
                   'Order Confirmation',
                   style: AppTextStyles.h2.copyWith(fontSize: 18),

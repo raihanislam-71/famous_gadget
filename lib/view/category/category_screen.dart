@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -32,6 +33,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isWeb = kIsWeb;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -57,23 +59,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
             icon: const Icon(Icons.search),
           ),
         ],
-        automaticallyImplyLeading:
-            !(kIsWeb && MediaQuery.sizeOf(context).width >= 768),
-        leading: (kIsWeb && MediaQuery.sizeOf(context).width >= 768)
+        automaticallyImplyLeading: !isWeb,
+        leading: isWeb
             ? null
             : IconButton(
                 onPressed: () {
-                  if (kIsWeb) {
-                    if (Navigator.of(context).canPop()) {
-                      Navigator.of(context).pop();
-                    } else {
-                      AppRoutes.backToHome();
-                    }
-                  } else {
-                    Get.find<BottomNavController>().backToHome();
-                  }
+                  Get.find<BottomNavController>().backToHome();
                 },
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: const Icon(CupertinoIcons.back),
               ),
       ),
       body: Column(

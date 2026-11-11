@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +66,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
+    final isWeb = kIsWeb;
     final theme = Theme.of(context);
     final products = Product.demoProducts.where((product) {
       return product.name.toLowerCase().contains(
@@ -103,8 +104,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
         backgroundColor: theme.colorScheme.surface,
         foregroundColor: theme.colorScheme.onSurface,
         elevation: 0,
-        automaticallyImplyLeading: !isDesktopWeb,
-        leading: isDesktopWeb
+        automaticallyImplyLeading: !isWeb,
+        leading: isWeb
             ? null
             : IconButton(
                 onPressed: () {
@@ -114,7 +115,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     AppRoutes.backToHome();
                   }
                 },
-                icon: const Icon(Icons.arrow_back_ios),
+                icon: const Icon(CupertinoIcons.back),
               ),
         actions: [
           IconButton(

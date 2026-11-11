@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -172,21 +173,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       surfaceTintColor: theme.colorScheme.surface,
       elevation: 0,
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        tooltip: 'Back',
-        onPressed: () {
-          if (kIsWeb) {
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-            } else {
-              AppRoutes.backToHome();
-            }
-          } else {
-            Get.back<void>();
-          }
-        },
-      ),
+      automaticallyImplyLeading: false,
+      leading: kIsWeb
+          ? null
+          : IconButton(
+              icon: const Icon(CupertinoIcons.back),
+              tooltip: 'Back',
+              onPressed: () => Get.back<void>(),
+            ),
       actions: [
         IconButton(
           icon: Icon(

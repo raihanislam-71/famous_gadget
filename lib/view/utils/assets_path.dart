@@ -20,8 +20,6 @@ class AssetsPath {
   static const String navCart = '$_images/figma_cart/cart.svg';
   static const String navUser = '$_images/figma_cart/user.svg';
   static const String loginLogo = '$_images/figma_login/app_logo.png';
-  static const String checkoutBackArrow =
-      '$_images/figma_checkout/back_arrow.svg';
   static const String checkoutStepDivider =
       '$_images/figma_checkout/step_divider.svg';
   static const String checkoutAdd = '$_images/figma_checkout/add.svg';
@@ -55,8 +53,6 @@ class AssetsPath {
       '$_images/figma_wishlist/haylou_watch.png';
   static const String wishlistA4TechImage =
       '$_images/figma_wishlist/a4tech_keyboard.png';
-  static const String wishlistBackArrow =
-      '$_images/figma_wishlist/back_arrow.svg';
   static const String wishlistHeart = '$_images/figma_wishlist/heart.svg';
   static const String wishlistCart =
       '$_images/figma_wishlist/shopping_cart.svg';
