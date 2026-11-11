@@ -1,10 +1,9 @@
 import 'package:bdcalling_class/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 
 import '../utils/app_colors.dart';
 import '../navigation/main_bottom_nav_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,7 +15,10 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Future<void> _moveToNextScreen() async {
     await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const MainBottomNavScreen());
+    AppRoutes.off<void>(
+      route: AppRoutes.home,
+      mobileBuilder: () => const MainBottomNavScreen(),
+    );
   }
 
   @override

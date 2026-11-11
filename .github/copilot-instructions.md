@@ -4,6 +4,7 @@ State Management & Navigation (GetX)
 Controller Management
 Model Classes
 Reusable Common Widgets
+1 file in 200-250 line no overflow
 Code Quality & Simplicity
 File Size & Code Organization
 Widget & Method Extraction
@@ -15,3 +16,4 @@ Security
 Existing Code & Change Safety
 Error Handling & Verification
 Development Workflow & Completion Summary
+No app run test

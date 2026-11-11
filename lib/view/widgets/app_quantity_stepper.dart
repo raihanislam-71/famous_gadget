@@ -17,11 +17,12 @@ class AppQuantityStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       height: 44,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.pageBackground,
+        color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(22),
       ),
       child: Row(
@@ -36,7 +37,10 @@ class AppQuantityStepper extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
               '$value',
-              style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+              style: AppTextStyles.body.copyWith(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           _QuantityAction(
@@ -63,6 +67,7 @@ class _QuantityAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Semantics(
       button: true,
       label: semanticsLabel,
@@ -77,7 +82,7 @@ class _QuantityAction extends StatelessWidget {
               fontSize: 18,
               color: onPressed == null
                   ? AppColors.disabledForeground
-                  : AppColors.navyDark,
+                  : theme.colorScheme.onSurface,
             ),
           ),
         ),

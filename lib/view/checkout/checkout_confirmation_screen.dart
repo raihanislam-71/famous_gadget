@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +11,7 @@ import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 import 'checkout_delivery_screen.dart';
 import 'order_success_screen.dart';
+import '../navigation/app_navigation.dart';
 
 class CheckoutConfirmationScreen extends StatefulWidget {
   const CheckoutConfirmationScreen({super.key, required this.deliveryAddress});
@@ -39,7 +42,7 @@ class _CheckoutConfirmationScreenState
         statusBarBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           bottom: false,
           child: Column(
@@ -80,26 +83,29 @@ class _CheckoutConfirmationScreenState
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(bottom: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(color: Theme.of(context).dividerColor),
+        ),
       ),
       child: Align(
         alignment: Alignment.centerLeft,
         child: InkWell(
-          onTap: () => Get.back<void>(),
+          onTap: kIsWeb ? null : () => Get.back<void>(),
           borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SvgPicture.asset(
-                  AssetsPath.checkoutBackArrow,
-                  width: 24,
-                  height: 24,
-                ),
-                const SizedBox(width: 12),
+                if (!kIsWeb) ...[
+                  Icon(
+                    CupertinoIcons.back,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  const SizedBox(width: 12),
+                ],
                 Text(
                   'Order Confirmation',
                   style: AppTextStyles.h2.copyWith(fontSize: 18),
@@ -116,7 +122,7 @@ class _CheckoutConfirmationScreenState
     title,
     style: AppTextStyles.badge.copyWith(
       fontSize: 14,
-      color: AppColors.navyDark,
+      color: Theme.of(context).colorScheme.onSurface,
     ),
   );
 
@@ -124,7 +130,7 @@ class _CheckoutConfirmationScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         border: Border.all(color: AppColors.primary, width: 1.5),
         borderRadius: BorderRadius.circular(16),
       ),
@@ -186,7 +192,7 @@ class _CheckoutConfirmationScreenState
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         border: Border.all(color: AppColors.primary, width: 1.5),
         borderRadius: BorderRadius.circular(14),
       ),
@@ -247,7 +253,11 @@ class _CheckoutConfirmationScreenState
           height: 44,
           child: TextField(
             controller: _notesController,
-            style: AppTextStyles.body.copyWith(fontSize: 14, height: 1),
+            style: AppTextStyles.body.copyWith(
+              fontSize: 14,
+              height: 1,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
             decoration: InputDecoration(
               hintText: 'e.g. Leave package with guard',
               hintStyle: AppTextStyles.body.copyWith(
@@ -256,7 +266,7 @@ class _CheckoutConfirmationScreenState
                 color: AppColors.secondaryText,
               ),
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: Theme.of(context).colorScheme.surface,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               border: _inputBorder(),
               enabledBorder: _inputBorder(),
@@ -311,7 +321,7 @@ class _CheckoutConfirmationScreenState
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.badge.copyWith(
                   fontSize: 13,
-                  color: AppColors.navyDark,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 2),
@@ -324,7 +334,7 @@ class _CheckoutConfirmationScreenState
           price,
           style: AppTextStyles.badge.copyWith(
             fontSize: 13,
-            color: AppColors.navyDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ],
@@ -335,7 +345,7 @@ class _CheckoutConfirmationScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -393,7 +403,7 @@ class _CheckoutConfirmationScreenState
               : AppTextStyles.body.copyWith(
                   fontSize: 13,
                   height: 1,
-                  color: valueColor ?? AppColors.navyDark,
+                  color: valueColor ?? Theme.of(context).colorScheme.onSurface,
                 ),
         ),
       ],
@@ -403,9 +413,9 @@ class _CheckoutConfirmationScreenState
   Widget _buildPlaceOrderButton() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.border)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
       ),
       child: SafeArea(
         top: false,
@@ -421,6 +431,10 @@ class _CheckoutConfirmationScreenState
       );
 
   void _placeOrder() {
-    Get.off<void>(() => const OrderSuccessScreen(isPreview: true));
+    AppRoutes.off<void>(
+      route: AppRoutes.orderSuccess,
+      arguments: const {'isPreview': true},
+      mobileBuilder: () => const OrderSuccessScreen(isPreview: true),
+    );
   }
 }

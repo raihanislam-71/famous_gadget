@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
@@ -41,29 +44,43 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isWeb = kIsWeb;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.pageBackground,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+      value: SystemUiOverlayStyle(
+        statusBarColor: theme.scaffoldBackgroundColor,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: AppColors.pageBackground,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          foregroundColor: AppColors.navyDark,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          foregroundColor: Theme.of(context).colorScheme.onSurface,
           elevation: 0,
           scrolledUnderElevation: 0,
-          surfaceTintColor: AppColors.surface,
-          shape: const Border(bottom: BorderSide(color: AppColors.border)),
-          toolbarHeight: 60,
-          leadingWidth: 52,
-          titleSpacing: 0,
-          leading: IconButton(
-            tooltip: 'Back',
-            onPressed: Get.back<void>,
-            icon: SvgPicture.asset(AssetsPath.wishlistBackArrow),
+          surfaceTintColor: Theme.of(context).colorScheme.surface,
+          shape: Border(
+            bottom: BorderSide(color: Theme.of(context).dividerColor),
           ),
+          toolbarHeight: 60,
+          leadingWidth: isWeb ? 0 : 52,
+          titleSpacing: isWeb ? 16 : 0,
+          automaticallyImplyLeading: !isWeb,
+          leading: isWeb
+              ? null
+              : IconButton(
+                  tooltip: 'Back',
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      AppRoutes.backToHome();
+                    }
+                  },
+                  icon: const Icon(CupertinoIcons.back),
+                ),
           title: Text(
             'My Wishlist (${_items.length})',
             style: AppTextStyles.h2.copyWith(
@@ -83,25 +100,42 @@ class _WishlistScreenState extends State<WishlistScreen> {
               )
             : LayoutBuilder(
                 builder: (context, constraints) {
-                  final contentWidth = constraints.maxWidth - 32;
-                  final cardWidth = contentWidth < 336
-                      ? (contentWidth - 12) / 2
-                      : 162.0;
-
                   return SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
-                    child: Wrap(
-                      spacing: 12,
-                      runSpacing: 12,
-                      children: [
-                        for (final item in _items)
-                          _WishlistProductCard(
-                            item: item,
-                            width: cardWidth,
-                            onRemove: () => _removeItem(item),
-                            onAddToCart: () => _addToCart(item),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: SizedBox(
+                        width: constraints.maxWidth.clamp(0, 1120).toDouble(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: LayoutBuilder(
+                            builder: (context, gridConstraints) {
+                              final availableWidth = gridConstraints.maxWidth;
+                              final crossAxisCount = availableWidth >= 900
+                                  ? 4
+                                  : availableWidth >= 600
+                                  ? 3
+                                  : 2;
+                              final cardWidth =
+                                  (availableWidth - 12 * (crossAxisCount - 1)) /
+                                  crossAxisCount;
+
+                              return Wrap(
+                                spacing: 12,
+                                runSpacing: 12,
+                                children: [
+                                  for (final item in _items)
+                                    _WishlistProductCard(
+                                      item: item,
+                                      width: cardWidth,
+                                      onRemove: () => _removeItem(item),
+                                      onAddToCart: () => _addToCart(item),
+                                    ),
+                                ],
+                              );
+                            },
                           ),
-                      ],
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -163,7 +197,7 @@ class _WishlistProductCard extends StatelessWidget {
       width: width,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -189,7 +223,7 @@ class _WishlistProductCard extends StatelessWidget {
                 ),
                 Positioned(
                   top: 0,
-                  left: 0,
+                  right: 0,
                   child: Semantics(
                     button: true,
                     label: 'Remove ${item.name} from wishlist',
@@ -197,7 +231,7 @@ class _WishlistProductCard extends StatelessWidget {
                       width: 28,
                       height: 28,
                       child: Material(
-                        color: AppColors.surface,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(14),
                         child: InkWell(
                           onTap: onRemove,
@@ -219,7 +253,8 @@ class _WishlistProductCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.body.copyWith(
-              fontSize: 13,
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 14,
               height: 1.2,
               fontWeight: FontWeight.w500,
             ),
@@ -228,14 +263,14 @@ class _WishlistProductCard extends StatelessWidget {
           Text(
             item.price,
             style: AppTextStyles.badge.copyWith(
-              fontSize: 15,
+              fontSize: 16,
               color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 6),
           SizedBox(
             width: double.infinity,
-            height: 27,
+            height: 34,
             child: Material(
               color: AppColors.primary,
               borderRadius: BorderRadius.circular(10),
@@ -248,17 +283,19 @@ class _WishlistProductCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        width: 12,
-                        height: 12,
-                        child: FittedBox(
-                          child: SvgPicture.asset(AssetsPath.wishlistCart),
+                        width: 18,
+                        height: 18,
+                        child: Icon(
+                          Icons.shopping_cart_outlined,
+                          size: 17,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                       const SizedBox(width: 4),
                       Text(
                         'Add to Cart',
                         style: AppTextStyles.badge.copyWith(
-                          fontSize: 11,
+                          fontSize: 12,
                           color: AppColors.surface,
                         ),
                       ),
