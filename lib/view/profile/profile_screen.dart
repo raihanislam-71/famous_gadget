@@ -505,8 +505,8 @@ class _AccountMenuItem extends StatelessWidget {
               height: 20,
               colorFilter: ColorFilter.mode(
                 Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black,
+                    ? AppColors.surface
+                    : AppColors.navyDark,
                 BlendMode.srcIn,
               ),
             ),
