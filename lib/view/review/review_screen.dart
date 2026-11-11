@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -14,7 +15,7 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 768;
+    final isWeb = kIsWeb;
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -24,11 +25,11 @@ class ReviewScreen extends StatelessWidget {
         foregroundColor: theme.colorScheme.onSurface,
         surfaceTintColor: theme.colorScheme.surface,
         elevation: 0,
-        automaticallyImplyLeading: !isDesktopWeb,
-        leading: isDesktopWeb
+        automaticallyImplyLeading: !isWeb,
+        leading: isWeb
             ? null
             : IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(CupertinoIcons.back),
                 onPressed: () {
                   if (Navigator.of(context).canPop()) {
                     Navigator.of(context).pop();
@@ -41,20 +42,23 @@ class ReviewScreen extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            color: Colors.white,
+            color: theme.colorScheme.surface,
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-            child: _buildRatingOverview(Get.find<ReviewController>()),
+            child: _buildRatingOverview(
+              context,
+              Get.find<ReviewController>(),
+            ),
           ),
           Container(
-            color: Colors.white,
+            color: theme.colorScheme.surface,
             padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
             child: Row(
               children: [
-                _buildSortOption('Most Recent'),
+                _buildSortOption(context, 'Most Recent'),
                 const SizedBox(width: 8),
-                _buildSortOption('Highest Rating'),
+                _buildSortOption(context, 'Highest Rating'),
                 const SizedBox(width: 8),
-                _buildSortOption('Lowest Rating'),
+                _buildSortOption(context, 'Lowest Rating'),
               ],
             ),
           ),
@@ -74,13 +78,17 @@ class ReviewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRatingOverview(ReviewController controller) {
+  Widget _buildRatingOverview(
+    BuildContext context,
+    ReviewController controller,
+  ) {
+    final theme = Theme.of(context);
     final reviewCount = controller.reviews.length;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: const Color(0xFFE7E9ED)),
+        color: theme.colorScheme.surface,
+        border: Border.all(color: theme.dividerColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -93,34 +101,35 @@ class ReviewScreen extends StatelessWidget {
               children: [
                 Text(
                   controller.averageRating.toStringAsFixed(1),
-                  style: const TextStyle(
-                    fontSize: 34,
+                  style: TextStyle(
+                    fontSize: 38,
                     height: 1,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF17191D),
+                    color: theme.colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 6),
                 RatingBarIndicator(
                   rating: controller.averageRating,
                   itemCount: 5,
-                  itemSize: 13,
-                  unratedColor: const Color(0xFFE7E9ED),
+                  itemSize: 15,
+                  unratedColor: theme.colorScheme.surfaceContainerHighest,
                   itemBuilder: (context, index) =>
                       const Icon(Icons.star, color: Color(0xFFFF8A00)),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '$reviewCount Reviews',
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Color(0xFF777D87),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ],
             ),
           ),
-          Container(width: 1, height: 78, color: const Color(0xFFE9EBEF)),
+          Container(width: 1, height: 78, color: theme.dividerColor),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -134,9 +143,10 @@ class ReviewScreen extends StatelessWidget {
                           width: 12,
                           child: Text(
                             '$stars',
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Color(0xFF454A52),
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -154,8 +164,9 @@ class ReviewScreen extends StatelessWidget {
                                   ? 0
                                   : controller.getRatingCount(stars) /
                                         reviewCount,
-                              minHeight: 4,
-                              backgroundColor: const Color(0xFFF0F1F3),
+                              minHeight: 5,
+                              backgroundColor:
+                                  theme.colorScheme.surfaceContainerHighest,
                               valueColor: const AlwaysStoppedAnimation(
                                 Color(0xFFFF8A00),
                               ),
@@ -163,13 +174,14 @@ class ReviewScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 26,
+                          width: 34,
                           child: Text(
                             '${reviewCount == 0 ? 0 : (controller.getRatingCount(stars) * 100 / reviewCount).round()}%',
                             textAlign: TextAlign.end,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Color(0xFF777D87),
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ),
@@ -184,13 +196,16 @@ class ReviewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSortOption(String label) {
+  Widget _buildSortOption(BuildContext context, String label) {
     return GetBuilder<ReviewController>(
       builder: (controller) {
         final isSelected = controller.selectedSort == label;
+        final theme = Theme.of(context);
         return Expanded(
           child: Material(
-            color: isSelected ? const Color(0xFFFFF5EF) : Colors.white,
+            color: isSelected
+                ? theme.colorScheme.primary.withValues(alpha: 0.12)
+                : theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(18),
             child: InkWell(
               borderRadius: BorderRadius.circular(18),
@@ -202,8 +217,8 @@ class ReviewScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: isSelected
-                        ? const Color(0xFFFF7A35)
-                        : const Color(0xFFE6E8EC),
+                        ? theme.colorScheme.primary
+                        : theme.dividerColor,
                   ),
                   borderRadius: BorderRadius.circular(18),
                 ),
@@ -212,11 +227,11 @@ class ReviewScreen extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                     color: isSelected
-                        ? const Color(0xFFE85F1A)
-                        : const Color(0xFF30343A),
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurface,
                   ),
                 ),
               ),
