@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 import '../navigation/app_navigation.dart';
 import 'otp_verification_screen.dart';
+import 'widgets/register_header.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key, required this.onRegisterSuccess});
@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              _buildHeader(),
+              const RegisterHeader(),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
@@ -91,34 +91,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      height: 160,
-      padding: const EdgeInsets.all(20),
-      color: AppColors.navyDark,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(
-            AssetsPath.loginLogo,
-            width: 140,
-            height: 35,
-            fit: BoxFit.contain,
-          ),
-          Text(
-            'Create Account',
-            style: AppTextStyles.h2.copyWith(
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: AppColors.surface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildNameField({
     required String label,
     required TextEditingController controller,
@@ -129,7 +101,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         controller: controller,
         textCapitalization: TextCapitalization.words,
         textInputAction: TextInputAction.next,
-        
         validator: (value) =>
             value == null || value.trim().isEmpty ? 'Required' : null,
         style: AppTextStyles.body.copyWith(
