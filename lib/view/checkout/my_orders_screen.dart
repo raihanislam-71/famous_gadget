@@ -5,6 +5,8 @@ import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import 'order_detail_screen.dart';
 import '../navigation/app_navigation.dart';
+import 'widgets/orders/order_card.dart';
+import 'widgets/orders/order_summary.dart';
 
 class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key, this.isPreview = false});
@@ -24,8 +26,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     'Cancelled',
   ];
 
-  static const List<_OrderSummary> _orders = [
-    _OrderSummary(
+  static const List<OrderSummary> _orders = [
+    OrderSummary(
       number: '#FG-20240315',
       status: 'Processing',
       date: 'Mar 15, 2024',
@@ -34,7 +36,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       statusColor: AppColors.amber,
       statusBackground: Color(0x14F59E0B),
     ),
-    _OrderSummary(
+    OrderSummary(
       number: '#FG-20240311',
       status: 'Shipping',
       date: 'Mar 11, 2024',
@@ -43,7 +45,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       statusColor: AppColors.codPurple,
       statusBackground: Color(0x147C3AED),
     ),
-    _OrderSummary(
+    OrderSummary(
       number: '#FG-20240305',
       status: 'Delivered',
       date: 'Mar 05, 2024',
@@ -52,7 +54,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       statusColor: AppColors.successGreen,
       statusBackground: Color(0x1416A34A),
     ),
-    _OrderSummary(
+    OrderSummary(
       number: '#FG-20240228',
       status: 'Cancelled',
       date: 'Feb 28, 2024',
@@ -113,7 +115,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                       separatorBuilder: (_, _) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final order = visibleOrders[index];
-                        return _OrderCard(
+                        return OrderCard(
                           order: order,
                           onTap: () => AppRoutes.to<void>(
                             route: AppRoutes.orderDetails,
@@ -177,145 +179,6 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   : Theme.of(context).colorScheme.onSurface,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OrderSummary {
-  const _OrderSummary({
-    required this.number,
-    required this.status,
-    required this.date,
-    required this.itemCount,
-    required this.total,
-    required this.statusColor,
-    required this.statusBackground,
-  });
-
-  final String number;
-  final String status;
-  final String date;
-  final int itemCount;
-  final String total;
-  final Color statusColor;
-  final Color statusBackground;
-}
-
-class _OrderCard extends StatelessWidget {
-  const _OrderCard({required this.order, required this.onTap});
-
-  final _OrderSummary order;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Material(
-      color: colorScheme.surface,
-      borderRadius: BorderRadius.circular(20),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    order.number,
-                    style: AppTextStyles.badge.copyWith(
-                      fontSize: 15,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  _OrderStatusBadge(order: order),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Divider(
-                  height: 1,
-                  color: Theme.of(context).dividerColor,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Placed on ${order.date}',
-                        style: AppTextStyles.caption.copyWith(
-                          fontSize: 12,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${order.itemCount} '
-                        '${order.itemCount == 1 ? 'item' : 'items'}',
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: 13,
-                          height: 1,
-                          fontWeight: FontWeight.w500,
-                          color: colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Total Amount',
-                        style: AppTextStyles.caption.copyWith(
-                          fontSize: 12,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        order.total,
-                        style: AppTextStyles.badge.copyWith(
-                          fontSize: 16,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OrderStatusBadge extends StatelessWidget {
-  const _OrderStatusBadge({required this.order});
-
-  final _OrderSummary order;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: order.statusBackground,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        order.status,
-        style: AppTextStyles.badge.copyWith(
-          fontSize: 11,
-          color: order.statusColor,
         ),
       ),
     );
