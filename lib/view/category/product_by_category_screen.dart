@@ -3,9 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/product.dart';
-import '../utils/app_colors.dart';
 import '../widgets/product_card.dart';
 import '../navigation/app_navigation.dart';
+import 'widgets/sort_options_sheet.dart';
+import 'widgets/filter_price_sheet.dart';
 
 class ProductByCategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -198,76 +199,20 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
   void _showSortOptions() {
     showModalBottomSheet<void>(
       context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Popularity'),
-              trailing: _sortAscending
-                  ? const Icon(Icons.check, color: AppColors.primary)
-                  : null,
-              onTap: () {
-                setState(() => _sortAscending = true);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Price: low to high'),
-              trailing: !_sortAscending
-                  ? const Icon(Icons.check, color: AppColors.primary)
-                  : null,
-              onTap: () {
-                setState(() => _sortAscending = false);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
+      builder: (context) => SortOptionsSheet(
+        isAscending: _sortAscending,
+        onSortChanged: (value) => setState(() => _sortAscending = value),
       ),
     );
   }
 
   void _showFilters() {
-    var selectedRange = _priceRange;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setSheetState) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Filter by price',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                RangeSlider(
-                  values: selectedRange,
-                  min: 0,
-                  max: 100000,
-                  divisions: 20,
-                  labels: RangeLabels(
-                    '৳${selectedRange.start.round()}',
-                    '৳${selectedRange.end.round()}',
-                  ),
-                  onChanged: (range) =>
-                      setSheetState(() => selectedRange = range),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    setState(() => _priceRange = selectedRange);
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Apply filters'),
-                ),
-              ],
-            ),
-          ),
-        ),
+      builder: (context) => FilterPriceSheet(
+        initialRange: _priceRange,
+        onApply: (range) => setState(() => _priceRange = range),
       ),
     );
   }
