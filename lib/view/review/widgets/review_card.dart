@@ -1,4 +1,4 @@
-import 'package:bdcalling_class/models/review.dart';
+import 'package:famous_gadget/models/review.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';

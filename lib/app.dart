@@ -1,5 +1,5 @@
-import 'package:bdcalling_class/view/splash/splash_screen.dart';
-import 'package:bdcalling_class/view/utils/app_theme.dart';
+import 'package:famous_gadget/view/splash/splash_screen.dart';
+import 'package:famous_gadget/view/utils/app_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

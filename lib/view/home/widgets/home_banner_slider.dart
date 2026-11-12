@@ -160,7 +160,7 @@ class _HomeBannerSliderState extends State<HomeBannerSlider> {
 }
 */
 
-import 'package:bdcalling_class/view/utils/assets_path.dart';
+import 'package:famous_gadget/view/utils/assets_path.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 

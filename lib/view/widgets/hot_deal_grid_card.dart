@@ -9,7 +9,7 @@ class HotDealGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 3,
+      elevation: 2,
       color: Colors.white,
       child: SizedBox(
         width: 140,
