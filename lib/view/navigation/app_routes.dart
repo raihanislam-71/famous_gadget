@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-
 import '../../controllers/auth_controller.dart';
 import '../../models/saved_address.dart';
 import '../auth/login_screen.dart';
