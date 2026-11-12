@@ -4,7 +4,8 @@ Code Quality: Maintain custom coding style and use beginner-friendly widgets ins
 Centralized Assets & Config: Centralized Colors, Theme, TextStyle, Assets, and API endpoints
 Responsive Design: Responsive across Mobile, Tablet, and Web
 Modular Code: Reusable Widget Extraction or Method Extraction
-File Length & Readability: Clean, readable code with maximum 200 lines per file (no overflow)
+Modular File Structure: Follow a strict feature-based modular folder structure (separating views, controllers, models, and bindings per module)
+File Length & Readability: Clean, readable code with strictly less than 200 lines per file (no overflow)
 Controller Management
 Model Classes
 Security Best Practices
