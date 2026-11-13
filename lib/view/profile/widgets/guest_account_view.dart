@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../checkout/my_orders_screen.dart';

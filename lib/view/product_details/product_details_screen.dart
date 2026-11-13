@@ -169,11 +169,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           backgroundColor: theme.scaffoldBackgroundColor,
           appBar: isDesktop ? null : this._buildMobileAppBar(context),
           body: isDesktop
-              ? this._buildDesktopLayout(context, constraints)
-              : this._buildMobileLayout(context),
+              ? _buildDesktopLayout(context, constraints)
+              : _buildMobileLayout(context),
           bottomNavigationBar: isDesktop
               ? null
-              : this._buildMobileBottomBar(context),
+              : _buildMobileBottomBar(context),
         );
       },
     );
