@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/profile_controller.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
+import 'widgets/edit_profile/edit_profile_avatar.dart';
+import 'widgets/edit_profile/edit_profile_form.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -48,24 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          foregroundColor: Theme.of(context).colorScheme.onSurface,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          surfaceTintColor: Theme.of(context).colorScheme.surface,
-          shape: const Border(bottom: BorderSide(color: AppColors.border)),
-          toolbarHeight: 60,
-          automaticallyImplyLeading: false,
-          titleSpacing: 16,
-          title: Text(
-            'Edit Profile',
-            style: AppTextStyles.h2.copyWith(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
+        appBar: _buildAppBar(context),
         body: SafeArea(
           top: false,
           child: Form(
@@ -77,9 +60,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
                     child: Column(
                       children: [
-                        _buildAvatar(),
+                        const EditProfileAvatar(),
                         const SizedBox(height: 20),
-                        _buildProfileForm(),
+                        EditProfileFormWidget(
+                          firstNameController: _firstNameController,
+                          lastNameController: _lastNameController,
+                          emailController: _emailController,
+                          phoneController: _phoneController,
+                        ),
                       ],
                     ),
                   ),
@@ -100,165 +88,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildAvatar() {
-    return GetBuilder<ProfileController>(
-      builder: (profile) => SizedBox(
-        width: 90,
-        height: 90,
-        child: Stack(
-          children: [
-            Container(
-              width: 90,
-              height: 90,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                profile.initials,
-                style: AppTextStyles.h1.copyWith(
-                  fontSize: 32,
-                  color: AppColors.surface,
-                ),
-              ),
-            ),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: AppColors.navyDark,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.surface, width: 2),
-                ),
-                alignment: Alignment.center,
-                child: SvgPicture.asset(
-                  AssetsPath.profileCamera,
-                  width: 14,
-                  height: 14,
-                ),
-              ),
-            ),
-          ],
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Theme.of(context).colorScheme.surface,
+      shape: const Border(bottom: BorderSide(color: AppColors.border)),
+      toolbarHeight: 60,
+      automaticallyImplyLeading: false,
+      titleSpacing: 16,
+      title: Text(
+        'Edit Profile Screen',
+        style: AppTextStyles.h2.copyWith(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
-  }
-
-  Widget _buildProfileForm() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildField(
-          label: 'First Name',
-          controller: _firstNameController,
-          capitalization: TextCapitalization.words,
-        ),
-        const SizedBox(height: 16),
-        _buildField(
-          label: 'Last Name',
-          controller: _lastNameController,
-          capitalization: TextCapitalization.words,
-        ),
-        const SizedBox(height: 16),
-        _buildField(
-          label: 'Email Address',
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          validator: _validateEmail,
-        ),
-        const Padding(
-          padding: EdgeInsets.only(left: 4, top: 4),
-          child: Row(
-            children: [
-              Icon(Icons.check, color: AppColors.successGreen, size: 14),
-              SizedBox(width: 4),
-              Text(
-                'Verified Account',
-                style: TextStyle(
-                  fontFamily: AppTextStyles.bodyFontFamily,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.successGreen,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        _buildField(
-          label: 'Phone Number',
-          controller: _phoneController,
-          keyboardType: TextInputType.phone,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildField({
-    required String label,
-    required TextEditingController controller,
-    TextInputType? keyboardType,
-    TextCapitalization capitalization = TextCapitalization.none,
-    String? Function(String?)? validator,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.badge.copyWith(
-            fontSize: 13,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 48,
-          child: TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            textCapitalization: capitalization,
-            validator: validator ?? _requiredValidator,
-            style: AppTextStyles.body.copyWith(
-              fontSize: 14,
-              height: 1,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.surface,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-              border: _inputBorder(),
-              enabledBorder: _inputBorder(),
-              focusedBorder: _inputBorder(color: AppColors.primary),
-              errorBorder: _inputBorder(color: AppColors.dangerRed),
-              focusedErrorBorder: _inputBorder(color: AppColors.dangerRed),
-              errorStyle: const TextStyle(fontSize: 10, height: 1),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  OutlineInputBorder _inputBorder({Color color = AppColors.border}) {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(16),
-      borderSide: BorderSide(color: color),
-    );
-  }
-
-  String? _requiredValidator(String? value) {
-    return value == null || value.trim().isEmpty ? 'Required' : null;
-  }
-
-  String? _validateEmail(String? value) {
-    final email = value?.trim() ?? '';
-    return GetUtils.isEmail(email) ? null : 'Enter a valid email address';
   }
 
   void _saveChanges() {

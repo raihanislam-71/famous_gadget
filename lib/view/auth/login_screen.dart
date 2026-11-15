@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 import '../navigation/app_navigation.dart';
 import 'otp_verification_screen.dart';
 import 'register_screen.dart';
+import 'widgets/login_welcome_banner.dart';
+import 'widgets/phone_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -46,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              _buildWelcomeBanner(),
+              const LoginWelcomeBanner(),
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
@@ -63,7 +64,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        _buildPhoneField(),
+                        PhoneField(
+                          controller: _phoneController,
+                          onSubmitted: _submit,
+                        ),
                         const SizedBox(height: 20),
                         AppPrimaryButton(label: 'Login', onPressed: _submit),
                         const SizedBox(height: 8),
@@ -81,115 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWelcomeBanner() {
-    return Container(
-      width: double.infinity,
-      height: 220,
-      padding: const EdgeInsets.all(24),
-      color: AppColors.navyDark,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Image.asset(
-            AssetsPath.loginLogo,
-            width: 160,
-            height: 40,
-            fit: BoxFit.contain,
-          ),
-          Column(
-            children: [
-              Text(
-                'Welcome Back',
-                style: AppTextStyles.h2.copyWith(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.surface,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Login to unlock premium gadget benefits',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.caption.copyWith(
-                  fontSize: 13,
-                  color: AppColors.secondaryText,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPhoneField() {
-    return SizedBox(
-      height: 48,
-      child: TextFormField(
-        controller: _phoneController,
-        keyboardType: TextInputType.phone,
-        textInputAction: TextInputAction.done,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(10),
-        ],
-        style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
-        validator: (value) {
-          final phone = value?.trim() ?? '';
-          if (phone.length != 10 || !phone.startsWith('1')) {
-            return 'Enter a valid phone number.';
-          }
-          return null;
-        },
-        onFieldSubmitted: (_) => _submit(),
-        decoration: InputDecoration(
-          prefixIcon: Padding(
-            padding: const EdgeInsets.only(left: 14, right: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '+880',
-                  style: AppTextStyles.uiSemibold.copyWith(fontSize: 15),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  width: 1,
-                  height: 18,
-                  color: Theme.of(context).dividerColor,
-                ),
-              ],
-            ),
-          ),
-          prefixIconConstraints: const BoxConstraints(
-            minWidth: 0,
-            minHeight: 48,
-          ),
-          hintText: '1XXXXXXXXX',
-          hintStyle: AppTextStyles.body.copyWith(
-            color: AppColors.secondaryText,
-          ),
-          filled: true,
-          fillColor: Theme.of(context).colorScheme.surface,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: AppColors.border),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: AppColors.border),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: AppColors.primary),
-          ),
-          errorStyle: const TextStyle(height: 0, fontSize: 0),
         ),
       ),
     );

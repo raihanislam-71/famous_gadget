@@ -2,15 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
-import 'checkout_delivery_screen.dart';
 import 'order_success_screen.dart';
+import 'widgets/checkout_step_indicator.dart';
+import 'widgets/confirmation/order_bill.dart';
+import 'widgets/confirmation/order_item_card.dart';
+import 'widgets/confirmation/payment_card.dart';
+import 'widgets/confirmation/shipping_card.dart';
 import '../navigation/app_navigation.dart';
 
 class CheckoutConfirmationScreen extends StatefulWidget {
@@ -55,11 +57,11 @@ class _CheckoutConfirmationScreenState
                   children: [
                     _buildSectionTitle('PAYMENT METHOD'),
                     const SizedBox(height: 16),
-                    _buildPaymentCard(),
+                    const PaymentCard(),
                     const SizedBox(height: 16),
                     _buildSectionTitle('SHIPPING METHOD'),
                     const SizedBox(height: 16),
-                    _buildShippingCard(),
+                    const ShippingCard(),
                     const SizedBox(height: 16),
                     _buildOrderNotes(),
                     const SizedBox(height: 16),
@@ -67,7 +69,7 @@ class _CheckoutConfirmationScreenState
                     const SizedBox(height: 16),
                     _buildOrderItems(),
                     const SizedBox(height: 16),
-                    _buildBill(),
+                    const OrderBill(),
                   ],
                 ),
               ),
@@ -126,120 +128,6 @@ class _CheckoutConfirmationScreenState
     ),
   );
 
-  Widget _buildPaymentCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border.all(color: AppColors.primary, width: 1.5),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: const BoxDecoration(
-              color: AppColors.softPeach,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                AssetsPath.checkoutCodBanknote,
-                width: 20,
-                height: 20,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Cash on Delivery (COD)',
-                  style: AppTextStyles.badge.copyWith(fontSize: 14),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Pay cash when you receive your gadget.',
-                  style: AppTextStyles.caption.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 18,
-            height: 18,
-            decoration: const BoxDecoration(
-              color: AppColors.successGreen,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                AssetsPath.checkoutConfirmCheck,
-                width: 10,
-                height: 10,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildShippingCard() {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border.all(color: AppColors.primary, width: 1.5),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: [
-          _buildRadio(true),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Express Delivery (Dhaka Only)',
-                  style: AppTextStyles.badge.copyWith(fontSize: 14),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Same day delivery inside Dhaka zones',
-                  style: AppTextStyles.caption.copyWith(fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            '৳120',
-            style: AppTextStyles.badge.copyWith(
-              fontSize: 14,
-              color: AppColors.primary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRadio(bool selected) => Container(
-    width: 18,
-    height: 18,
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      border: Border.all(
-        color: selected ? AppColors.primary : AppColors.border,
-        width: selected ? 5 : 1.5,
-      ),
-    ),
-  );
-
   Widget _buildOrderNotes() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -279,132 +167,20 @@ class _CheckoutConfirmationScreenState
   }
 
   Widget _buildOrderItems() {
-    return Column(
+    return const Column(
       children: [
-        _buildOrderItem(
+        OrderItemCard(
           image: AssetsPath.checkoutAnkerImage,
           name: 'Anker Soundcore R50i',
           detail: 'Qty: 1 • Navy Blue',
           price: '৳1,999',
         ),
-        const SizedBox(height: 8),
-        _buildOrderItem(
+        SizedBox(height: 8),
+        OrderItemCard(
           image: AssetsPath.checkoutOnePlusImage,
           name: 'OnePlus Nord CE 3 Lite',
           detail: 'Qty: 1 • Pastel Lime',
           price: '৳24,499',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildOrderItem({
-    required String image,
-    required String name,
-    required String detail,
-    required String price,
-  }) {
-    return Row(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.asset(image, width: 40, height: 40, fit: BoxFit.cover),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.badge.copyWith(
-                  fontSize: 13,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(detail, style: AppTextStyles.caption.copyWith(fontSize: 11)),
-            ],
-          ),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          price,
-          style: AppTextStyles.badge.copyWith(
-            fontSize: 13,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBill() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          _buildBillRow('Subtotal', '৳26,498'),
-          const SizedBox(height: 8),
-          _buildBillRow('Shipping Fee', '৳120'),
-          const SizedBox(height: 8),
-          _buildBillRow(
-            'Promo Discount',
-            '-৳500',
-            valueColor: AppColors.successGreen,
-          ),
-          const SizedBox(height: 8),
-          SvgPicture.asset(AssetsPath.checkoutBillDivider),
-          const SizedBox(height: 8),
-          _buildBillRow(
-            'Total Amount',
-            '৳26,118',
-            isTotal: true,
-            valueColor: AppColors.primary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBillRow(
-    String label,
-    String value, {
-    bool isTotal = false,
-    Color? valueColor,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: isTotal
-              ? AppTextStyles.uiSemibold.copyWith(fontSize: 16)
-              : AppTextStyles.body.copyWith(
-                  fontSize: 13,
-                  height: 1,
-                  color: AppColors.secondaryText,
-                ),
-        ),
-        Text(
-          value,
-          style: isTotal
-              ? AppTextStyles.h2.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: valueColor,
-                )
-              : AppTextStyles.body.copyWith(
-                  fontSize: 13,
-                  height: 1,
-                  color: valueColor ?? Theme.of(context).colorScheme.onSurface,
-                ),
         ),
       ],
     );

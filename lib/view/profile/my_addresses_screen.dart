@@ -6,6 +6,7 @@ import '../../models/saved_address.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import 'add_address_screen.dart';
+import 'widgets/my_addresses/address_card.dart';
 
 class MyAddressesScreen extends StatefulWidget {
   const MyAddressesScreen({super.key});
@@ -47,51 +48,68 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
       ),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          foregroundColor: Theme.of(context).colorScheme.onSurface,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          surfaceTintColor: Theme.of(context).colorScheme.surface,
-          shape: const Border(bottom: BorderSide(color: AppColors.border)),
-          toolbarHeight: 60,
-          automaticallyImplyLeading: false,
-          titleSpacing: 0,
-          title: Text(
-            'My Addresses',
-            style: AppTextStyles.h2.copyWith(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
+        appBar: _buildAppBar(context),
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
           children: [
-            for (var index = 0; index < _addresses.length; index++) ...[
-              _AddressCard(
-                address: _addresses[index],
-                onEdit: () => _openAddressForm(_addresses[index]),
-              ),
-              if (index < _addresses.length - 1) const SizedBox(height: 12),
-            ],
+            _buildAddressList(),
             const SizedBox(height: 28),
-            OutlinedButton.icon(
-              onPressed: () => _openAddressForm(),
-              icon: const Icon(Icons.add, size: 16),
-              label: const Text('Add New Address'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.primary,
-                side: const BorderSide(color: AppColors.primary),
-                minimumSize: const Size.fromHeight(42),
-                shape: const StadiumBorder(),
-                textStyle: AppTextStyles.button.copyWith(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+            _buildAddButton(),
           ],
+        ),
+      ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Theme.of(context).colorScheme.surface,
+      shape: const Border(bottom: BorderSide(color: AppColors.border)),
+      toolbarHeight: 60,
+      automaticallyImplyLeading: false,
+      titleSpacing: 16,
+      title: Text(
+        'My Addresses',
+        style: AppTextStyles.h2.copyWith(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddressList() {
+    return Column(
+      children: List.generate(_addresses.length, (index) {
+        final address = _addresses[index];
+        return Padding(
+          padding: EdgeInsets.only(bottom: index < _addresses.length - 1 ? 12 : 0),
+          child: AddressCard(
+            address: address,
+            onEdit: () => _openAddressForm(address),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildAddButton() {
+    return OutlinedButton.icon(
+      onPressed: () => _openAddressForm(),
+      icon: const Icon(Icons.add, size: 16),
+      label: const Text('Add New Address'),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.primary,
+        side: const BorderSide(color: AppColors.primary),
+        minimumSize: const Size.fromHeight(42),
+        shape: const StadiumBorder(),
+        textStyle: AppTextStyles.button.copyWith(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
@@ -118,91 +136,5 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
         _addresses[existingIndex] = updatedAddress;
       }
     });
-  }
-}
-
-class _AddressCard extends StatelessWidget {
-  const _AddressCard({required this.address, required this.onEdit});
-
-  final SavedAddress address;
-  final VoidCallback onEdit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Flexible(
-                child: Text(
-                  '${address.name} (${address.type})',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.badge.copyWith(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ),
-              if (address.isDefault) ...[
-                const SizedBox(width: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.softPeach,
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Text(
-                    'DEFAULT',
-                    style: AppTextStyles.badge.copyWith(
-                      fontSize: 7,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-              //const Spacer(),
-              IconButton(
-                onPressed: onEdit,
-                tooltip: 'Edit address',
-                visualDensity: VisualDensity.compact,
-                constraints: const BoxConstraints.tightFor(
-                  width: 32,
-                  height: 32,
-                ),
-                icon: const Icon(
-                  Icons.edit_outlined,
-                  size: 14,
-                  color: AppColors.secondaryText,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            address.phone,
-            style: AppTextStyles.caption.copyWith(fontSize: 11),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            address.formattedAddress,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.caption.copyWith(fontSize: 11, height: 1.25),
-          ),
-        ],
-      ),
-    );
   }
 }
