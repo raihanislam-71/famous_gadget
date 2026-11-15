@@ -99,11 +99,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   static Widget _buildRecommendedProduct(BuildContext context, int index) {
-    return ProductCard(productId: '$index', width: double.infinity);
+    return ProductCard(productId: '$index');
+    // return ProductCard(productId: '$index', width: double.infinity);
   }
 
   static Widget _buildHotDealProduct(BuildContext context, int index) {
-    return ProductCard(productId: '${index + 4}', width: double.infinity);
+    return ProductCard(productId: '${index + 4}');
+    // return ProductCard(productId: '${index + 4}', width: double.infinity);
   }
 
   Widget _buildFeaturedProductSection() {

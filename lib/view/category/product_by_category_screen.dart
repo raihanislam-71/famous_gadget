@@ -161,29 +161,32 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
                       ),
                     );
                   }
-                  final columns = constraints.maxWidth < 560
-                      ? 2
-                      : constraints.maxWidth < 900
-                      ? 3
-                      : 4;
-                  final itemWidth =
-                      (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                  final childAspectRatio = itemWidth < 228
-                      ? itemWidth / 240
-                      : 0.95;
+                  // final columns = constraints.maxWidth < 560
+                  //     ? 2
+                  //     : constraints.maxWidth < 900
+                  //     ? 3
+                  //     : 4;
+                  // final itemWidth =
+                  //     (constraints.maxWidth - 16 * (columns - 1)) / columns;
+                  // final childAspectRatio = itemWidth < 228
+                  //     ? itemWidth / 240
+                  //     : 0.95;
                   return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: visibleProductIds.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columns,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: childAspectRatio,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 260,
+                          mainAxisExtent: 250,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                        ),
                     itemBuilder: (context, index) {
                       final productId = visibleProductIds[index];
                       return ProductCard(
                         productId: productId,
-                        width: double.infinity,
+                        //width: double.infinity,
                       );
                     },
                   );

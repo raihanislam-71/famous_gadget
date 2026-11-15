@@ -155,25 +155,17 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       ),
                     );
                   }
-                  final columns = constraints.maxWidth < 560
-                      ? 2
-                      : constraints.maxWidth < 900
-                      ? 3
-                      : 4;
-                  final itemWidth =
-                      (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                  final childAspectRatio = itemWidth < 228
-                      ? itemWidth / 240
-                      : 0.95;
                   return GridView.builder(
-                    padding: const EdgeInsets.only(top: 8),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: products.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columns,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: childAspectRatio,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 260,
+                          mainAxisExtent: 250,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                        ),
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return ProductCard(

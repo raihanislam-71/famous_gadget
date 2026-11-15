@@ -1,6 +1,7 @@
+import 'package:famous_gadget/models/product.dart';
 import 'package:famous_gadget/view/utils/app_colors.dart';
+import 'package:famous_gadget/view/widgets/product_card.dart';
 import 'package:flutter/material.dart';
-import 'web_product_card.dart';
 
 class WebHotDealsSection extends StatelessWidget {
   const WebHotDealsSection({super.key, required this.onViewProducts});
@@ -71,15 +72,15 @@ class WebHotDealsSection extends StatelessWidget {
                     ),
                   ],
                 );
-                const offer = WebProductCard(
-                  product: WebProduct(
-                    'Arlo Pro 5 Smart 4K Camera',
-                    18500,
-                    24000,
-                    '4.8',
-                    '52',
-                    'hot_camera.jpg',
-                    'arlo-pro-5',
+                const offer = ProductCard(
+                  product: Product(
+                    id: 'arlo-pro-5',
+                    name: 'Arlo Pro 5 Smart 4K Camera',
+                    price: 18500,
+                    originalPrice: 24000,
+                    rating: '4.8',
+                    reviewCount: '52',
+                    imagePath: 'assets/images/figma_web/hot_camera.jpg',
                   ),
                 );
                 if (compact) {

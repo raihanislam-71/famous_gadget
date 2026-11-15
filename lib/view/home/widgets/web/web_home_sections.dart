@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../../../models/product.dart';
+import '../../../widgets/product_card.dart';
 import 'web_category_card.dart';
-import 'web_product_card.dart';
 import 'web_section_layout.dart';
 import 'web_section_heading.dart';
 
@@ -53,7 +54,7 @@ class WebCategorySection extends StatelessWidget {
 class WebProductsSection extends StatelessWidget {
   final String title;
   final String subtitle;
-  final List<WebProduct> products;
+  final List<Product> products;
   final VoidCallback onSeeAll;
   final bool shaded;
 
@@ -94,7 +95,7 @@ class WebProductsSection extends StatelessWidget {
                     mainAxisSpacing: 16,
                     childAspectRatio: aspectRatio,
                   ),
-                  itemBuilder: (context, index) => WebProductCard(product: products[index]),
+                  itemBuilder: (context, index) => ProductCard(product: products[index]),
                 );
               },
             ),
