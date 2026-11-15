@@ -1,3 +1,4 @@
+import 'package:famous_gadget/view/product_details/widgets/product_image_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -26,7 +27,6 @@ part 'sections/product_details_desktop_content.dart';
 part 'sections/product_details_desktop_reviews.dart';
 part 'sections/product_details_related_products.dart';
 part 'sections/product_details_mobile_layout.dart';
-part 'sections/product_details_mobile_image.dart';
 part 'sections/product_details_mobile_content.dart';
 part 'sections/product_details_mobile_bottom_bar.dart';
 
@@ -48,7 +48,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   late Product _product;
   late String _selectedImage;
   bool _isWishlisted = false;
-  Color selectedColor = Colors.black;
+  Color selectedColor = const Color(0xFF2455A4);
 
   @override
   void initState() {
@@ -163,6 +163,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth >= 1100;
+        // Mobile gets the compact product view; tablet and desktop share the
+        // wider web layout.
         final usesDesktopContent = constraints.maxWidth >= 900;
 
         return Scaffold(
