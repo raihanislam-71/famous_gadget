@@ -27,7 +27,7 @@ class WebHomeScreen extends StatelessWidget {
             const WebSiteHeader(),
             const WebWebContent(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 child: HomeBannerSlider(),
               ),
             ),

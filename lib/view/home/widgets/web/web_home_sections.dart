@@ -28,7 +28,7 @@ class WebCategorySection extends StatelessWidget {
                   'Explore our handpicked collections of trending tech gadgets',
               onSeeAll: onSeeAll,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
             SizedBox(
               height: 142,
               child: ListView.separated(
@@ -78,7 +78,7 @@ class WebProductsSection extends StatelessWidget {
               subtitle: subtitle,
               onSeeAll: onSeeAll,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
