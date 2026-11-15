@@ -59,7 +59,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final filteredCategories = categories.where((category) {
       return (category['name'] as String).toLowerCase().contains(
         _searchQuery.trim().toLowerCase(),
@@ -109,7 +109,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  Get.find<BottomNavController>().backToHome();
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  } else if (Get.isRegistered<BottomNavController>()) {
+                    Get.find<BottomNavController>().backToHome();
+                  } else {
+                    AppRoutes.backToHome();
+                  }
                 },
                 icon: const Icon(CupertinoIcons.back),
               ),
@@ -126,11 +132,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     ),
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 180,
-                      mainAxisExtent: 160,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                    ),
+                          maxCrossAxisExtent: 180,
+                          mainAxisExtent: 160,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                        ),
                     itemCount: filteredCategories.length,
                     itemBuilder: (context, index) {
                       final category = filteredCategories[index];

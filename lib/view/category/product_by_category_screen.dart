@@ -56,7 +56,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final visibleProductIds = _visibleProductIds;
     return Scaffold(
       appBar: AppBar(
@@ -162,16 +162,14 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
                       itemCount: visibleProductIds.length,
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 260,
-                        mainAxisExtent: 250,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                      ),
+                            maxCrossAxisExtent: 260,
+                            mainAxisExtent: 250,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                          ),
                       itemBuilder: (context, index) {
                         final productId = visibleProductIds[index];
-                        return ProductCard(
-                          productId: productId,
-                        );
+                        return ProductCard(productId: productId);
                       },
                     ),
             ),

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
@@ -82,6 +83,8 @@ class _CheckoutConfirmationScreenState
   }
 
   Widget _buildAppBar() {
+    final showWebHeader = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -94,14 +97,14 @@ class _CheckoutConfirmationScreenState
       child: Align(
         alignment: Alignment.centerLeft,
         child: InkWell(
-          onTap: kIsWeb ? null : () => Get.back<void>(),
+          onTap: showWebHeader ? null : () => Get.back<void>(),
           borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (!kIsWeb) ...[
+                if (!showWebHeader) ...[
                   Icon(
                     CupertinoIcons.back,
                     color: Theme.of(context).colorScheme.onSurface,

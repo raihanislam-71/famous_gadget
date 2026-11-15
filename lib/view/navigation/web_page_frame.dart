@@ -9,11 +9,13 @@ class WebPageFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDesktop = MediaQuery.sizeOf(context).width >= 1100;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          const WebSiteHeader(isHome: false),
+          if (isDesktop) const WebSiteHeader(isHome: false),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {

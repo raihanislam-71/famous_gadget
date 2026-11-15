@@ -64,6 +64,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+    final showWebHeader = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
@@ -71,7 +73,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         'My Wishlist (${_items.length})',
         style: AppTextStyles.h2.copyWith(fontSize: 18),
       ),
-      leading: kIsWeb
+      leading: showWebHeader
           ? null
           : IconButton(
               icon: const Icon(CupertinoIcons.back),

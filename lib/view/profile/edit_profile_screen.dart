@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -98,6 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       shape: const Border(bottom: BorderSide(color: AppColors.border)),
       toolbarHeight: 60,
       automaticallyImplyLeading: false,
+      leading: _buildBackButton(context),
       titleSpacing: 16,
       title: Text(
         'Edit Profile Screen',
@@ -107,6 +110,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildBackButton(BuildContext context) {
+    final showBack = !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
+    return showBack
+        ? IconButton(
+            icon: const Icon(CupertinoIcons.back),
+            tooltip: 'Back',
+            onPressed: () => Get.back<void>(),
+          )
+        : const SizedBox.shrink();
   }
 
   void _saveChanges() {

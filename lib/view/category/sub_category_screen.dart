@@ -75,7 +75,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
 
     return Scaffold(
       appBar: AppBar(

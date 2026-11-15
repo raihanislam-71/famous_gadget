@@ -81,7 +81,8 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
                     const SizedBox(height: 16),
                     SavedAddressCard(
                       isSelected: _isSavedAddressSelected,
-                      onTap: () => setState(() => _isSavedAddressSelected = true),
+                      onTap: () =>
+                          setState(() => _isSavedAddressSelected = true),
                     ),
                     const SizedBox(height: 16),
                     DashedBorderButton(
@@ -122,6 +123,8 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
   }
 
   Widget _buildAppBar() {
+    final showWebHeader = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -134,13 +137,13 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
       child: Row(
         children: [
           InkWell(
-            onTap: kIsWeb ? null : () => Get.back<void>(),
+            onTap: showWebHeader ? null : () => Get.back<void>(),
             borderRadius: BorderRadius.circular(20),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               child: Row(
                 children: [
-                  if (!kIsWeb) ...[
+                  if (!showWebHeader) ...[
                     Icon(
                       CupertinoIcons.back,
                       color: Theme.of(context).colorScheme.onSurface,

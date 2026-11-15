@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -90,6 +92,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
           elevation: 0,
           scrolledUnderElevation: 0,
           automaticallyImplyLeading: false,
+          leading: _buildBackButton(context),
           titleSpacing: 16,
           title: Text(
             'My Orders',
@@ -138,6 +141,23 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildBackButton(BuildContext context) {
+    final showBack = !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
+    return showBack
+        ? IconButton(
+            icon: const Icon(CupertinoIcons.back),
+            tooltip: 'Back',
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              } else {
+                AppRoutes.backToHome();
+              }
+            },
+          )
+        : const SizedBox.shrink();
   }
 
   Widget _buildFilters() {

@@ -18,7 +18,7 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.find<CartController>();
-    final isWideLayout = MediaQuery.sizeOf(context).width >= 900;
+    final isWideLayout = MediaQuery.sizeOf(context).width >= 1100;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -49,22 +49,30 @@ class CartScreen extends StatelessWidget {
           ),
           body: SafeArea(
             top: false,
-            child: controller.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(color: AppColors.primary),
-                  )
-                : controller.errorMessage != null
-                ? _CartLoadError(
-                    message: controller.errorMessage!,
-                    onRetry: controller.loadCart,
-                  )
-                : controller.items.isEmpty
-                ? _EmptyCart()
-                : _PopulatedCart(
-                    controller: cartController,
-                    items: controller.items,
-                    isWideLayout: isWideLayout,
-                  ),
+            child: LayoutBuilder(
+              builder: (context, constraints) => SizedBox(
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+                child: controller.items.isNotEmpty
+                    ? _PopulatedCart(
+                        controller: cartController,
+                        items: controller.items,
+                        isWideLayout: isWideLayout,
+                      )
+                    : controller.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
+                      )
+                    : controller.errorMessage != null
+                    ? _CartLoadError(
+                        message: controller.errorMessage!,
+                        onRetry: controller.loadCart,
+                      )
+                    : _EmptyCart(),
+              ),
+            ),
           ),
           bottomNavigationBar:
               controller.items.isEmpty ||
@@ -212,8 +220,16 @@ class _PopulatedCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final horizontalPadding = screenWidth >= 600 ? 32.0 : 16.0;
+
     Widget itemList() => ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        16,
+        horizontalPadding,
+        24,
+      ),
       itemCount: items.length,
       separatorBuilder: (_, _) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
@@ -227,7 +243,23 @@ class _PopulatedCart extends StatelessWidget {
       },
     );
 
-    if (!isWideLayout) return itemList();
+    if (!isWideLayout) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final contentWidth = constraints.maxWidth > 720
+              ? 720.0
+              : constraints.maxWidth;
+          return Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              width: contentWidth,
+              height: constraints.maxHeight,
+              child: itemList(),
+            ),
+          );
+        },
+      );
+    }
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

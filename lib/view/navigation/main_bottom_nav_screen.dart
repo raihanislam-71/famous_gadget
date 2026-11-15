@@ -9,10 +9,7 @@ import 'package:famous_gadget/view/utils/app_text_styles.dart';
 import 'package:famous_gadget/view/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-
-import '../home/web_home_screen.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});
@@ -34,46 +31,56 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) return const WebHomeScreen();
-
     return GetBuilder<BottomNavController>(
       builder: (_) {
         return Scaffold(
           extendBody: true,
           backgroundColor: Colors.transparent,
           body: _screens[_bottomNavController.selectedIndex],
-          bottomNavigationBar: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Container(
-              height: 68,
-              decoration: BoxDecoration(
-                color: AppColors.navyDark,
-                borderRadius: BorderRadius.circular(34),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.25),
-                    blurRadius: 12,
-                    offset: const Offset(0, 8),
+          bottomNavigationBar: SafeArea(
+            top: false,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
                   ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildNavItem(0, AssetsPath.navHome, 'Home'),
-                    _buildNavItem(1, AssetsPath.navGrid, 'Category'),
-                    GetBuilder<CartController>(
-                      builder: (cart) => _buildNavItem(
-                        2,
-                        AssetsPath.navCart,
-                        'Cart',
-                        badge: cart.totalItemCount,
+                  child: Container(
+                    height: 68,
+                    decoration: BoxDecoration(
+                      color: AppColors.navyDark,
+                      borderRadius: BorderRadius.circular(34),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.25),
+                          blurRadius: 12,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildNavItem(0, AssetsPath.navHome, 'Home'),
+                          _buildNavItem(1, AssetsPath.navGrid, 'Category'),
+                          GetBuilder<CartController>(
+                            builder: (cart) => _buildNavItem(
+                              2,
+                              AssetsPath.navCart,
+                              'Cart',
+                              badge: cart.totalItemCount,
+                            ),
+                          ),
+                          _buildNavItem(3, AssetsPath.navUser, 'Account'),
+                        ],
                       ),
                     ),
-                    _buildNavItem(3, AssetsPath.navUser, 'Account'),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -133,7 +140,10 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
               ],
               if (badge > 0)
                 Container(
-                  constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+                  constraints: const BoxConstraints(
+                    minWidth: 18,
+                    minHeight: 18,
+                  ),
                   margin: const EdgeInsets.only(left: 4),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   alignment: Alignment.center,

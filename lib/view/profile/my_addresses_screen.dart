@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -71,6 +73,7 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
       shape: const Border(bottom: BorderSide(color: AppColors.border)),
       toolbarHeight: 60,
       automaticallyImplyLeading: false,
+      leading: _buildBackButton(context),
       titleSpacing: 16,
       title: Text(
         'My Addresses',
@@ -82,12 +85,25 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
     );
   }
 
+  Widget _buildBackButton(BuildContext context) {
+    final showBack = !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
+    return showBack
+        ? IconButton(
+            icon: const Icon(CupertinoIcons.back),
+            tooltip: 'Back',
+            onPressed: () => Get.back<void>(),
+          )
+        : const SizedBox.shrink();
+  }
+
   Widget _buildAddressList() {
     return Column(
       children: List.generate(_addresses.length, (index) {
         final address = _addresses[index];
         return Padding(
-          padding: EdgeInsets.only(bottom: index < _addresses.length - 1 ? 12 : 0),
+          padding: EdgeInsets.only(
+            bottom: index < _addresses.length - 1 ? 12 : 0,
+          ),
           child: AddressCard(
             address: address,
             onEdit: () => _openAddressForm(address),

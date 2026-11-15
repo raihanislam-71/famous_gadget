@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+
 import '../../../controllers/auth_controller.dart';
 import '../app_navigation.dart';
 import '../web_page_frame.dart';
@@ -8,8 +9,19 @@ import '../web_page_frame.dart';
 class RouteHelpers {
   RouteHelpers._();
 
-  static Widget webPage(Widget child) =>
-      kIsWeb ? WebPageFrame(child: child) : child;
+  static Widget webPage(Widget child) {
+    if (!kIsWeb) return child;
+
+    return Builder(
+      builder: (context) {
+        // Tablet and smaller web viewports use the same mobile-style shell.
+        // The desktop web header starts only at the app's desktop breakpoint.
+        return MediaQuery.sizeOf(context).width < 1100
+            ? child
+            : WebPageFrame(child: child);
+      },
+    );
+  }
 
   static Object? objectArgument(String key) {
     final arguments = Get.arguments;

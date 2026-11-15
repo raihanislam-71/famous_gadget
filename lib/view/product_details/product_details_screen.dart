@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -163,15 +162,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isDesktop = constraints.maxWidth >= 900;
+        final isDesktop = constraints.maxWidth >= 1100;
+        final usesDesktopContent = constraints.maxWidth >= 900;
 
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
           appBar: isDesktop ? null : _buildMobileAppBar(context),
-          body: isDesktop
-              ? _buildDesktopLayout(context, constraints)
+          body: usesDesktopContent
+              ? _buildDesktopLayout(
+                  context,
+                  constraints,
+                  showBreadcrumb: isDesktop,
+                )
               : _buildMobileLayout(context),
-          bottomNavigationBar: isDesktop
+          bottomNavigationBar: usesDesktopContent
               ? null
               : _buildMobileBottomBar(context),
         );
