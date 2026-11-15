@@ -3,7 +3,7 @@ part of '../product_details_screen.dart';
 extension _ProductDetailsDesktopInfo on _ProductDetailsScreenState {
   Widget _buildDesktopProductInfo(BuildContext context) {
     final theme = Theme.of(context);
-    final discount = this._calculateDiscount();
+    final discount = _calculateDiscount();
     final savings = _product.originalPrice - _product.price;
 
     return Column(
@@ -94,14 +94,14 @@ extension _ProductDetailsDesktopInfo on _ProductDetailsScreenState {
             'Ocean Blue',
             'Space Gray',
           ],
-          onColorSelected: (c) => this._updateState(() => _selectedColor = c),
+          onColorSelected: (c) => _updateState(() => selectedColor = c),
         ),
         const SizedBox(height: 24),
         // Action Area: In Stock vs Out of Stock
         if (widget.isInStock)
-          this._buildDesktopInStockActions(context)
+          _buildDesktopInStockActions(context)
         else
-          this._buildDesktopOutOfStockActions(context),
+          _buildDesktopOutOfStockActions(context),
         const SizedBox(height: 24),
         // Delivery Estimates Box
         Container(

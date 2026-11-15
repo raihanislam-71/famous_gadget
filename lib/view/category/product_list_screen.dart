@@ -145,45 +145,29 @@ class _ProductListScreenState extends State<ProductListScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (products.isEmpty) {
-                    return Center(
+              child: products.isEmpty
+                  ? Center(
                       child: Text(
                         'No products found',
                         style: theme.textTheme.bodyLarge,
                       ),
-                    );
-                  }
-                  final columns = constraints.maxWidth < 560
-                      ? 2
-                      : constraints.maxWidth < 900
-                      ? 3
-                      : 4;
-                  final itemWidth =
-                      (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                  final childAspectRatio = itemWidth < 228
-                      ? itemWidth / 240
-                      : 0.95;
-                  return GridView.builder(
-                    padding: const EdgeInsets.only(top: 8),
-                    itemCount: products.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columns,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: childAspectRatio,
+                    )
+                  : GridView.builder(
+                      itemCount: products.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 260,
+                        mainAxisExtent: 250,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                      ),
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return ProductCard(
+                          product: product,
+                        );
+                      },
                     ),
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      return ProductCard(
-                        productId: product.id,
-                        isInStock: product.isInStock,
-                      );
-                    },
-                  );
-                },
-              ),
             ),
           ),
         ],
