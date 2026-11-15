@@ -1,6 +1,6 @@
+import '../../../../models/product.dart';
 import '../../../utils/assets_path.dart';
 import 'web_category_card.dart';
-import 'web_product_card.dart';
 
 class WebHomeData {
   static const categories = [
@@ -15,30 +15,158 @@ class WebHomeData {
   ];
 
   static const featured = [
-    WebProduct('Anker Soundcore R50i True Wireless Earbuds', 1999, 2499, '4.8', '210', 'featured_earbuds.jpg', 'anker-r50i'),
-    WebProduct('Haylou Solar Lite Smart Watch with SpO2', 2799, 3599, '4.7', '89', 'featured_watch.jpg', 'haylou-watch'),
-    WebProduct('DJI Osmo Mobile 6 Smartphone Gimbal', 13499, 15000, '4.9', '135', 'featured_gimbal.jpg', 'dji-osmo'),
-    WebProduct('Sony WH-1000XM5 Noise Cancelling Headphones', 32500, 45000, '4.9', '342', 'featured_headphones.jpg', 'sony-xm5'),
+    Product(
+      id: 'anker-r50i',
+      name: 'Anker Soundcore R50i True Wireless Earbuds',
+      price: 1999,
+      originalPrice: 2499,
+      rating: '4.8',
+      reviewCount: '210',
+      imagePath: 'assets/images/figma_web/featured_earbuds.jpg',
+    ),
+    Product(
+      id: 'haylou-watch',
+      name: 'Haylou Solar Lite Smart Watch with SpO2',
+      price: 2799,
+      originalPrice: 3599,
+      rating: '4.7',
+      reviewCount: '89',
+      imagePath: 'assets/images/figma_web/featured_watch.jpg',
+    ),
+    Product(
+      id: 'dji-osmo',
+      name: 'DJI Osmo Mobile 6 Smartphone Gimbal',
+      price: 13499,
+      originalPrice: 15000,
+      rating: '4.9',
+      reviewCount: '135',
+      imagePath: 'assets/images/figma_web/featured_gimbal.jpg',
+    ),
+    Product(
+      id: 'sony-xm5',
+      name: 'Sony WH-1000XM5 Noise Cancelling Headphones',
+      price: 32500,
+      originalPrice: 45000,
+      rating: '4.9',
+      reviewCount: '342',
+      imagePath: 'assets/images/figma_web/featured_headphones.jpg',
+    ),
   ];
 
   static const bestSellers = [
-    WebProduct('OnePlus Nord CE 3 Lite 5G (8GB/256GB)', 24499, 27900, '4.9', '340', 'bestseller_phone.jpg', 'oneplus-nord'),
-    WebProduct('A4Tech Bloody B820R Mechanical Keyboard', 4200, 5000, '4.6', '120', 'bestseller_keyboard.jpg', 'a4tech-keyboard'),
-    WebProduct('Xiaomi Mi TV Box S 2nd Gen 4K Ultra HD', 5699, 6500, '4.8', '412', 'bestseller_tvbox.jpg', 'xiaomi-tv-box'),
-    WebProduct('TP-Link Archer C6 MU-MIMO Router', 2399, 2800, '4.7', '512', 'bestseller_router.jpg', 'tp-link-router'),
+    Product(
+      id: 'oneplus-nord',
+      name: 'OnePlus Nord CE 3 Lite 5G (8GB/256GB)',
+      price: 24499,
+      originalPrice: 27900,
+      rating: '4.9',
+      reviewCount: '340',
+      imagePath: 'assets/images/figma_web/bestseller_phone.jpg',
+    ),
+    Product(
+      id: 'a4tech-keyboard',
+      name: 'A4Tech Bloody B820R Mechanical Keyboard',
+      price: 4200,
+      originalPrice: 5000,
+      rating: '4.6',
+      reviewCount: '120',
+      imagePath: 'assets/images/figma_web/bestseller_keyboard.jpg',
+    ),
+    Product(
+      id: 'xiaomi-tv-box',
+      name: 'Xiaomi Mi TV Box S 2nd Gen 4K Ultra HD',
+      price: 5699,
+      originalPrice: 6500,
+      rating: '4.8',
+      reviewCount: '412',
+      imagePath: 'assets/images/figma_web/bestseller_tvbox.jpg',
+    ),
+    Product(
+      id: 'tp-link-router',
+      name: 'TP-Link Archer C6 MU-MIMO Router',
+      price: 2399,
+      originalPrice: 2800,
+      rating: '4.7',
+      reviewCount: '512',
+      imagePath: 'assets/images/figma_web/bestseller_router.jpg',
+    ),
   ];
 
   static const newArrivals = [
-    WebProduct('Xiaomi Pad 6 (8GB/256GB)', 36500, 39000, '4.8', '45', 'new_phone.jpg', 'xiaomi-pad'),
-    WebProduct('Realme Buds T300 with 30dB ANC', 2850, 3500, '4.6', '28', 'new_earbuds.jpg', 'realme-buds'),
-    WebProduct('BoyaLink Wireless Dual Lavalier Microphone', 9499, 11000, '4.7', '19', 'new_lavalier.jpg', 'boya-mic'),
-    WebProduct('Wanbo T2 Max Smart Full HD Projector', 16499, 18999, '4.5', '67', 'new_projector.jpg', 'wanbo-projector'),
+    Product(
+      id: 'xiaomi-pad',
+      name: 'Xiaomi Pad 6 (8GB/256GB)',
+      price: 36500,
+      originalPrice: 39000,
+      rating: '4.8',
+      reviewCount: '45',
+      imagePath: 'assets/images/figma_web/new_phone.jpg',
+    ),
+    Product(
+      id: 'realme-buds',
+      name: 'Realme Buds T300 with 30dB ANC',
+      price: 2850,
+      originalPrice: 3500,
+      rating: '4.6',
+      reviewCount: '28',
+      imagePath: 'assets/images/figma_web/new_earbuds.jpg',
+    ),
+    Product(
+      id: 'boya-mic',
+      name: 'BoyaLink Wireless Dual Lavalier Microphone',
+      price: 9499,
+      originalPrice: 11000,
+      rating: '4.7',
+      reviewCount: '19',
+      imagePath: 'assets/images/figma_web/new_lavalier.jpg',
+    ),
+    Product(
+      id: 'wanbo-projector',
+      name: 'Wanbo T2 Max Smart Full HD Projector',
+      price: 16499,
+      originalPrice: 18999,
+      rating: '4.5',
+      reviewCount: '67',
+      imagePath: 'assets/images/figma_web/new_projector.jpg',
+    ),
   ];
 
   static const recommended = [
-    WebProduct('Logitech C922 Pro Stream Webcam', 10500, 12500, '4.8', '94', 'recommended_webcam.jpg', 'logitech-webcam'),
-    WebProduct('Anker PowerCore 24K 140W Power Bank', 14200, 16500, '4.9', '210', 'recommended_powerbank.jpg', 'anker-powercore'),
-    WebProduct('Samsung Galaxy Tab S9 FE', 49500, 55000, '4.8', '120', 'recommended_tablet.jpg', 'samsung-tab'),
-    WebProduct('Aventho Wireless Headset', 15499, 19500, '4.7', '34', 'recommended_headset.jpg', 'aventho-headset'),
+    Product(
+      id: 'logitech-webcam',
+      name: 'Logitech C922 Pro Stream Webcam',
+      price: 10500,
+      originalPrice: 12500,
+      rating: '4.8',
+      reviewCount: '94',
+      imagePath: 'assets/images/figma_web/recommended_webcam.jpg',
+    ),
+    Product(
+      id: 'anker-powercore',
+      name: 'Anker PowerCore 24K 140W Power Bank',
+      price: 14200,
+      originalPrice: 16500,
+      rating: '4.9',
+      reviewCount: '210',
+      imagePath: 'assets/images/figma_web/recommended_powerbank.jpg',
+    ),
+    Product(
+      id: 'samsung-tab',
+      name: 'Samsung Galaxy Tab S9 FE',
+      price: 49500,
+      originalPrice: 55000,
+      rating: '4.8',
+      reviewCount: '120',
+      imagePath: 'assets/images/figma_web/recommended_tablet.jpg',
+    ),
+    Product(
+      id: 'aventho-headset',
+      name: 'Aventho Wireless Headset',
+      price: 15499,
+      originalPrice: 19500,
+      rating: '4.7',
+      reviewCount: '34',
+      imagePath: 'assets/images/figma_web/recommended_headset.jpg',
+    ),
   ];
 }
