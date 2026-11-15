@@ -3,7 +3,7 @@ part of '../product_details_screen.dart';
 extension _ProductDetailsMobileLayout on _ProductDetailsScreenState {
   Widget _buildMobileLayout(BuildContext context) {
     final theme = Theme.of(context);
-    final discount = this._calculateDiscount();
+    final discount = _calculateDiscount();
     final savings = _product.originalPrice - _product.price;
 
     return SingleChildScrollView(
@@ -11,9 +11,9 @@ extension _ProductDetailsMobileLayout on _ProductDetailsScreenState {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          this._buildMobileImageCard(context, discount),
+          _buildMobileImageCard(context, discount),
           const SizedBox(height: 12),
-          this._buildGalleryThumbnails(context),
+          _buildGalleryThumbnails(context),
           const SizedBox(height: 16),
           // Product Name
           Text(
@@ -122,10 +122,10 @@ extension _ProductDetailsMobileLayout on _ProductDetailsScreenState {
               'Ocean Blue',
               'Space Gray',
             ],
-            onColorSelected: (c) => this._updateState(() => _selectedColor = c),
+            onColorSelected: (c) => _updateState(() => selectedColor = c),
           ),
           const SizedBox(height: 20),
-          this._buildMobileSpecifications(context),
+          _buildMobileSpecifications(context),
           const SizedBox(height: 16),
           // Description
           Text('Description', style: theme.textTheme.titleLarge),
@@ -148,7 +148,7 @@ extension _ProductDetailsMobileLayout on _ProductDetailsScreenState {
           ),
           const SizedBox(height: 12),
           ..._reviewController.previewReviews.map(
-            (rev) => this._buildMobileReviewCard(context, rev),
+            (rev) => _buildMobileReviewCard(context, rev),
           ),
           const SizedBox(height: 8),
           SizedBox(

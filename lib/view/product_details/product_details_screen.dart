@@ -49,7 +49,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   late Product _product;
   late String _selectedImage;
   bool _isWishlisted = false;
-  Color _selectedColor = Colors.black;
+  Color selectedColor = Colors.black;
 
   @override
   void initState() {
@@ -167,7 +167,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
-          appBar: isDesktop ? null : this._buildMobileAppBar(context),
+          appBar: isDesktop ? null : _buildMobileAppBar(context),
           body: isDesktop
               ? _buildDesktopLayout(context, constraints)
               : _buildMobileLayout(context),
