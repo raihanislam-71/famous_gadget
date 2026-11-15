@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../models/product.dart';
 import '../../../widgets/product_card.dart';
 import 'web_category_card.dart';
@@ -23,22 +24,24 @@ class WebCategorySection extends StatelessWidget {
           children: [
             WebSectionHeading(
               title: 'Shop by Category',
-              subtitle: 'Explore our handpicked collections of trending tech gadgets',
+              subtitle:
+                  'Explore our handpicked collections of trending tech gadgets',
               onSeeAll: onSeeAll,
             ),
             const SizedBox(height: 24),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: categories.length,
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 180,
-                mainAxisExtent: 146,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
+            SizedBox(
+              height: 142,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 4),
+                itemBuilder: (context, index) {
+                  return SizedBox(
+                    width: 132,
+                    child: WebCategoryCard(category: categories[index]),
+                  );
+                },
               ),
-              itemBuilder: (context, index) =>
-                  WebCategoryCard(category: categories[index]),
             ),
           ],
         ),
