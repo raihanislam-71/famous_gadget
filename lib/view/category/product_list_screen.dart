@@ -145,37 +145,29 @@ class _ProductListScreenState extends State<ProductListScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (products.isEmpty) {
-                    return Center(
+              child: products.isEmpty
+                  ? Center(
                       child: Text(
                         'No products found',
                         style: theme.textTheme.bodyLarge,
                       ),
-                    );
-                  }
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: products.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 260,
-                          mainAxisExtent: 250,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                        ),
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      return ProductCard(
-                        productId: product.id,
-                        isInStock: product.isInStock,
-                      );
-                    },
-                  );
-                },
-              ),
+                    )
+                  : GridView.builder(
+                      itemCount: products.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 260,
+                        mainAxisExtent: 250,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                      ),
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return ProductCard(
+                          product: product,
+                        );
+                      },
+                    ),
             ),
           ),
         ],

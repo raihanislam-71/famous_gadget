@@ -151,47 +151,29 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (visibleProductIds.isEmpty) {
-                    return Center(
+              child: visibleProductIds.isEmpty
+                  ? Center(
                       child: Text(
                         'No products found',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                    );
-                  }
-                  // final columns = constraints.maxWidth < 560
-                  //     ? 2
-                  //     : constraints.maxWidth < 900
-                  //     ? 3
-                  //     : 4;
-                  // final itemWidth =
-                  //     (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                  // final childAspectRatio = itemWidth < 228
-                  //     ? itemWidth / 240
-                  //     : 0.95;
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: visibleProductIds.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 260,
-                          mainAxisExtent: 250,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                        ),
-                    itemBuilder: (context, index) {
-                      final productId = visibleProductIds[index];
-                      return ProductCard(
-                        productId: productId,
-                        //width: double.infinity,
-                      );
-                    },
-                  );
-                },
-              ),
+                    )
+                  : GridView.builder(
+                      itemCount: visibleProductIds.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 260,
+                        mainAxisExtent: 250,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                      ),
+                      itemBuilder: (context, index) {
+                        final productId = visibleProductIds[index];
+                        return ProductCard(
+                          productId: productId,
+                        );
+                      },
+                    ),
             ),
           ),
         ],

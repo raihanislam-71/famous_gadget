@@ -117,53 +117,39 @@ class _CategoryScreenState extends State<CategoryScreen> {
       body: Column(
         children: [
           Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final width = constraints.maxWidth;
-                final crossAxisCount = width < 360
-                    ? 2
-                    : width < 600
-                    ? 3
-                    : width < 900
-                    ? 4
-                    : 6;
-
-                if (filteredCategories.isEmpty) {
-                  return const Center(child: Text('No categories found'));
-                }
-
-                return GridView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
+            child: filteredCategories.isEmpty
+                ? const Center(child: Text('No categories found'))
+                : GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 180,
+                      mainAxisExtent: 160,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                    ),
+                    itemCount: filteredCategories.length,
+                    itemBuilder: (context, index) {
+                      final category = filteredCategories[index];
+                      return CategoryGridCard(
+                        categoryName: category['name']!,
+                        imagePath: category['image']!,
+                        itemsCount: category['items']!,
+                        onTap: () {
+                          final categoryName = category['name']! as String;
+                          AppRoutes.to<void>(
+                            route: AppRoutes.subCategory,
+                            arguments: {'categoryName': categoryName},
+                            mobileBuilder: () =>
+                                SubCategoryScreen(categoryName: categoryName),
+                          );
+                        },
+                      );
+                    },
                   ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 0.82,
-                  ),
-                  itemCount: filteredCategories.length,
-                  itemBuilder: (context, index) {
-                    final category = filteredCategories[index];
-                    return CategoryGridCard(
-                      categoryName: category['name']!,
-                      imagePath: category['image']!,
-                      itemsCount: category['items']!,
-                      onTap: () {
-                        final categoryName = category['name']! as String;
-                        AppRoutes.to<void>(
-                          route: AppRoutes.subCategory,
-                          arguments: {'categoryName': categoryName},
-                          mobileBuilder: () =>
-                              SubCategoryScreen(categoryName: categoryName),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
           ),
         ],
       ),

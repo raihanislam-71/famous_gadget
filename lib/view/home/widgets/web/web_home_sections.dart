@@ -27,22 +27,18 @@ class WebCategorySection extends StatelessWidget {
               onSeeAll: onSeeAll,
             ),
             const SizedBox(height: 24),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final columns = constraints.maxWidth < 560 ? 2 : constraints.maxWidth < 900 ? 4 : 8;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: categories.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columns,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    mainAxisExtent: 146,
-                  ),
-                  itemBuilder: (context, index) => WebCategoryCard(category: categories[index]),
-                );
-              },
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: categories.length,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 180,
+                mainAxisExtent: 146,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemBuilder: (context, index) =>
+                  WebCategoryCard(category: categories[index]),
             ),
           ],
         ),
@@ -80,24 +76,18 @@ class WebProductsSection extends StatelessWidget {
               onSeeAll: onSeeAll,
             ),
             const SizedBox(height: 24),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final columns = constraints.maxWidth < 560 ? 2 : constraints.maxWidth < 900 ? 3 : 4;
-                final itemWidth = (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                final aspectRatio = itemWidth < 265 ? itemWidth / 270 : 0.98;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: products.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columns,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: aspectRatio,
-                  ),
-                  itemBuilder: (context, index) => ProductCard(product: products[index]),
-                );
-              },
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: products.length,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 260,
+                mainAxisExtent: 250,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+              ),
+              itemBuilder: (context, index) =>
+                  ProductCard(product: products[index]),
             ),
           ],
         ),
