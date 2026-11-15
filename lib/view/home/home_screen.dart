@@ -18,9 +18,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bannerHeight = screenWidth > 600 ? 250.0 : screenWidth * 0.45;
-
     return Scaffold(
       appBar: _buildAppBar(),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -29,11 +26,7 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
-              SizedBox(
-                height: bannerHeight,
-                width: double.infinity,
-                child: const HomeBannerSlider(),
-              ),
+              const HomeBannerSlider(),
               const SizedBox(height: 16),
               SectionHeader(
                 title: 'Category',
@@ -63,6 +56,7 @@ class HomeScreen extends StatelessWidget {
                 buttonLabel: 'Claim Now',
                 colors: [Color(0xFFFF6A00), Color(0xFFFFA100)],
                 buttonForeground: Colors.orange,
+                imagePath: 'assets/images/banner-product-image.png',
               ),
               const SizedBox(height: 16),
               const PromoBanner(
@@ -71,6 +65,7 @@ class HomeScreen extends StatelessWidget {
                 buttonLabel: 'Explore',
                 colors: [Color(0xFF0B1220), Color(0xFF1D2C40)],
                 buttonForeground: Color(0xFF0B1220),
+                imagePath: 'assets/images/figma_web/new_earbuds.jpg',
               ),
               const SizedBox(height: 16),
               SectionHeader(title: 'Recommended For You', onTap: () {}),
@@ -100,12 +95,10 @@ class HomeScreen extends StatelessWidget {
 
   static Widget _buildRecommendedProduct(BuildContext context, int index) {
     return ProductCard(productId: '$index');
-    // return ProductCard(productId: '$index', width: double.infinity);
   }
 
   static Widget _buildHotDealProduct(BuildContext context, int index) {
     return ProductCard(productId: '${index + 4}');
-    // return ProductCard(productId: '${index + 4}', width: double.infinity);
   }
 
   Widget _buildFeaturedProductSection() {
