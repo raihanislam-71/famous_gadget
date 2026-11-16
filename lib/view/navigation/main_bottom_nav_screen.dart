@@ -148,13 +148,13 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.dangerRed,
                     shape: BoxShape.circle,
                   ),
                   child: Text(
                     '$badge',
                     style: AppTextStyles.caption.copyWith(
-                      color: AppColors.dangerRed,
+                      color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),

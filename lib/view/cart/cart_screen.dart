@@ -10,6 +10,7 @@ import '../checkout/checkout_delivery_screen.dart';
 import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
+import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 
 class CartScreen extends StatelessWidget {
@@ -55,7 +56,7 @@ class CartScreen extends StatelessWidget {
                 height: constraints.maxHeight,
                 child: controller.items.isNotEmpty
                     ? _PopulatedCart(
-                        controller: cartController,
+                        controller: controller,
                         items: controller.items,
                         isWideLayout: isWideLayout,
                       )
@@ -303,7 +304,7 @@ class _CartItemCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              item.imagePath,
+              _imagePathFor(item),
               width: 88,
               height: 88,
               fit: BoxFit.contain,
@@ -369,6 +370,14 @@ class _CartItemCard extends StatelessWidget {
 
   String _formatPrice(double price) =>
       '৳${NumberFormat('#,##0').format(price)}';
+
+  // Cart data can survive an app update. Keep the display asset stable even
+  // when an older saved item contains a path from the previous cart screen.
+  String _imagePathFor(CartItem item) {
+    if (item.id == 'anker-r50i') return AssetsPath.cartAnkerImage;
+    if (item.id == 'oneplus-nord') return AssetsPath.cartOnePlusImage;
+    return item.imagePath;
+  }
 }
 
 class _QuantityButton extends StatelessWidget {
