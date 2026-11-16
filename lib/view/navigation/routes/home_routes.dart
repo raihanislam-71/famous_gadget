@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import '../../home/home_screen.dart';
 import '../main_bottom_nav_screen.dart';
 import '../app_navigation.dart';
 
@@ -18,12 +17,8 @@ class HomeRouteEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return constraints.maxWidth < 1100
-            ? const MainBottomNavScreen()
-            : const HomeScreen();
-      },
-    );
+    // Keep the selected tab as the route content at every viewport size.
+    // The shell adapts its navigation chrome without swapping to HomeScreen.
+    return const MainBottomNavScreen();
   }
 }

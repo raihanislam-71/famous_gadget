@@ -12,15 +12,10 @@ class RouteHelpers {
   static Widget webPage(Widget child) {
     if (!kIsWeb) return child;
 
-    return Builder(
-      builder: (context) {
-        // Tablet and smaller web viewports use the same mobile-style shell.
-        // The desktop web header starts only at the app's desktop breakpoint.
-        return MediaQuery.sizeOf(context).width < 1100
-            ? child
-            : WebPageFrame(child: child);
-      },
-    );
+    // Keep the same route subtree mounted while the browser crosses the
+    // tablet/desktop breakpoint. WebPageFrame adapts its chrome and width
+    // without replacing the page itself.
+    return WebPageFrame(child: child);
   }
 
   static Object? objectArgument(String key) {

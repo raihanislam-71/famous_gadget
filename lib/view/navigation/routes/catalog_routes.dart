@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controllers/bottom_nav_controller.dart';
-import '../../cart/cart_screen.dart';
 import '../../category/category_screen.dart';
 import '../../category/product_by_category_screen.dart';
 import '../../category/product_list_screen.dart';
@@ -141,10 +140,7 @@ class CatalogRoutes {
         ),
       ),
     ),
-    GetPage<void>(
-      name: AppRoutes.cart,
-      page: () => RouteHelpers.webPage(const _CartRouteEntry()),
-    ),
+    GetPage<void>(name: AppRoutes.cart, page: () => const _CartRouteEntry()),
     GetPage<void>(
       name: '${AppRoutes.reviews}/:productId',
       page: () => RouteHelpers.webPage(
@@ -199,10 +195,7 @@ class _CartRouteEntryState extends State<_CartRouteEntry> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => constraints.maxWidth < 1100
-          ? const MainBottomNavScreen()
-          : const CartScreen(),
-    );
+    // Keep the cart tab mounted as the active page when the viewport changes.
+    return const MainBottomNavScreen();
   }
 }
