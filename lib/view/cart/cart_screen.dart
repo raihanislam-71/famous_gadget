@@ -44,7 +44,7 @@ class _CartScreenState extends State<CartScreen> {
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: GetBuilder<CartController>(
-        builder: (controller) => ColoredBox(
+        builder: (controller) => Material(
           color: theme.scaffoldBackgroundColor,
           child: Column(
             children: [
