@@ -85,17 +85,26 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ],
                                 )
-                              : Column(
+                              : Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(child: _buildCartList(controller)),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                        12,
-                                        0,
-                                        12,
-                                        12,
+                                    ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 320,
                                       ),
-                                      child: _CartSummary(context, controller),
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                          0,
+                                          12,
+                                          16,
+                                          12,
+                                        ),
+                                        child: _CartSummary(
+                                          context,
+                                          controller,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 )
