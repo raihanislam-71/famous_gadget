@@ -36,6 +36,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final showBackButton = MediaQuery.sizeOf(context).width < 1100;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -51,15 +52,33 @@ class _CartScreenState extends State<CartScreen> {
               Container(
                 height: 60,
                 width: double.infinity,
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 color: theme.colorScheme.surface,
-                child: Text(
-                  'My Cart (${controller.totalItemCount} Items)',
-                  style: AppTextStyles.h2.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Row(
+                  children: [
+                    if (showBackButton)
+                      IconButton(
+                        tooltip: 'Back',
+                        onPressed: () {
+                          if (Navigator.of(context).canPop()) {
+                            Get.back<void>();
+                          } else {
+                            Get.find<BottomNavController>().backToHome();
+                          }
+                        },
+                        icon: const Icon(Icons.arrow_back_ios),
+                      ),
+                    Expanded(
+                      child: Text(
+                        'My Cart (${controller.totalItemCount} Items)',
+                        style: AppTextStyles.h2.copyWith(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    if (showBackButton) const SizedBox(width: 8),
+                  ],
                 ),
               ),
               Expanded(
