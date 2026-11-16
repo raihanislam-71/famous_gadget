@@ -36,10 +36,6 @@ extension _ProductDetailsChrome on _ProductDetailsScreenState {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // DESKTOP / WEB LAYOUT (>= 900px)
-  // ---------------------------------------------------------------------------
-
   Widget _buildStatusPill(String text, Color color, {bool isSolid = false}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
