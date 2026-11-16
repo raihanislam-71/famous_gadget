@@ -13,13 +13,27 @@ import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  // Space reserved for the floating navigation bar owned by the parent.
+  static const double _mobileBottomNavigationClearance = 88;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) Get.find<CartController>().loadCart();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final cartController = Get.find<CartController>();
-    final isWideLayout = MediaQuery.sizeOf(context).width >= 1100;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -30,60 +44,145 @@ class CartScreen extends StatelessWidget {
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: GetBuilder<CartController>(
-        builder: (controller) => Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            foregroundColor: Theme.of(context).colorScheme.onSurface,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            toolbarHeight: 60,
-            titleSpacing: 16,
-            title: Text(
-              'My Cart (${controller.totalItemCount} Items)',
-              style: AppTextStyles.h2.copyWith(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
+        builder: (controller) => ColoredBox(
+          color: theme.scaffoldBackgroundColor,
+          child: Column(
+            children: [
+              Container(
+                height: 60,
+                width: double.infinity,
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                color: theme.colorScheme.surface,
+                child: Text(
+                  'My Cart (${controller.totalItemCount} Items)',
+                  style: AppTextStyles.h2.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
-            ),
-          ),
-          body: SafeArea(
-            top: false,
-            child: LayoutBuilder(
-              builder: (context, constraints) => SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                child: controller.items.isNotEmpty
-                    ? _PopulatedCart(
-                        controller: controller,
-                        items: controller.items,
-                        isWideLayout: isWideLayout,
-                      )
-                    : controller.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
-                        ),
-                      )
-                    : controller.errorMessage != null
-                    ? _CartLoadError(
-                        message: controller.errorMessage!,
-                        onRetry: controller.loadCart,
-                      )
-                    : _EmptyCart(),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) => SizedBox(
+                    width: constraints.maxWidth,
+                    height: constraints.maxHeight,
+                    child: controller.items.isNotEmpty
+                        ? constraints.maxWidth < 1100
+                              ? Stack(
+                                  children: [
+                                    Positioned.fill(
+                                      child: _buildCartList(
+                                        controller,
+                                        bottomPadding: 220,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 12,
+                                      right: 12,
+                                      bottom: _mobileBottomNavigationClearance,
+                                      child: _CartSummary(context, controller),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    Expanded(child: _buildCartList(controller)),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                        12,
+                                        0,
+                                        12,
+                                        12,
+                                      ),
+                                      child: _CartSummary(context, controller),
+                                    ),
+                                  ],
+                                )
+                        : controller.isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.primary,
+                            ),
+                          )
+                        : controller.errorMessage != null
+                        ? _CartLoadError(
+                            message: controller.errorMessage!,
+                            onRetry: controller.loadCart,
+                          )
+                        : _EmptyCart(),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-          bottomNavigationBar:
-              controller.items.isEmpty ||
-                  controller.isLoading ||
-                  controller.errorMessage != null
-              ? null
-              : isWideLayout
-              ? null
-              : _CartSummary(controller: cartController),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCartList(
+    CartController controller, {
+    double bottomPadding = 16,
+  }) {
+    return RefreshIndicator(
+      onRefresh: controller.loadCart,
+      child: ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(16, 12, 16, bottomPadding),
+        itemCount: controller.items.length,
+        separatorBuilder: (_, _) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final item = controller.items[index];
+          return _CartItemCard(
+            item: item,
+            onDecrease: () => controller.updateQuantity(item.id, -1),
+            onIncrease: () => controller.updateQuantity(item.id, 1),
+            onRemove: () => controller.removeProduct(item.id),
+          );
+        },
+      ),
+    );
+  }
+
+  Container _CartSummary(BuildContext context, CartController controller) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border.all(color: Theme.of(context).dividerColor),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Subtotal', style: AppTextStyles.body),
+              Text(
+                '৳${NumberFormat('#,##0').format(controller.subtotal)}',
+                style: AppTextStyles.badge.copyWith(fontSize: 16),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          AppPrimaryButton(
+            label: 'Checkout (Cash on Delivery)',
+            height: 48,
+            onPressed: () {
+              AppRoutes.to<void>(
+                route: AppRoutes.checkoutDelivery,
+                mobileBuilder: () => const CheckoutDeliveryScreen(),
+              );
+            },
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Demo checkout preview',
+            style: AppTextStyles.caption.copyWith(fontSize: 11),
+          ),
+        ],
       ),
     );
   }
@@ -208,76 +307,6 @@ class _CartLoadError extends StatelessWidget {
   }
 }
 
-class _PopulatedCart extends StatelessWidget {
-  const _PopulatedCart({
-    required this.controller,
-    required this.items,
-    required this.isWideLayout,
-  });
-
-  final CartController controller;
-  final List<CartItem> items;
-  final bool isWideLayout;
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final horizontalPadding = screenWidth >= 600 ? 32.0 : 16.0;
-
-    Widget itemList() => ListView.separated(
-      padding: EdgeInsets.fromLTRB(
-        horizontalPadding,
-        16,
-        horizontalPadding,
-        24,
-      ),
-      itemCount: items.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final item = items[index];
-        return _CartItemCard(
-          item: item,
-          onDecrease: () => controller.updateQuantity(item.id, -1),
-          onIncrease: () => controller.updateQuantity(item.id, 1),
-          onRemove: () => controller.removeProduct(item.id),
-        );
-      },
-    );
-
-    if (!isWideLayout) {
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          final contentWidth = constraints.maxWidth > 720
-              ? 720.0
-              : constraints.maxWidth;
-          return Align(
-            alignment: Alignment.topCenter,
-            child: SizedBox(
-              width: contentWidth,
-              height: constraints.maxHeight,
-              child: itemList(),
-            ),
-          );
-        },
-      );
-    }
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(child: itemList()),
-        SizedBox(
-          width: 360,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
-            child: _CartSummary(controller: controller),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _CartItemCard extends StatelessWidget {
   const _CartItemCard({
     required this.item,
@@ -370,9 +399,6 @@ class _CartItemCard extends StatelessWidget {
 
   String _formatPrice(double price) =>
       '৳${NumberFormat('#,##0').format(price)}';
-
-  // Cart data can survive an app update. Keep the display asset stable even
-  // when an older saved item contains a path from the previous cart screen.
   String _imagePathFor(CartItem item) {
     if (item.id == 'anker-r50i') return AssetsPath.cartAnkerImage;
     if (item.id == 'oneplus-nord') return AssetsPath.cartOnePlusImage;
@@ -403,58 +429,6 @@ class _QuantityButton extends StatelessWidget {
           icon,
           size: 16,
           color: Theme.of(context).colorScheme.onSurface,
-        ),
-      ),
-    );
-  }
-}
-
-class _CartSummary extends StatelessWidget {
-  const _CartSummary({required this.controller});
-
-  final CartController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          border: Border.all(color: Theme.of(context).dividerColor),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Subtotal', style: AppTextStyles.body),
-                Text(
-                  '৳${NumberFormat('#,##0').format(controller.subtotal)}',
-                  style: AppTextStyles.badge.copyWith(fontSize: 16),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            AppPrimaryButton(
-              label: 'Checkout (Cash on Delivery)',
-              height: 48,
-              onPressed: () {
-                AppRoutes.to<void>(
-                  route: AppRoutes.checkoutDelivery,
-                  mobileBuilder: () => const CheckoutDeliveryScreen(),
-                );
-              },
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Demo checkout preview',
-              style: AppTextStyles.caption.copyWith(fontSize: 11),
-            ),
-          ],
         ),
       ),
     );
