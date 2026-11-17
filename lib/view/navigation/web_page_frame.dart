@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../breakpoints.dart';
 import 'web_site_header.dart';
 
 class WebPageFrame extends StatelessWidget {
@@ -19,8 +20,9 @@ class WebPageFrame extends StatelessWidget {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final contentWidth = constraints.maxWidth > 1328
-                    ? 1280.0
+                final contentWidth =
+                    constraints.maxWidth > webPageFrameCenterBreakpoint
+                    ? webContentMaxWidth
                     : constraints.maxWidth;
                 return Center(
                   child: SizedBox(

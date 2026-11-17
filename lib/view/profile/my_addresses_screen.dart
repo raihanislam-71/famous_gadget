@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../breakpoints.dart';
 import '../../models/saved_address.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
@@ -64,6 +65,7 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
@@ -74,7 +76,8 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
       toolbarHeight: 60,
       automaticallyImplyLeading: false,
       leading: _buildBackButton(context),
-      titleSpacing: 16,
+      leadingWidth: isDesktopWeb ? 0 : null,
+      titleSpacing: isDesktopWeb ? webHeaderAlignedTitleSpacing(context) : 16,
       title: Text(
         'My Addresses',
         style: AppTextStyles.h2.copyWith(

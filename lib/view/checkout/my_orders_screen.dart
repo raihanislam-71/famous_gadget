@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../breakpoints.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import 'order_detail_screen.dart';
@@ -72,6 +73,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final visibleOrders = _selectedFilter == 'All'
         ? _orders
         : _orders.where((order) => order.status == _selectedFilter).toList();
@@ -93,7 +95,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
           scrolledUnderElevation: 0,
           automaticallyImplyLeading: false,
           leading: _buildBackButton(context),
-          titleSpacing: 16,
+          leadingWidth: isDesktopWeb ? 0 : null,
+          titleSpacing: isDesktopWeb
+              ? webHeaderAlignedTitleSpacing(context)
+              : 16,
           title: Text(
             'My Orders',
             style: AppTextStyles.h2.copyWith(fontSize: 18),

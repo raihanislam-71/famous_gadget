@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../breakpoints.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
@@ -126,22 +127,27 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) => AppBar(
-    title: Text(
-      'Change Password',
-      style: AppTextStyles.h2.copyWith(
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
+  AppBar _buildAppBar(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+    return AppBar(
+      title: Text(
+        'Change Password',
+        style: AppTextStyles.h2.copyWith(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+        ),
       ),
-    ),
-    backgroundColor: Theme.of(context).colorScheme.surface,
-    foregroundColor: Theme.of(context).colorScheme.onSurface,
-    elevation: 0,
-    shape: const Border(bottom: BorderSide(color: AppColors.border)),
-    toolbarHeight: 60,
-    automaticallyImplyLeading: false,
-    leading: _buildBackButton(context),
-  );
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      elevation: 0,
+      shape: const Border(bottom: BorderSide(color: AppColors.border)),
+      toolbarHeight: 60,
+      automaticallyImplyLeading: false,
+      leading: _buildBackButton(context),
+      leadingWidth: isDesktopWeb ? 0 : null,
+      titleSpacing: isDesktopWeb ? webHeaderAlignedTitleSpacing(context) : 16,
+    );
+  }
 
   Widget _buildBackButton(BuildContext context) {
     final showBack = !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
