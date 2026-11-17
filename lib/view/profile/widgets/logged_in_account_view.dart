@@ -8,6 +8,7 @@ import 'logged_in/account_menu_section.dart';
 import 'logged_in/logout_button_card.dart';
 import 'logged_in/profile_header_card.dart';
 import 'logged_in/settings_menu_section.dart';
+import 'profile_app_bar.dart';
 
 class LoggedInAccountView extends StatelessWidget {
   const LoggedInAccountView({super.key});
@@ -16,6 +17,7 @@ class LoggedInAccountView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: profileAppBar(context, 'My Profile'),
       body: GetBuilder<ProfileController>(
         builder: (profile) => LayoutBuilder(
           builder: (context, constraints) {

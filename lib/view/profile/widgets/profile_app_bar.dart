@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../controllers/bottom_nav_controller.dart';
 import '../../../controllers/theme_controller.dart';
+import '../../navigation/app_navigation.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 
@@ -14,6 +18,25 @@ AppBar profileAppBar(BuildContext context, String title) {
     shape: const Border(bottom: BorderSide(color: AppColors.border)),
     toolbarHeight: 60,
     titleSpacing: 16,
+    leading: IconButton(
+      tooltip: 'Back',
+      icon: const Icon(CupertinoIcons.back),
+      onPressed: () {
+        if (Get.isRegistered<BottomNavController>()) {
+          final bottomNav = Get.find<BottomNavController>();
+          if (bottomNav.selectedIndex != 0) {
+            bottomNav.backToHome();
+            return;
+          }
+        }
+
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        } else {
+          AppRoutes.backToHome();
+        }
+      },
+    ),
     title: Text(
       title,
       style: AppTextStyles.h2.copyWith(
