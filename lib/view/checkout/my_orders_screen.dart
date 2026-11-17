@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import '../../breakpoints.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import 'order_detail_screen.dart';
 import '../navigation/app_navigation.dart';
 import 'widgets/orders/order_card.dart';
 import 'widgets/orders/order_summary.dart';
@@ -125,18 +124,13 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                         final order = visibleOrders[index];
                         return OrderCard(
                           order: order,
-                          onTap: () => AppRoutes.to<void>(
+                          onTap: () => AppRoutes.toNamed<void>(
                             route: AppRoutes.orderDetails,
                             arguments: {
                               'orderNumber': order.number,
                               'status': order.status,
                               'isPreview': widget.isPreview,
                             },
-                            mobileBuilder: () => OrderDetailScreen(
-                              orderNumber: order.number,
-                              status: order.status,
-                              isPreview: widget.isPreview,
-                            ),
                           ),
                         );
                       },
@@ -155,8 +149,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
             icon: const Icon(CupertinoIcons.back),
             tooltip: 'Back',
             onPressed: () {
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
+              if (AppRoutes.canPop) {
+                AppRoutes.back<void>();
               } else {
                 AppRoutes.backToHome();
               }

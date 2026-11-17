@@ -26,17 +26,13 @@ class HeaderNavLinks extends StatelessWidget {
   }
 
   void _openCategories() {
-    AppRoutes.to<void>(
-      route: AppRoutes.categories,
-      mobileBuilder: () => const SizedBox.shrink(),
-    );
+    AppRoutes.toNamed<void>(route: AppRoutes.categories);
   }
 
   void _openProducts(String categoryName) {
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.products,
       arguments: {'categoryName': categoryName},
-      mobileBuilder: () => const SizedBox.shrink(),
     );
   }
 }

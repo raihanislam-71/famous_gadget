@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../category/product_list_screen.dart';
+
 import 'app_navigation.dart';
 
 class HeaderSearchBox extends StatelessWidget {
@@ -46,14 +46,9 @@ class HeaderSearchBox extends StatelessWidget {
   }
 
   void _openProductSearch(String query) {
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.search,
       arguments: {'searchQuery': query},
-      mobileBuilder: () => ProductListScreen(
-        title: 'Search Products',
-        initialSearchActive: true,
-        initialSearchQuery: query,
-      ),
     );
   }
 }

@@ -101,10 +101,7 @@ extension _ProductDetailsDesktopLayout on _ProductDetailsScreenState {
           ),
           const SizedBox(width: 8),
           InkWell(
-            onTap: () => AppRoutes.to<void>(
-              route: AppRoutes.products,
-              mobileBuilder: () => const SizedBox.shrink(),
-            ),
+            onTap: () => AppRoutes.toNamed<void>(route: AppRoutes.products),
             borderRadius: BorderRadius.circular(4),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),

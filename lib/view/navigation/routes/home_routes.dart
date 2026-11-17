@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../main_bottom_nav_screen.dart';
 import '../app_navigation.dart';
+import '../../splash/splash_screen.dart';
 
 class HomeRoutes {
   HomeRoutes._();
 
   static List<GetPage<void>> get pages => [
+    GetPage<void>(name: AppRoutes.splash, page: () => const SplashScreen()),
     GetPage<void>(name: AppRoutes.home, page: () => const HomeRouteEntry()),
   ];
 }

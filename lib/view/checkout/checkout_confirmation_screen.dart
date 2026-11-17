@@ -8,7 +8,6 @@ import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../utils/assets_path.dart';
 import '../widgets/app_buttons.dart';
-import 'order_success_screen.dart';
 import 'widgets/checkout_step_indicator.dart';
 import 'widgets/confirmation/order_bill.dart';
 import 'widgets/confirmation/order_item_card.dart';
@@ -210,10 +209,9 @@ class _CheckoutConfirmationScreenState
       );
 
   void _placeOrder() {
-    AppRoutes.off<void>(
+    AppRoutes.offNamed<void>(
       route: AppRoutes.orderSuccess,
       arguments: const {'isPreview': true},
-      mobileBuilder: () => const OrderSuccessScreen(isPreview: true),
     );
   }
 }

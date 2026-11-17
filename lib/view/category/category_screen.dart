@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import '../../controllers/bottom_nav_controller.dart';
 import '../utils/assets_path.dart';
 import '../home/widgets/category_grid_card.dart';
-import 'sub_category_screen.dart';
 import '../navigation/app_navigation.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -109,8 +108,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
                   } else if (Get.isRegistered<BottomNavController>()) {
                     Get.find<BottomNavController>().backToHome();
                   } else {
@@ -146,11 +145,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         itemsCount: category['items']!,
                         onTap: () {
                           final categoryName = category['name']! as String;
-                          AppRoutes.to<void>(
+                          AppRoutes.toNamed<void>(
                             route: AppRoutes.subCategory,
                             arguments: {'categoryName': categoryName},
-                            mobileBuilder: () =>
-                                SubCategoryScreen(categoryName: categoryName),
                           );
                         },
                       );

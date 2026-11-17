@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../navigation/app_navigation.dart';
+
 class FilterPriceSheet extends StatefulWidget {
   final RangeValues initialRange;
   final Function(RangeValues) onApply;
@@ -50,7 +52,7 @@ class _FilterPriceSheetState extends State<FilterPriceSheet> {
             FilledButton(
               onPressed: () {
                 widget.onApply(selectedRange);
-                Navigator.pop(context);
+                AppRoutes.back<void>();
               },
               child: const Text('Apply filters'),
             ),

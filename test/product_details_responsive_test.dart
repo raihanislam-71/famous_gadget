@@ -2,6 +2,7 @@ import 'package:famous_gadget/controllers/cart_controller.dart';
 import 'package:famous_gadget/controllers/product_cart_button_controller.dart';
 import 'package:famous_gadget/controllers/review_controller.dart';
 import 'package:famous_gadget/controllers/theme_controller.dart';
+import 'package:famous_gadget/view/navigation/app_navigation.dart';
 import 'package:famous_gadget/view/navigation/app_routes.dart';
 import 'package:famous_gadget/view/navigation/web_page_frame.dart';
 import 'package:famous_gadget/view/product_details/out_of_stock_product_details_screen.dart';
@@ -255,7 +256,8 @@ void main() {
     await tester.pumpWidget(
       GetMaterialApp(
         theme: AppTheme.light,
-        home: const ProductDetailsScreen(productId: 'anker-r50i'),
+        initialRoute: '${AppRoutes.productDetails}/anker-r50i',
+        getPages: AppRoutePages.pages,
       ),
     );
     await tester.pumpAndSettle();

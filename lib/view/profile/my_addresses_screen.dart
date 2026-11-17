@@ -6,9 +6,9 @@ import 'package:get/get.dart';
 
 import '../../breakpoints.dart';
 import '../../models/saved_address.dart';
+import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import 'add_address_screen.dart';
 import 'widgets/my_addresses/address_card.dart';
 
 class MyAddressesScreen extends StatefulWidget {
@@ -135,8 +135,9 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
   }
 
   Future<void> _openAddressForm([SavedAddress? address]) async {
-    final updatedAddress = await Get.to<SavedAddress>(
-      () => AddAddressScreen(address: address),
+    final updatedAddress = await AppRoutes.toNamed<SavedAddress>(
+      route: AppRoutes.addressForm,
+      arguments: {'address': address},
       preventDuplicates: false,
     );
     if (!mounted || updatedAddress == null) return;

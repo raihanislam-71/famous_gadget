@@ -7,7 +7,6 @@ import '../../models/product.dart';
 import '../../controllers/theme_controller.dart';
 import '../navigation/app_navigation.dart';
 import '../navigation/web_site_header.dart';
-import '../category/category_screen.dart';
 import '../utils/assets_path.dart';
 import '../widgets/product_card.dart';
 import 'widgets/home_banner_slider.dart';
@@ -62,10 +61,8 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   SectionHeader(
                     title: 'Category',
-                    onTap: () => AppRoutes.to<void>(
-                      route: AppRoutes.categories,
-                      mobileBuilder: () => const CategoryScreen(),
-                    ),
+                    onTap: () =>
+                        AppRoutes.toNamed<void>(route: AppRoutes.categories),
                   ),
                   const SizedBox(height: 16),
                   _buildCategoriesSection(),

@@ -30,8 +30,8 @@ AppBar profileAppBar(BuildContext context, String title) {
           }
         }
 
-        if (Navigator.canPop(context)) {
-          Navigator.pop(context);
+        if (AppRoutes.canPop) {
+          AppRoutes.back<void>();
         } else {
           AppRoutes.backToHome();
         }

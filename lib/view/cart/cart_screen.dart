@@ -7,7 +7,6 @@ import '../../breakpoints.dart';
 import '../../controllers/bottom_nav_controller.dart';
 import '../../controllers/cart_controller.dart';
 import '../../models/cart_item.dart';
-import '../checkout/checkout_delivery_screen.dart';
 import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
@@ -133,8 +132,8 @@ class _CartScreenState extends State<CartScreen> {
           IconButton(
             tooltip: 'Back',
             onPressed: () {
-              if (Navigator.of(context).canPop()) {
-                Get.back<void>();
+              if (AppRoutes.canPop) {
+                AppRoutes.back<void>();
               } else {
                 Get.find<BottomNavController>().backToHome();
               }
@@ -238,10 +237,7 @@ class _CartScreenState extends State<CartScreen> {
             label: 'Checkout (Cash on Delivery)',
             height: 48,
             onPressed: () {
-              AppRoutes.to<void>(
-                route: AppRoutes.checkoutDelivery,
-                mobileBuilder: () => const CheckoutDeliveryScreen(),
-              );
+              AppRoutes.toNamed<void>(route: AppRoutes.checkoutDelivery);
             },
           ),
           const SizedBox(height: 4),
@@ -313,10 +309,7 @@ class _EmptyCart extends StatelessWidget {
               width: 280,
               child: OutlinedButton(
                 onPressed: () {
-                  AppRoutes.to<void>(
-                    route: AppRoutes.checkoutDelivery,
-                    mobileBuilder: () => const CheckoutDeliveryScreen(),
-                  );
+                  AppRoutes.toNamed<void>(route: AppRoutes.checkoutDelivery);
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,

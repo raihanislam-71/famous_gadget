@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 import '../../controllers/bottom_nav_controller.dart';
-import '../navigation/main_bottom_nav_screen.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
-import 'my_orders_screen.dart';
 import '../navigation/app_navigation.dart';
 import 'widgets/success/order_details_summary.dart';
 import 'widgets/success/order_success_icon.dart';
@@ -116,10 +115,9 @@ class OrderSuccessScreen extends StatelessWidget {
             width: double.infinity,
             height: 52,
             child: OutlinedButton(
-              onPressed: () => AppRoutes.to<void>(
+              onPressed: () => AppRoutes.toNamed<void>(
                 route: AppRoutes.orders,
                 arguments: {'isPreview': isPreview},
-                mobileBuilder: () => MyOrdersScreen(isPreview: isPreview),
               ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.surface,
@@ -137,9 +135,6 @@ class OrderSuccessScreen extends StatelessWidget {
 
   void _continueShopping() {
     Get.find<BottomNavController>().changeIndex(0);
-    AppRoutes.offAll<void>(
-      route: AppRoutes.home,
-      mobileBuilder: () => const MainBottomNavScreen(),
-    );
+    AppRoutes.offAllNamed<void>(route: AppRoutes.home);
   }
 }

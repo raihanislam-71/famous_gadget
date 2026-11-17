@@ -63,8 +63,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
           ? const SizedBox.shrink()
           : IconButton(
               icon: const Icon(CupertinoIcons.back),
-              onPressed: () => Navigator.canPop(context)
-                  ? Navigator.pop(context)
+              onPressed: () => AppRoutes.canPop
+                  ? AppRoutes.back<void>()
                   : AppRoutes.backToHome(),
             ),
     );

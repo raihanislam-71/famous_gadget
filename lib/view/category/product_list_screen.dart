@@ -109,8 +109,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
                   } else {
                     AppRoutes.backToHome();
                   }

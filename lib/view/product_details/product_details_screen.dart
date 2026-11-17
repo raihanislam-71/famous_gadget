@@ -8,9 +8,7 @@ import 'package:intl/intl.dart';
 import '../../controllers/product_cart_button_controller.dart';
 import '../../controllers/review_controller.dart';
 import '../../models/product.dart';
-import '../checkout/checkout_delivery_screen.dart';
 import '../navigation/app_navigation.dart';
-import '../review/review_screen.dart';
 import '../utils/app_colors.dart';
 import 'widgets/color_picker.dart';
 import 'widgets/rating_and_reviews_section.dart';
@@ -140,7 +138,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
+            onPressed: () => AppRoutes.back<void>(),
             child: const Text('OK'),
           ),
         ],
@@ -150,10 +148,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   void _buyNow() {
     _cartBtnController.addToCart(_product);
-    AppRoutes.to<void>(
-      route: AppRoutes.checkoutDelivery,
-      mobileBuilder: () => const CheckoutDeliveryScreen(),
-    );
+    AppRoutes.toNamed<void>(route: AppRoutes.checkoutDelivery);
   }
 
   @override

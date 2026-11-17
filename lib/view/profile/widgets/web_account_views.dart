@@ -4,15 +4,11 @@ import 'package:get/get.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../../controllers/profile_controller.dart';
-import '../../checkout/my_orders_screen.dart';
 import '../../navigation/app_navigation.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 import '../../utils/assets_path.dart';
 import '../../widgets/app_buttons.dart';
-import '../edit_profile_screen.dart';
-import '../my_addresses_screen.dart';
-import '../../wishlist/wishlist_screen.dart';
 import 'guest_account_view.dart';
 import 'logged_in/account_menu_section.dart';
 import 'logged_in/logout_button_card.dart';
@@ -233,11 +229,9 @@ class WebGuestAccountView extends StatelessWidget {
                             title: 'My Orders',
                             subtitle: 'Track active & past shipments',
                             onTap: () => _requireLogin(
-                              () => AppRoutes.to<void>(
+                              () => AppRoutes.toNamed<void>(
                                 route: AppRoutes.orders,
                                 arguments: const {'isPreview': true},
-                                mobileBuilder: () =>
-                                    const MyOrdersScreen(isPreview: true),
                               ),
                             ),
                           ),
@@ -248,9 +242,8 @@ class WebGuestAccountView extends StatelessWidget {
                             title: 'Wishlist',
                             subtitle: 'View saved items to buy later',
                             onTap: () => _requireLogin(
-                              () => AppRoutes.to<void>(
+                              () => AppRoutes.toNamed<void>(
                                 route: AppRoutes.wishlist,
-                                mobileBuilder: () => const WishlistScreen(),
                               ),
                             ),
                           ),
@@ -261,9 +254,8 @@ class WebGuestAccountView extends StatelessWidget {
                             title: 'Saved Addresses',
                             subtitle: 'Manage Dhaka delivery zones',
                             onTap: () => _requireLogin(
-                              () => AppRoutes.to<void>(
+                              () => AppRoutes.toNamed<void>(
                                 route: AppRoutes.addresses,
-                                mobileBuilder: () => const MyAddressesScreen(),
                               ),
                             ),
                           ),
@@ -277,11 +269,9 @@ class WebGuestAccountView extends StatelessWidget {
                           title: 'My Orders',
                           subtitle: 'Track active & past shipments',
                           onTap: () => _requireLogin(
-                            () => AppRoutes.to<void>(
+                            () => AppRoutes.toNamed<void>(
                               route: AppRoutes.orders,
                               arguments: const {'isPreview': true},
-                              mobileBuilder: () =>
-                                  const MyOrdersScreen(isPreview: true),
                             ),
                           ),
                         ),
@@ -290,9 +280,8 @@ class WebGuestAccountView extends StatelessWidget {
                           title: 'Wishlist',
                           subtitle: 'View saved items to buy later',
                           onTap: () => _requireLogin(
-                            () => AppRoutes.to<void>(
+                            () => AppRoutes.toNamed<void>(
                               route: AppRoutes.wishlist,
-                              mobileBuilder: () => const WishlistScreen(),
                             ),
                           ),
                         ),
@@ -301,9 +290,8 @@ class WebGuestAccountView extends StatelessWidget {
                           title: 'Saved Addresses',
                           subtitle: 'Manage Dhaka delivery zones',
                           onTap: () => _requireLogin(
-                            () => AppRoutes.to<void>(
+                            () => AppRoutes.toNamed<void>(
                               route: AppRoutes.addresses,
-                              mobileBuilder: () => const MyAddressesScreen(),
                             ),
                           ),
                         ),
@@ -409,10 +397,8 @@ class _WebProfileSummary extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           OutlinedButton.icon(
-            onPressed: () => AppRoutes.to<void>(
-              route: AppRoutes.editProfile,
-              mobileBuilder: () => const EditProfileScreen(),
-            ),
+            onPressed: () =>
+                AppRoutes.toNamed<void>(route: AppRoutes.editProfile),
             icon: const Icon(Icons.edit_outlined, size: 18),
             label: const Text('Edit Profile'),
             style: OutlinedButton.styleFrom(

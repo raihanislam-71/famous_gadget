@@ -5,7 +5,6 @@ import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
 import '../navigation/app_navigation.dart';
-import 'otp_verification_screen.dart';
 import 'widgets/register_header.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -269,7 +268,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           style: AppTextStyles.caption.copyWith(fontSize: 13),
         ),
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => AppRoutes.back<void>(),
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,
@@ -331,16 +330,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     final phoneNumber = _phoneController.text.trim();
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.otp,
       arguments: {
         'phoneNumber': phoneNumber,
         'onVerified': widget.onRegisterSuccess,
       },
-      mobileBuilder: () => OtpVerificationScreen(
-        phoneNumber: phoneNumber,
-        onVerified: widget.onRegisterSuccess,
-      ),
     );
   }
 

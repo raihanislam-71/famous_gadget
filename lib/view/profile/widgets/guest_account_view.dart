@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../controllers/auth_controller.dart';
-import '../../checkout/my_orders_screen.dart';
 import '../../navigation/app_navigation.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_text_styles.dart';
 import '../../utils/assets_path.dart';
 import '../../widgets/app_buttons.dart';
-import '../my_addresses_screen.dart';
-import '../../wishlist/wishlist_screen.dart';
 import 'profile_app_bar.dart';
 
 class GuestAccountView extends StatelessWidget {
@@ -122,11 +119,9 @@ class GuestAccountView extends StatelessWidget {
                           title: 'My Orders',
                           subtitle: 'Track active & past shipments',
                           onTap: () => _requireLogin(
-                            () => AppRoutes.to<void>(
+                            () => AppRoutes.toNamed<void>(
                               route: AppRoutes.orders,
                               arguments: const {'isPreview': true},
-                              mobileBuilder: () =>
-                                  const MyOrdersScreen(isPreview: true),
                             ),
                           ),
                         ),
@@ -135,9 +130,8 @@ class GuestAccountView extends StatelessWidget {
                           title: 'Wishlist',
                           subtitle: 'View saved items to buy later',
                           onTap: () => _requireLogin(
-                            () => AppRoutes.to<void>(
+                            () => AppRoutes.toNamed<void>(
                               route: AppRoutes.wishlist,
-                              mobileBuilder: () => const WishlistScreen(),
                             ),
                           ),
                         ),
@@ -146,9 +140,8 @@ class GuestAccountView extends StatelessWidget {
                           title: 'Saved Addresses',
                           subtitle: 'Manage Dhaka delivery zones',
                           onTap: () => _requireLogin(
-                            () => AppRoutes.to<void>(
+                            () => AppRoutes.toNamed<void>(
                               route: AppRoutes.addresses,
-                              mobileBuilder: () => const MyAddressesScreen(),
                             ),
                           ),
                         ),

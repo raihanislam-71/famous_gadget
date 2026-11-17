@@ -11,7 +11,6 @@ import 'widgets/checkout_step_indicator.dart';
 import 'widgets/delivery/address_form.dart';
 import 'widgets/delivery/dashed_border_button.dart';
 import 'widgets/delivery/saved_address_card.dart';
-import 'checkout_confirmation_screen.dart';
 import '../navigation/app_navigation.dart';
 
 class CheckoutDeliveryScreen extends StatefulWidget {
@@ -204,7 +203,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
               .map(
                 (district) => ListTile(
                   title: Text(district, style: AppTextStyles.body),
-                  onTap: () => Navigator.pop(context, district),
+                  onTap: () => AppRoutes.back<String>(result: district),
                 ),
               )
               .toList(),
@@ -237,10 +236,9 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
               '${_streetController.text.trim()}, '
               '${_district.trim()}, ${_cityController.text.trim()}';
 
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.checkoutConfirmation,
       arguments: {'deliveryAddress': address},
-      mobileBuilder: () => CheckoutConfirmationScreen(deliveryAddress: address),
     );
   }
 

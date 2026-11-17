@@ -1,5 +1,5 @@
-import 'package:famous_gadget/view/category/sub_category_screen.dart';
 import 'package:flutter/material.dart';
+
 import '../../../utils/app_colors.dart';
 import '../../../navigation/app_navigation.dart';
 
@@ -25,11 +25,9 @@ class WebCategoryCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
-        onTap: () => AppRoutes.to<void>(
+        onTap: () => AppRoutes.toNamed<void>(
           route: AppRoutes.subCategory,
           arguments: {'categoryName': category.routeName},
-          mobileBuilder: () =>
-              SubCategoryScreen(categoryName: category.routeName),
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
