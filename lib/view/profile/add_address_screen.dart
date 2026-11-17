@@ -5,15 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../models/saved_address.dart';
+import '../navigation/web_page_frame.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
 import 'widgets/add_address/address_text_field.dart';
 
 class AddAddressScreen extends StatefulWidget {
-  const AddAddressScreen({super.key, this.address});
+  const AddAddressScreen({super.key, this.address, this.showWebHeader = true});
 
   final SavedAddress? address;
+  final bool showWebHeader;
 
   @override
   State<AddAddressScreen> createState() => _AddAddressScreenState();
@@ -44,20 +46,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   }
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _emailController.dispose();
-    _streetController.dispose();
-    _cityController.dispose();
-    _postCodeController.dispose();
-    _districtController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
+    final screen = AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
@@ -91,6 +81,13 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         ),
       ),
     );
+
+    if (widget.showWebHeader &&
+        kIsWeb &&
+        MediaQuery.sizeOf(context).width >= 1100) {
+      return WebPageFrame(child: screen);
+    }
+    return screen;
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -231,5 +228,17 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         type: widget.address?.type ?? 'Home',
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _streetController.dispose();
+    _cityController.dispose();
+    _postCodeController.dispose();
+    _districtController.dispose();
+    super.dispose();
   }
 }

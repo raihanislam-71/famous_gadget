@@ -78,6 +78,7 @@ class AccountRoutes {
           address: RouteHelpers.objectArgument('address') is SavedAddress
               ? RouteHelpers.objectArgument('address') as SavedAddress
               : null,
+          showWebHeader: false,
         ),
       ),
     ),
