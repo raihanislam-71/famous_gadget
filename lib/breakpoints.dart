@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+const double webContentMaxWidth = 1280;
+const double webContentHorizontalPadding = 20;
+
 extension BreakpointUtils on BuildContext {
   bool get isMobile => MediaQuery.of(this).size.width < 700;
   bool get isTablet =>

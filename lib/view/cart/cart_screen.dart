@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../breakpoints.dart';
 import '../../controllers/bottom_nav_controller.dart';
 import '../../controllers/cart_controller.dart';
 import '../../models/cart_item.dart';
@@ -52,34 +53,28 @@ class _CartScreenState extends State<CartScreen> {
               Container(
                 height: 60,
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(
+                  horizontal: showBackButton ? 8 : webContentHorizontalPadding,
+                ),
                 color: theme.colorScheme.surface,
-                child: Row(
-                  children: [
-                    if (showBackButton)
-                      IconButton(
-                        tooltip: 'Back',
-                        onPressed: () {
-                          if (Navigator.of(context).canPop()) {
-                            Get.back<void>();
-                          } else {
-                            Get.find<BottomNavController>().backToHome();
-                          }
-                        },
-                        icon: const Icon(Icons.arrow_back_ios),
-                      ),
-                    Expanded(
-                      child: Text(
-                        'My Cart (${controller.totalItemCount} Items)',
-                        style: AppTextStyles.h2.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                child: showBackButton
+                    ? _buildCartTitleRow(
+                        context,
+                        controller,
+                        showBackButton: true,
+                      )
+                    : Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: webContentMaxWidth,
+                          ),
+                          child: _buildCartTitleRow(
+                            context,
+                            controller,
+                            showBackButton: false,
+                          ),
                         ),
                       ),
-                    ),
-                    if (showBackButton) const SizedBox(width: 8),
-                  ],
-                ),
               ),
               Expanded(
                 child: LayoutBuilder(
@@ -104,29 +99,7 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ],
                                 )
-                              : Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(child: _buildCartList(controller)),
-                                    ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        maxWidth: 320,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                          0,
-                                          12,
-                                          16,
-                                          12,
-                                        ),
-                                        child: _CartSummary(
-                                          context,
-                                          controller,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
+                              : _buildDesktopCartLayout(controller)
                         : controller.isLoading
                         ? const Center(
                             child: CircularProgressIndicator(
@@ -149,15 +122,81 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
+  Widget _buildCartTitleRow(
+    BuildContext context,
+    CartController controller, {
+    required bool showBackButton,
+  }) {
+    return Row(
+      children: [
+        if (showBackButton)
+          IconButton(
+            tooltip: 'Back',
+            onPressed: () {
+              if (Navigator.of(context).canPop()) {
+                Get.back<void>();
+              } else {
+                Get.find<BottomNavController>().backToHome();
+              }
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+        Expanded(
+          child: Text(
+            'My Cart (${controller.totalItemCount} Items)',
+            style: AppTextStyles.h2.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        if (showBackButton) const SizedBox(width: 8),
+      ],
+    );
+  }
+
+  Widget _buildDesktopCartLayout(CartController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: webContentHorizontalPadding,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: webContentMaxWidth),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _buildCartList(controller, leftPadding: 0)),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 320),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 12, 0, 12),
+                  child: _CartSummary(context, controller),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCartList(
     CartController controller, {
     double bottomPadding = 16,
+    double leftPadding = 16,
+    double rightPadding = 16,
   }) {
     return RefreshIndicator(
       onRefresh: controller.loadCart,
       child: ListView.separated(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(16, 12, 16, bottomPadding),
+        padding: EdgeInsets.fromLTRB(
+          leftPadding,
+          12,
+          rightPadding,
+          bottomPadding,
+        ),
         itemCount: controller.items.length,
         separatorBuilder: (_, _) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
