@@ -3,12 +3,13 @@ import 'package:famous_gadget/controllers/cart_controller.dart';
 import 'package:famous_gadget/view/cart/cart_screen.dart';
 import 'package:famous_gadget/view/category/category_screen.dart';
 import 'package:famous_gadget/view/home/home_screen.dart';
+import 'package:famous_gadget/view/navigation/web_site_header.dart';
 import 'package:famous_gadget/view/profile/profile_screen.dart';
 import 'package:famous_gadget/view/utils/app_colors.dart';
 import 'package:famous_gadget/view/utils/app_text_styles.dart';
 import 'package:famous_gadget/view/utils/assets_path.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
@@ -27,11 +28,12 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
     HomeScreen(),
     CategoryScreen(),
     CartScreen(),
-    ProfileScreen(),
+    ProfileScreen(showWebHeader: false),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final showWebHeader = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final showBottomNavigation =
         !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
 
@@ -40,7 +42,16 @@ class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
         return Scaffold(
           extendBody: true,
           backgroundColor: Colors.transparent,
-          body: _screens[_bottomNavController.selectedIndex],
+          body: showWebHeader
+              ? Column(
+                  children: [
+                    const WebSiteHeader(),
+                    Expanded(
+                      child: _screens[_bottomNavController.selectedIndex],
+                    ),
+                  ],
+                )
+              : _screens[_bottomNavController.selectedIndex],
           bottomNavigationBar: showBottomNavigation
               ? SafeArea(
                   top: false,

@@ -37,8 +37,7 @@ class ProfileScreen extends StatelessWidget {
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               body: Column(
                 children: [
-                  if (kIsWeb && showWebHeader)
-                    const WebSiteHeader(isHome: false),
+                  if (kIsWeb && showWebHeader) const WebSiteHeader(),
                   Expanded(child: accountView),
                 ],
               ),

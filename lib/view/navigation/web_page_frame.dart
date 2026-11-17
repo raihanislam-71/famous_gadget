@@ -15,7 +15,7 @@ class WebPageFrame extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          if (isDesktop) const WebSiteHeader(isHome: false),
+          if (isDesktop) const WebSiteHeader(),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {

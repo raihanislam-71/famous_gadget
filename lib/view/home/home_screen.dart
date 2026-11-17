@@ -1,4 +1,5 @@
 import 'package:famous_gadget/view/widgets/section_header.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,7 +32,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          if (isWideLayout) const WebSiteHeader(),
+          if (isWideLayout && !kIsWeb) const WebSiteHeader(),
           Expanded(
             child: SingleChildScrollView(
               child: _buildHomeContent(isWideLayout),
