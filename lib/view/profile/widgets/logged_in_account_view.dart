@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,23 +17,37 @@ class LoggedInAccountView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: GetBuilder<ProfileController>(
-        builder: (profile) => ListView(
-          padding: const EdgeInsets.only(bottom: 104),
-          children: [
-            ProfileHeaderCard(profile: profile),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: Column(
-                children: const [
-                  AccountMenuSection(),
-                  SizedBox(height: 14),
-                  SettingsMenuSection(),
-                  SizedBox(height: 14),
-                  LogoutButtonCard(),
-                ],
+        builder: (profile) => LayoutBuilder(
+          builder: (context, constraints) {
+            final contentWidth = constraints.maxWidth >= 700
+                ? math.min(constraints.maxWidth, 760.0)
+                : constraints.maxWidth;
+
+            return Center(
+              child: SizedBox(
+                width: contentWidth,
+                height: constraints.maxHeight,
+                child: ListView(
+                  padding: const EdgeInsets.only(bottom: 104),
+                  children: [
+                    ProfileHeaderCard(profile: profile),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
+                      child: Column(
+                        children: [
+                          AccountMenuSection(),
+                          SizedBox(height: 14),
+                          SettingsMenuSection(),
+                          SizedBox(height: 14),
+                          LogoutButtonCard(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

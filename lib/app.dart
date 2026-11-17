@@ -1,5 +1,6 @@
 import 'package:famous_gadget/view/splash/splash_screen.dart';
 import 'package:famous_gadget/view/utils/app_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       builder: (themeController) => GetMaterialApp(
         debugShowCheckedModeBanner: false,
         initialBinding: ControllerBinder(),
-        initialRoute: null,
+        initialRoute: kIsWeb ? AppRoutePages.initialWebRoute : null,
         home: const SplashScreen(),
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,

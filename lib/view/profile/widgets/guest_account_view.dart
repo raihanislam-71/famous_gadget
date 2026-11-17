@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,135 +24,160 @@ class GuestAccountView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: profileAppBar(context, 'My Profile'),
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 104),
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(24),
-            color: Theme.of(context).colorScheme.surface,
-            child: Column(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: const BoxDecoration(
-                    color: AppColors.pageBackground,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      AssetsPath.accountGuestUser,
-                      width: 40,
-                      height: 40,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isTablet = constraints.maxWidth >= 700;
+          final contentWidth = isTablet
+              ? math.min(constraints.maxWidth, 760.0)
+              : constraints.maxWidth;
+
+          return Center(
+            child: SizedBox(
+              width: contentWidth,
+              height: constraints.maxHeight,
+              child: ListView(
+                padding: const EdgeInsets.only(bottom: 104),
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: isTablet
+                          ? BorderRadius.circular(20)
+                          : BorderRadius.zero,
+                      border: isTablet
+                          ? Border.all(color: AppColors.border)
+                          : null,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Welcome, Guest',
-                  style: AppTextStyles.h2.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Login to unlock seamless gadget shopping',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.caption.copyWith(fontSize: 13),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppPrimaryButton(
-                        label: 'Login',
-                        height: 44,
-                        onPressed: authController.openLogin,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: authController.openRegister,
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.primary,
-                          side: const BorderSide(color: AppColors.primary),
-                          minimumSize: const Size.fromHeight(44),
-                          shape: const StadiumBorder(),
-                          textStyle: AppTextStyles.button.copyWith(
-                            fontSize: 14,
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: const BoxDecoration(
+                            color: AppColors.pageBackground,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              AssetsPath.accountGuestUser,
+                              width: 40,
+                              height: 40,
+                            ),
                           ),
                         ),
-                        child: const Text('Register'),
-                      ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Welcome, Guest',
+                          style: AppTextStyles.h2.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Login to unlock seamless gadget shopping',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.caption.copyWith(fontSize: 13),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AppPrimaryButton(
+                                label: 'Login',
+                                height: 44,
+                                onPressed: authController.openLogin,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: authController.openRegister,
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: AppColors.primary,
+                                  side: const BorderSide(
+                                    color: AppColors.primary,
+                                  ),
+                                  minimumSize: const Size.fromHeight(44),
+                                  shape: const StadiumBorder(),
+                                  textStyle: AppTextStyles.button.copyWith(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                child: const Text('Register'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        GuestLockedItem(
+                          title: 'My Orders',
+                          subtitle: 'Track active & past shipments',
+                          onTap: () => _requireLogin(
+                            () => AppRoutes.to<void>(
+                              route: AppRoutes.orders,
+                              arguments: const {'isPreview': true},
+                              mobileBuilder: () =>
+                                  const MyOrdersScreen(isPreview: true),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        GuestLockedItem(
+                          title: 'Wishlist',
+                          subtitle: 'View saved items to buy later',
+                          onTap: () => _requireLogin(
+                            () => AppRoutes.to<void>(
+                              route: AppRoutes.wishlist,
+                              mobileBuilder: () => const WishlistScreen(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        GuestLockedItem(
+                          title: 'Saved Addresses',
+                          subtitle: 'Manage Dhaka delivery zones',
+                          onTap: () => _requireLogin(
+                            () => AppRoutes.to<void>(
+                              route: AppRoutes.addresses,
+                              mobileBuilder: () => const MyAddressesScreen(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: AppColors.softPeach,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '🔒 Account login is required to proceed with Cash on Delivery checkouts.',
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.body.copyWith(
+                              fontSize: 12,
+                              height: 1.3,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                GuestLockedItem(
-                  title: 'My Orders',
-                  subtitle: 'Track active & past shipments',
-                  onTap: () => _requireLogin(
-                    () => AppRoutes.to<void>(
-                      route: AppRoutes.orders,
-                      arguments: const {'isPreview': true},
-                      mobileBuilder: () =>
-                          const MyOrdersScreen(isPreview: true),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                GuestLockedItem(
-                  title: 'Wishlist',
-                  subtitle: 'View saved items to buy later',
-                  onTap: () => _requireLogin(
-                    () => AppRoutes.to<void>(
-                      route: AppRoutes.wishlist,
-                      mobileBuilder: () => const WishlistScreen(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                GuestLockedItem(
-                  title: 'Saved Addresses',
-                  subtitle: 'Manage Dhaka delivery zones',
-                  onTap: () => _requireLogin(
-                    () => AppRoutes.to<void>(
-                      route: AppRoutes.addresses,
-                      mobileBuilder: () => const MyAddressesScreen(),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: AppColors.softPeach,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '🔒 Account login is required to proceed with Cash on Delivery checkouts.',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.body.copyWith(
-                      fontSize: 12,
-                      height: 1.3,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
