@@ -1,4 +1,5 @@
 import 'package:famous_gadget/view/utils/app_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,15 +13,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ThemeController>(
-      builder: (themeController) => GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        initialBinding: ControllerBinder(),
-        initialRoute: AppRoutePages.initialRoute,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: themeController.themeMode,
-        getPages: AppRoutePages.pages,
-      ),
+      builder: (themeController) {
+        if (kIsWeb) {
+          return GetMaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            initialBinding: ControllerBinder(),
+            routeInformationParser: AppRoutePages.webRouteInformationParser,
+            routerDelegate: AppRoutePages.webRouterDelegate,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeController.themeMode,
+            getPages: AppRoutePages.webPages,
+          );
+        }
+
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          initialBinding: ControllerBinder(),
+          initialRoute: AppRoutePages.initialRoute,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeController.themeMode,
+          getPages: AppRoutePages.pages,
+        );
+      },
     );
   }
 }

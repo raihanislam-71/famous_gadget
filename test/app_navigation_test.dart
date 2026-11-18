@@ -62,4 +62,80 @@ void main() {
 
     expect(find.text('All products'), findsOneWidget);
   });
+
+  testWidgets('handles browser back through dynamic routes to the start', (
+    tester,
+  ) async {
+    final delegate = WebHistoryGetDelegate();
+    await tester.pumpWidget(
+      GetMaterialApp.router(
+        routeInformationParser: GetInformationParser(
+          initialRoute: AppRoutes.home,
+        ),
+        routerDelegate: delegate,
+        getPages: [
+          GetPage(
+            name: AppRoutes.home,
+            page: () => const Scaffold(body: Text('Home')),
+          ),
+          GetPage(
+            name: '${AppRoutes.subCategory}/:categoryName',
+            page: () => Scaffold(
+              body: Text(Get.parameters['categoryName'] ?? 'No category'),
+            ),
+          ),
+          GetPage(
+            name: '${AppRoutes.products}/:categoryName',
+            page: () => Scaffold(
+              body: Text(Get.parameters['categoryName'] ?? 'No products'),
+            ),
+          ),
+          GetPage(
+            name: '${AppRoutes.productDetails}/:productId',
+            page: () => Scaffold(
+              body: Text(Get.parameters['productId'] ?? 'No product'),
+            ),
+          ),
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    AppRoutes.toNamed<void>(
+      route: AppRoutes.subCategory,
+      arguments: const {'categoryName': 'Smart Watch'},
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Smart Watch'), findsOneWidget);
+
+    AppRoutes.toNamed<void>(
+      route: AppRoutes.products,
+      arguments: const {'categoryName': 'Flagship Phones'},
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Flagship Phones'), findsOneWidget);
+
+    AppRoutes.toNamed<void>(
+      route: AppRoutes.productDetails,
+      arguments: const {'productId': 'anker-r50i'},
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('anker-r50i'), findsOneWidget);
+
+    await delegate.setNewRoutePath(
+      GetNavConfig.fromRoute('/products/Flagship%20Phones')!,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Flagship Phones'), findsOneWidget);
+
+    await delegate.setNewRoutePath(
+      GetNavConfig.fromRoute('/categories/subcategory/Smart%20Watch')!,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Smart Watch'), findsOneWidget);
+
+    await delegate.setNewRoutePath(GetNavConfig.fromRoute(AppRoutes.home)!);
+    await tester.pumpAndSettle();
+    expect(find.text('Home'), findsOneWidget);
+  });
 }

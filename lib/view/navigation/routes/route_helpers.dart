@@ -39,6 +39,6 @@ class RouteHelpers {
 
   static void finishDirectLogin() {
     Get.find<AuthController>().completeDemoAuthentication();
-    Get.offAllNamed<void>(AppRoutes.home);
+    AppRoutes.offAllNamed<void>(route: AppRoutes.home);
   }
 }

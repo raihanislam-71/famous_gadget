@@ -23,10 +23,19 @@ class AppRoutePages {
     return AppRoutes.home;
   }
 
+  static WebHistoryGetDelegate get webRouterDelegate =>
+      Get.routerDelegate as WebHistoryGetDelegate? ?? WebHistoryGetDelegate();
+
+  static GetInformationParser get webRouteInformationParser =>
+      Get.createInformationParser(initialRoute: initialWebRoute);
+
   static List<GetPage<void>> get pages => [
     ...HomeRoutes.pages,
     ...CatalogRoutes.pages,
     ...AccountRoutes.pages,
     ...CheckoutRoutes.pages,
   ];
+
+  static List<GetPage<void>> get webPages =>
+      pages.where((page) => page.name != AppRoutes.splash).toList();
 }
