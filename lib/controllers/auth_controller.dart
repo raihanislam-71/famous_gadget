@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
-import '../view/auth/login_screen.dart';
-import '../view/auth/register_screen.dart';
 import '../view/navigation/app_navigation.dart';
 
 class AuthController extends GetxController {
@@ -13,25 +11,20 @@ class AuthController extends GetxController {
   void openLogin() {
     void onLoginSuccess() => _completeAuthentication(() {}, routeCount: 2);
     void onRegisterSuccess() => _completeAuthentication(() {}, routeCount: 3);
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.login,
       arguments: {
         'onLoginSuccess': onLoginSuccess,
         'onRegisterSuccess': onRegisterSuccess,
       },
-      mobileBuilder: () => LoginScreen(
-        onLoginSuccess: onLoginSuccess,
-        onRegisterSuccess: onRegisterSuccess,
-      ),
     );
   }
 
   void openRegister() {
     void onRegisterSuccess() => _completeAuthentication(() {}, routeCount: 2);
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.register,
       arguments: {'onRegisterSuccess': onRegisterSuccess},
-      mobileBuilder: () => RegisterScreen(onRegisterSuccess: onRegisterSuccess),
     );
   }
 
@@ -55,16 +48,12 @@ class AuthController extends GetxController {
         _completeAuthentication(onAuthenticated, routeCount: 2);
     void onRegisterSuccess() =>
         _completeAuthentication(onAuthenticated, routeCount: 3);
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.login,
       arguments: {
         'onLoginSuccess': onLoginSuccess,
         'onRegisterSuccess': onRegisterSuccess,
       },
-      mobileBuilder: () => LoginScreen(
-        onLoginSuccess: onLoginSuccess,
-        onRegisterSuccess: onRegisterSuccess,
-      ),
     );
   }
 

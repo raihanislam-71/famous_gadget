@@ -5,8 +5,6 @@ import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
 import '../navigation/app_navigation.dart';
-import 'otp_verification_screen.dart';
-import 'register_screen.dart';
 import 'widgets/login_welcome_banner.dart';
 import 'widgets/phone_field.dart';
 
@@ -101,11 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         TextButton(
           onPressed: () {
-            AppRoutes.to<void>(
+            AppRoutes.toNamed<void>(
               route: AppRoutes.register,
               arguments: {'onRegisterSuccess': widget.onRegisterSuccess},
-              mobileBuilder: () =>
-                  RegisterScreen(onRegisterSuccess: widget.onRegisterSuccess),
             );
           },
           style: TextButton.styleFrom(
@@ -133,16 +129,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     final phoneNumber = _phoneController.text.trim();
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.otp,
       arguments: {
         'phoneNumber': phoneNumber,
         'onVerified': widget.onLoginSuccess,
       },
-      mobileBuilder: () => OtpVerificationScreen(
-        phoneNumber: phoneNumber,
-        onVerified: widget.onLoginSuccess,
-      ),
     );
   }
 }

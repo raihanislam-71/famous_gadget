@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:famous_gadget/breakpoints.dart';
 
 import '../utils/app_colors.dart';
 import 'header_actions.dart';
@@ -69,17 +70,22 @@ class HeaderNavBar extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       color: theme.colorScheme.surface,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(
+        horizontal: webContentHorizontalPadding,
+        vertical: 12,
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1280),
+          constraints: const BoxConstraints(maxWidth: webContentMaxWidth),
           child: isHome
               ? LayoutBuilder(
                   builder: (context, constraints) {
                     final compact = constraints.maxWidth < 850;
                     final veryCompact = constraints.maxWidth < 440;
                     final logo = HeaderLogo(width: veryCompact ? 112 : 156);
-                    final search = HeaderSearchBox(controller: searchController);
+                    final search = HeaderSearchBox(
+                      controller: searchController,
+                    );
                     final actions = HeaderActions(
                       foreground: foreground,
                       showWishlist: !veryCompact,

@@ -1,6 +1,8 @@
 import 'package:famous_gadget/view/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
+import '../../navigation/app_navigation.dart';
+
 class SortOptionsSheet extends StatelessWidget {
   final bool isAscending;
   final Function(bool) onSortChanged;
@@ -24,7 +26,7 @@ class SortOptionsSheet extends StatelessWidget {
                 : null,
             onTap: () {
               onSortChanged(true);
-              Navigator.pop(context);
+              AppRoutes.back<void>();
             },
           ),
           ListTile(
@@ -34,7 +36,7 @@ class SortOptionsSheet extends StatelessWidget {
                 : null,
             onTap: () {
               onSortChanged(false);
-              Navigator.pop(context);
+              AppRoutes.back<void>();
             },
           ),
         ],

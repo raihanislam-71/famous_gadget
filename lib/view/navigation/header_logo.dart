@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'app_navigation.dart';
 import '../utils/assets_path.dart';
+
 import 'package:get/get.dart';
 
 class HeaderLogo extends StatelessWidget {
@@ -14,10 +16,7 @@ class HeaderLogo extends StatelessWidget {
       button: true,
       label: 'Famous Gadget home',
       child: InkWell(
-        onTap: () => AppRoutes.to<void>(
-          route: AppRoutes.home,
-          mobileBuilder: () => const SizedBox.shrink(),
-        ),
+        onTap: () => AppRoutes.toNamed<void>(route: AppRoutes.home),
         child: SizedBox(
           width: width,
           height: 40,

@@ -1,6 +1,4 @@
 import 'package:famous_gadget/controllers/cart_controller.dart';
-import 'package:famous_gadget/view/product_details/out_of_stock_product_details_screen.dart';
-import 'package:famous_gadget/view/product_details/product_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -40,18 +38,14 @@ class ProductCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           if (isAvailable) {
-            AppRoutes.to<void>(
+            AppRoutes.toNamed<void>(
               route: AppRoutes.productDetails,
               arguments: {'productId': targetProduct.id},
-              mobileBuilder: () =>
-                  ProductDetailsScreen(productId: targetProduct.id),
             );
           } else {
-            AppRoutes.to<void>(
+            AppRoutes.toNamed<void>(
               route: AppRoutes.outOfStockProduct,
               arguments: {'productId': targetProduct.id},
-              mobileBuilder: () =>
-                  OutOfStockProductDetailsScreen(productId: targetProduct.id),
             );
           }
         },

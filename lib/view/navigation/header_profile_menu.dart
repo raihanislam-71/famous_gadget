@@ -85,34 +85,26 @@ class HeaderProfileMenu extends StatelessWidget {
     final auth = Get.find<AuthController>();
     switch (action) {
       case _ProfileMenuAction.account:
-        AppRoutes.to<void>(
-          route: AppRoutes.account,
-          mobileBuilder: () => const SizedBox.shrink(),
-        );
+        AppRoutes.toNamed<void>(route: AppRoutes.account);
         break;
       case _ProfileMenuAction.orders:
         auth.requireAuthentication(
-          onAuthenticated: () => AppRoutes.to<void>(
+          onAuthenticated: () => AppRoutes.toNamed<void>(
             route: AppRoutes.orders,
             arguments: const {'isPreview': true},
-            mobileBuilder: () => const SizedBox.shrink(),
           ),
         );
         break;
       case _ProfileMenuAction.addresses:
         auth.requireAuthentication(
-          onAuthenticated: () => AppRoutes.to<void>(
-            route: AppRoutes.addresses,
-            mobileBuilder: () => const SizedBox.shrink(),
-          ),
+          onAuthenticated: () =>
+              AppRoutes.toNamed<void>(route: AppRoutes.addresses),
         );
         break;
       case _ProfileMenuAction.wishlist:
         auth.requireAuthentication(
-          onAuthenticated: () => AppRoutes.to<void>(
-            route: AppRoutes.wishlist,
-            mobileBuilder: () => const SizedBox.shrink(),
-          ),
+          onAuthenticated: () =>
+              AppRoutes.toNamed<void>(route: AppRoutes.wishlist),
         );
         break;
       case _ProfileMenuAction.login:
