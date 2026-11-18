@@ -1,5 +1,7 @@
 import 'dart:developer' as developer;
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class AppRoutes {
@@ -77,6 +79,21 @@ class AppRoutes {
     return Get.offAllNamed<T>(path, arguments: arguments);
   }
 
+  static Future<void> resetStackToNamed({
+    required String route,
+    Object? arguments,
+  }) {
+    _logNavigation('reset stack', route);
+    final path = _routePath(route, arguments);
+    final webDelegate = _webDelegate;
+    if (webDelegate != null) {
+      return webDelegate.resetStackTo(path, arguments: arguments);
+    }
+
+    Get.offAllNamed<void>(path, arguments: arguments);
+    return Future<void>.value();
+  }
+
   static void backToHome() {
     _logNavigation('back to home', home);
     offAllNamed<void>(route: home);
@@ -152,8 +169,32 @@ class WebHistoryGetDelegate extends GetDelegate {
     await super.setNewRoutePath(configuration);
   }
 
-  Future<T> offAllNamed<T>(String page, {dynamic arguments}) {
+  Future<T> offAllNamed<T>(String page, {dynamic arguments}) async {
     history.clear();
+    await _resetBrowserHistory();
     return toNamed<T>(page, arguments: arguments);
+  }
+
+  Future<void> resetStackTo(String page, {dynamic arguments}) async {
+    history.clear();
+    await _resetBrowserHistory();
+
+    final decoder = Get.routeTree.matchRoute(page, arguments: arguments);
+    decoder.replaceArguments(arguments);
+    if (decoder.route == null) {
+      throw StateError('No route is registered for "$page".');
+    }
+
+    await pushHistory(
+      GetNavConfig(
+        currentTreeBranch: decoder.treeBranch,
+        location: page,
+        state: null,
+      ),
+    );
+  }
+
+  Future<void> _resetBrowserHistory() async {
+    if (kIsWeb) await SystemNavigator.selectSingleEntryHistory();
   }
 }

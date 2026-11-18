@@ -96,6 +96,14 @@ void main() {
               body: Text(Get.parameters['productId'] ?? 'No product'),
             ),
           ),
+          GetPage(
+            name: AppRoutes.login,
+            page: () => const Scaffold(body: Text('Login')),
+          ),
+          GetPage(
+            name: AppRoutes.register,
+            page: () => const Scaffold(body: Text('Register')),
+          ),
         ],
       ),
     );
@@ -137,5 +145,29 @@ void main() {
     await delegate.setNewRoutePath(GetNavConfig.fromRoute(AppRoutes.home)!);
     await tester.pumpAndSettle();
     expect(find.text('Home'), findsOneWidget);
+
+    AppRoutes.toNamed<void>(route: AppRoutes.login);
+    await tester.pumpAndSettle();
+    AppRoutes.toNamed<void>(route: AppRoutes.register);
+    await tester.pumpAndSettle();
+
+    await AppRoutes.resetStackToNamed(route: AppRoutes.home);
+    await tester.pumpAndSettle();
+    expect(find.text('Home'), findsOneWidget);
+    expect(delegate.history.map((route) => route.locationString), [
+      AppRoutes.home,
+    ]);
+
+    AppRoutes.toNamed<void>(route: AppRoutes.login);
+    await tester.pumpAndSettle();
+    AppRoutes.toNamed<void>(route: AppRoutes.register);
+    await tester.pumpAndSettle();
+
+    AppRoutes.offAllNamed<void>(route: AppRoutes.home);
+    await tester.pumpAndSettle();
+    expect(find.text('Home'), findsOneWidget);
+    expect(delegate.history.map((route) => route.locationString), [
+      AppRoutes.home,
+    ]);
   });
 }
