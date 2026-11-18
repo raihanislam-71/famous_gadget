@@ -1,9 +1,16 @@
 import 'dart:developer' as developer;
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class AppRoutes {
   AppRoutes._();
+
+  static WebHistoryGetDelegate? get _webDelegate {
+    final delegate = Get.routerDelegate;
+    return delegate is WebHistoryGetDelegate ? delegate : null;
+  }
 
   static const splash = '/';
   static const home = '/home';
@@ -36,8 +43,14 @@ class AppRoutes {
     bool preventDuplicates = true,
   }) {
     _logNavigation('push', route);
+    final path = _routePath(route, arguments);
+    final webDelegate = _webDelegate;
+    if (webDelegate != null) {
+      if (preventDuplicates && path == Get.currentRoute) return null;
+      return webDelegate.toNamed<T>(path, arguments: arguments);
+    }
     return Get.toNamed<T>(
-      _routePath(route, arguments),
+      path,
       arguments: arguments,
       preventDuplicates: preventDuplicates,
     );
@@ -45,7 +58,12 @@ class AppRoutes {
 
   static Future<T?>? offNamed<T>({required String route, Object? arguments}) {
     _logNavigation('replace', route);
-    return Get.offNamed<T>(_routePath(route, arguments), arguments: arguments);
+    final path = _routePath(route, arguments);
+    final webDelegate = _webDelegate;
+    if (webDelegate != null) {
+      return webDelegate.offNamed<T>(path, arguments: arguments);
+    }
+    return Get.offNamed<T>(path, arguments: arguments);
   }
 
   static Future<T?>? offAllNamed<T>({
@@ -53,15 +71,32 @@ class AppRoutes {
     Object? arguments,
   }) {
     _logNavigation('reset stack', route);
-    return Get.offAllNamed<T>(
-      _routePath(route, arguments),
-      arguments: arguments,
-    );
+    final path = _routePath(route, arguments);
+    final webDelegate = _webDelegate;
+    if (webDelegate != null) {
+      return webDelegate.offAllNamed<T>(path, arguments: arguments);
+    }
+    return Get.offAllNamed<T>(path, arguments: arguments);
+  }
+
+  static Future<void> resetStackToNamed({
+    required String route,
+    Object? arguments,
+  }) {
+    _logNavigation('reset stack', route);
+    final path = _routePath(route, arguments);
+    final webDelegate = _webDelegate;
+    if (webDelegate != null) {
+      return webDelegate.resetStackTo(path, arguments: arguments);
+    }
+
+    Get.offAllNamed<void>(path, arguments: arguments);
+    return Future<void>.value();
   }
 
   static void backToHome() {
     _logNavigation('back to home', home);
-    Get.offAllNamed<void>(home);
+    offAllNamed<void>(route: home);
   }
 
   static bool get canPop => Get.key.currentState?.canPop() ?? false;
@@ -106,5 +141,60 @@ class AppRoutes {
       default:
         return route;
     }
+  }
+}
+
+class WebHistoryGetDelegate extends GetDelegate {
+  WebHistoryGetDelegate()
+    : super(
+        preventDuplicateHandlingMode:
+            PreventDuplicateHandlingMode.PopUntilOriginalRoute,
+      );
+
+  @override
+  Future<bool> popRoute({Object? result, PopMode popMode = PopMode.Page}) {
+    return super.popRoute(result: result, popMode: PopMode.History);
+  }
+
+  @override
+  Future<void> setNewRoutePath(GetNavConfig configuration) async {
+    final previousRouteIndex = history.lastIndexWhere(
+      (entry) => entry.locationString == configuration.locationString,
+    );
+    if (previousRouteIndex >= 0 && previousRouteIndex < history.length - 1) {
+      await backUntil(configuration.locationString, popMode: PopMode.History);
+      return;
+    }
+
+    await super.setNewRoutePath(configuration);
+  }
+
+  Future<T> offAllNamed<T>(String page, {dynamic arguments}) async {
+    history.clear();
+    await _resetBrowserHistory();
+    return toNamed<T>(page, arguments: arguments);
+  }
+
+  Future<void> resetStackTo(String page, {dynamic arguments}) async {
+    history.clear();
+    await _resetBrowserHistory();
+
+    final decoder = Get.routeTree.matchRoute(page, arguments: arguments);
+    decoder.replaceArguments(arguments);
+    if (decoder.route == null) {
+      throw StateError('No route is registered for "$page".');
+    }
+
+    await pushHistory(
+      GetNavConfig(
+        currentTreeBranch: decoder.treeBranch,
+        location: page,
+        state: null,
+      ),
+    );
+  }
+
+  Future<void> _resetBrowserHistory() async {
+    if (kIsWeb) await SystemNavigator.selectSingleEntryHistory();
   }
 }

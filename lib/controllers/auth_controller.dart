@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -64,11 +66,16 @@ class AuthController extends GetxController {
     _isAuthenticated = true;
     update();
     if (kIsWeb) {
-      Get.offAllNamed<void>(AppRoutes.home);
-    } else {
-      for (var index = 0; index < routeCount; index++) {
-        Get.back<void>();
-      }
+      unawaited(
+        AppRoutes.resetStackToNamed(route: AppRoutes.home).then((_) {
+          onAuthenticated();
+        }),
+      );
+      return;
+    }
+
+    for (var index = 0; index < routeCount; index++) {
+      Get.back<void>();
     }
     onAuthenticated();
   }
