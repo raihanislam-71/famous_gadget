@@ -114,9 +114,29 @@ class HeaderProfileMenu extends StatelessWidget {
         auth.openRegister();
         break;
       case _ProfileMenuAction.logout:
-        auth.logout();
+        _confirmLogout(auth);
         break;
     }
+  }
+
+  Future<void> _confirmLogout(AuthController auth) async {
+    final shouldLogout = await Get.dialog<bool>(
+      AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+    if (shouldLogout == true) auth.logout();
   }
 }
 
