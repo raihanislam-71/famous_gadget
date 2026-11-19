@@ -1,5 +1,5 @@
+import 'package:famous_gadget/view/product_details/widgets/product_image_slider.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -8,9 +8,7 @@ import 'package:intl/intl.dart';
 import '../../controllers/product_cart_button_controller.dart';
 import '../../controllers/review_controller.dart';
 import '../../models/product.dart';
-import '../checkout/checkout_delivery_screen.dart';
 import '../navigation/app_navigation.dart';
-import '../review/review_screen.dart';
 import '../utils/app_colors.dart';
 import 'widgets/color_picker.dart';
 import 'widgets/rating_and_reviews_section.dart';
@@ -27,7 +25,6 @@ part 'sections/product_details_desktop_content.dart';
 part 'sections/product_details_desktop_reviews.dart';
 part 'sections/product_details_related_products.dart';
 part 'sections/product_details_mobile_layout.dart';
-part 'sections/product_details_mobile_image.dart';
 part 'sections/product_details_mobile_content.dart';
 part 'sections/product_details_mobile_bottom_bar.dart';
 
@@ -49,7 +46,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   late Product _product;
   late String _selectedImage;
   bool _isWishlisted = false;
-  Color selectedColor = Colors.black;
+  Color selectedColor = const Color(0xFF2455A4);
 
   @override
   void initState() {
@@ -141,7 +138,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
+            onPressed: () => AppRoutes.back<void>(),
             child: const Text('OK'),
           ),
         ],
@@ -151,10 +148,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   void _buyNow() {
     _cartBtnController.addToCart(_product);
-    AppRoutes.to<void>(
-      route: AppRoutes.checkoutDelivery,
-      mobileBuilder: () => const CheckoutDeliveryScreen(),
-    );
+    AppRoutes.toNamed<void>(route: AppRoutes.checkoutDelivery);
   }
 
   @override
@@ -163,15 +157,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isDesktop = constraints.maxWidth >= 900;
+        final isDesktop = constraints.maxWidth >= 1100;
+        // Mobile gets the compact product view; tablet and desktop share the
+        // wider web layout.
+        final usesDesktopContent = constraints.maxWidth >= 900;
 
         return Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
           appBar: isDesktop ? null : _buildMobileAppBar(context),
-          body: isDesktop
-              ? _buildDesktopLayout(context, constraints)
+          body: usesDesktopContent
+              ? _buildDesktopLayout(
+                  context,
+                  constraints,
+                  showBreadcrumb: isDesktop,
+                )
               : _buildMobileLayout(context),
-          bottomNavigationBar: isDesktop
+          bottomNavigationBar: usesDesktopContent
               ? null
               : _buildMobileBottomBar(context),
         );

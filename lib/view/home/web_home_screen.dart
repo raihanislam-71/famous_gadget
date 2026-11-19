@@ -1,5 +1,3 @@
-import 'package:famous_gadget/view/category/category_screen.dart';
-import 'package:famous_gadget/view/category/product_by_category_screen.dart';
 import 'package:famous_gadget/view/navigation/app_navigation.dart';
 import 'package:famous_gadget/view/navigation/web_site_header.dart';
 import 'package:famous_gadget/view/widgets/promo_banner.dart';
@@ -81,20 +79,16 @@ class WebHomeScreen extends StatelessWidget {
     );
   }
 
-  void _openCategories() => AppRoutes.to<void>(
-    route: AppRoutes.categories,
-    mobileBuilder: () => const CategoryScreen(),
-  );
+  void _openCategories() =>
+      AppRoutes.toNamed<void>(route: AppRoutes.categories);
 
-  void _openProducts(String categoryName) => AppRoutes.to<void>(
+  void _openProducts(String categoryName) => AppRoutes.toNamed<void>(
     route: AppRoutes.products,
     arguments: {'categoryName': categoryName},
-    mobileBuilder: () => ProductByCategoryScreen(categoryName: categoryName),
   );
 
-  void _openAccount(String label) => AppRoutes.to<void>(
+  void _openAccount(String label) => AppRoutes.toNamed<void>(
     route: label == 'Order History' ? AppRoutes.orders : AppRoutes.account,
     arguments: {'isPreview': true},
-    mobileBuilder: () => const SizedBox.shrink(),
   );
 }

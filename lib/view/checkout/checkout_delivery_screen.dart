@@ -11,7 +11,6 @@ import 'widgets/checkout_step_indicator.dart';
 import 'widgets/delivery/address_form.dart';
 import 'widgets/delivery/dashed_border_button.dart';
 import 'widgets/delivery/saved_address_card.dart';
-import 'checkout_confirmation_screen.dart';
 import '../navigation/app_navigation.dart';
 
 class CheckoutDeliveryScreen extends StatefulWidget {
@@ -81,7 +80,8 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
                     const SizedBox(height: 16),
                     SavedAddressCard(
                       isSelected: _isSavedAddressSelected,
-                      onTap: () => setState(() => _isSavedAddressSelected = true),
+                      onTap: () =>
+                          setState(() => _isSavedAddressSelected = true),
                     ),
                     const SizedBox(height: 16),
                     DashedBorderButton(
@@ -122,6 +122,8 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
   }
 
   Widget _buildAppBar() {
+    final showWebHeader = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -134,13 +136,13 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
       child: Row(
         children: [
           InkWell(
-            onTap: kIsWeb ? null : () => Get.back<void>(),
+            onTap: showWebHeader ? null : () => Get.back<void>(),
             borderRadius: BorderRadius.circular(20),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
               child: Row(
                 children: [
-                  if (!kIsWeb) ...[
+                  if (!showWebHeader) ...[
                     Icon(
                       CupertinoIcons.back,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -201,7 +203,7 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
               .map(
                 (district) => ListTile(
                   title: Text(district, style: AppTextStyles.body),
-                  onTap: () => Navigator.pop(context, district),
+                  onTap: () => AppRoutes.back<String>(result: district),
                 ),
               )
               .toList(),
@@ -234,10 +236,9 @@ class _CheckoutDeliveryScreenState extends State<CheckoutDeliveryScreen> {
               '${_streetController.text.trim()}, '
               '${_district.trim()}, ${_cityController.text.trim()}';
 
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.checkoutConfirmation,
       arguments: {'deliveryAddress': address},
-      mobileBuilder: () => CheckoutConfirmationScreen(deliveryAddress: address),
     );
   }
 

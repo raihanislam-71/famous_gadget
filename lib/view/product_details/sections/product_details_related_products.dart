@@ -47,13 +47,11 @@ extension _ProductDetailsRelatedProducts on _ProductDetailsScreenState {
   
       return InkWell(
         onTap: () {
-          AppRoutes.to<void>(
+          AppRoutes.toNamed<void>(
             route: p.isInStock
                 ? AppRoutes.productDetails
                 : AppRoutes.outOfStockProduct,
-            arguments: {'productId': p.id},
-            mobileBuilder: () =>
-                ProductDetailsScreen(productId: p.id, isInStock: p.isInStock),
+            arguments: {'productId': p.id}
           );
         },
         borderRadius: BorderRadius.circular(14),

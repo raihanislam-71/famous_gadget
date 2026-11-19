@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../breakpoints.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
 import '../widgets/app_buttons.dart';
@@ -35,19 +38,31 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   bool get _hasMinLength => _newController.text.length >= 8;
-  bool get _hasMixedCase => RegExp(r'[A-Z]').hasMatch(_newController.text) && RegExp(r'[a-z]').hasMatch(_newController.text);
+  bool get _hasMixedCase =>
+      RegExp(r'[A-Z]').hasMatch(_newController.text) &&
+      RegExp(r'[a-z]').hasMatch(_newController.text);
   bool get _hasNumber => RegExp(r'\d').hasMatch(_newController.text);
-  bool get _hasSpecial => RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=/\\[\];`~]').hasMatch(_newController.text);
+  bool get _hasSpecial =>
+      RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=/\\[\];`~]')
+          .hasMatch(_newController.text);
 
   int get _strength {
     if (_newController.text.isEmpty) return 0;
-    return [_hasMinLength, _hasMixedCase, _hasNumber || _hasSpecial].where((m) => m).length;
+    return [
+      _hasMinLength,
+      _hasMixedCase,
+      _hasNumber || _hasSpecial,
+    ].where((m) => m).length;
   }
 
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(statusBarColor: AppColors.pageBackground, statusBarIconBrightness: Brightness.dark, statusBarBrightness: Brightness.light),
+      value: const SystemUiOverlayStyle(
+        statusBarColor: AppColors.pageBackground,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: _buildAppBar(context),
@@ -62,13 +77,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        PasswordInputField(label: 'Current Password', controller: _currentController, isVisible: _showCurrent, onToggle: () => setState(() => _showCurrent = !_showCurrent), validator: (v) => v!.isEmpty ? 'Required' : null),
+                        PasswordInputField(
+                          label: 'Current Password',
+                          controller: _currentController,
+                          isVisible: _showCurrent,
+                          onToggle: () =>
+                              setState(() => _showCurrent = !_showCurrent),
+                          validator: (v) => v!.isEmpty ? 'Required' : null,
+                        ),
                         const SizedBox(height: 20),
-                        PasswordInputField(label: 'New Password', controller: _newController, isVisible: _showNew, onToggle: () => setState(() => _showNew = !_showNew), onChanged: (_) => setState(() {}), validator: _newValidator),
+                        PasswordInputField(
+                          label: 'New Password',
+                          controller: _newController,
+                          isVisible: _showNew,
+                          onToggle: () => setState(() => _showNew = !_showNew),
+                          onChanged: (_) => setState(() {}),
+                          validator: _newValidator,
+                        ),
                         const SizedBox(height: 8),
                         PasswordStrengthBar(strength: _strength),
                         const SizedBox(height: 20),
-                        PasswordInputField(label: 'Confirm New Password', controller: _confirmController, isVisible: _showConfirm, onToggle: () => setState(() => _showConfirm = !_showConfirm), validator: _confirmValidator),
+                        PasswordInputField(
+                          label: 'Confirm New Password',
+                          controller: _confirmController,
+                          isVisible: _showConfirm,
+                          onToggle: () =>
+                              setState(() => _showConfirm = !_showConfirm),
+                          validator: _confirmValidator,
+                        ),
                         const SizedBox(height: 20),
                         _buildRequirements(),
                       ],
@@ -77,7 +113,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-                  child: AppPrimaryButton(label: 'Update Password', height: 52, onPressed: _update),
+                  child: AppPrimaryButton(
+                    label: 'Update Password',
+                    height: 52,
+                    onPressed: _update,
+                  ),
                 ),
               ],
             ),
@@ -87,30 +127,76 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) => AppBar(
-        title: Text('Change Password', style: AppTextStyles.h2.copyWith(fontSize: 18, fontWeight: FontWeight.w700)),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        foregroundColor: Theme.of(context).colorScheme.onSurface,
-        elevation: 0,
-        shape: const Border(bottom: BorderSide(color: AppColors.border)),
-        toolbarHeight: 60,
-      );
+  AppBar _buildAppBar(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+    return AppBar(
+      title: Text(
+        'Change Password',
+        style: AppTextStyles.h2.copyWith(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      elevation: 0,
+      shape: const Border(bottom: BorderSide(color: AppColors.border)),
+      toolbarHeight: 60,
+      automaticallyImplyLeading: false,
+      leading: _buildBackButton(context),
+      leadingWidth: isDesktopWeb ? 0 : null,
+      titleSpacing: isDesktopWeb ? webHeaderAlignedTitleSpacing(context) : 16,
+    );
+  }
+
+  Widget _buildBackButton(BuildContext context) {
+    final showBack = !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
+    return showBack
+        ? IconButton(
+            icon: const Icon(CupertinoIcons.back),
+            tooltip: 'Back',
+            onPressed: () => Get.back<void>(),
+          )
+        : const SizedBox.shrink();
+  }
 
   Widget _buildRequirements() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, border: Border.all(color: Theme.of(context).dividerColor), borderRadius: BorderRadius.circular(16)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Password Requirements', style: AppTextStyles.badge.copyWith(fontSize: 13, color: Theme.of(context).colorScheme.onSurface)),
-            const SizedBox(height: 8),
-            PasswordRequirementRow(label: 'At least 8 characters long', isMet: _hasMinLength),
-            PasswordRequirementRow(label: 'Includes uppercase & lowercase letters', isMet: _hasMixedCase),
-            PasswordRequirementRow(label: 'Includes at least one number', isMet: _hasNumber),
-            PasswordRequirementRow(label: 'Includes a special character (e.g. ! @ #)', isMet: _hasSpecial),
-          ],
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      border: Border.all(color: Theme.of(context).dividerColor),
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Password Requirements',
+          style: AppTextStyles.badge.copyWith(
+            fontSize: 13,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
-      );
+        const SizedBox(height: 8),
+        PasswordRequirementRow(
+          label: 'At least 8 characters long',
+          isMet: _hasMinLength,
+        ),
+        PasswordRequirementRow(
+          label: 'Includes uppercase & lowercase letters',
+          isMet: _hasMixedCase,
+        ),
+        PasswordRequirementRow(
+          label: 'Includes at least one number',
+          isMet: _hasNumber,
+        ),
+        PasswordRequirementRow(
+          label: 'Includes a special character (e.g. ! @ #)',
+          isMet: _hasSpecial,
+        ),
+      ],
+    ),
+  );
 
   String? _newValidator(String? v) {
     if (v == null || v.length < 8) return 'Use at least 8 characters';
@@ -120,10 +206,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return null;
   }
 
-  String? _confirmValidator(String? v) => v != _newController.text ? 'Passwords do not match' : null;
+  String? _confirmValidator(String? v) =>
+      v != _newController.text ? 'Passwords do not match' : null;
 
   void _update() {
     if (!_formKey.currentState!.validate()) return;
-    Get.showSnackbar(const GetSnackBar(message: 'Password updated.', snackPosition: SnackPosition.BOTTOM, duration: Duration(seconds: 3)));
+    Get.showSnackbar(
+      const GetSnackBar(
+        message: 'Password updated.',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: Duration(seconds: 3),
+      ),
+    );
   }
 }

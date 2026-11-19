@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
-import '../../controllers/auth_controller.dart';
-import '../../models/wishlist_item_model.dart';
+import '../../breakpoints.dart';
+import '../../models/product.dart';
 import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import '../utils/assets_path.dart';
-import 'widgets/wishlist_product_card.dart';
+import '../widgets/product_card.dart';
+import '../widgets/responsive_product_grid.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -20,27 +19,11 @@ class WishlistScreen extends StatefulWidget {
 }
 
 class _WishlistScreenState extends State<WishlistScreen> {
-  final List<WishlistItem> _items = [
-    const WishlistItem(
-      name: 'Sony WH-1000XM5',
-      price: '৳32,500',
-      imagePath: AssetsPath.wishlistSonyImage,
-    ),
-    const WishlistItem(
-      name: 'Anker Soundcore R50i',
-      price: '৳1,999',
-      imagePath: AssetsPath.wishlistAnkerImage,
-    ),
-    const WishlistItem(
-      name: 'Haylou Solar Lite',
-      price: '৳2,799',
-      imagePath: AssetsPath.wishlistHaylouImage,
-    ),
-    const WishlistItem(
-      name: 'A4Tech Bloody B820R',
-      price: '৳4,200',
-      imagePath: AssetsPath.wishlistA4TechImage,
-    ),
+  final List<Product> _items = [
+    Product.demoForId('sony-xm5'),
+    Product.demoForId('anker-r50i'),
+    Product.demoForId('haylou-watch'),
+    Product.demoForId('a4tech-keyboard'),
   ];
 
   @override
@@ -64,19 +47,24 @@ class _WishlistScreenState extends State<WishlistScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+    final showWebHeader = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       elevation: 0,
+      automaticallyImplyLeading: false,
+      leadingWidth: showWebHeader ? 0 : null,
+      titleSpacing: showWebHeader ? webHeaderAlignedTitleSpacing(context) : 16,
       title: Text(
         'My Wishlist (${_items.length})',
         style: AppTextStyles.h2.copyWith(fontSize: 18),
       ),
-      leading: kIsWeb
-          ? null
+      leading: showWebHeader
+          ? const SizedBox.shrink()
           : IconButton(
               icon: const Icon(CupertinoIcons.back),
-              onPressed: () => Navigator.canPop(context)
-                  ? Navigator.pop(context)
+              onPressed: () => AppRoutes.canPop
+                  ? AppRoutes.back<void>()
                   : AppRoutes.backToHome(),
             ),
     );
@@ -90,46 +78,47 @@ class _WishlistScreenState extends State<WishlistScreen> {
   );
 
   Widget _buildWishlistGrid() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final crossAxis = constraints.maxWidth >= 900
-            ? 4
-            : (constraints.maxWidth >= 600 ? 3 : 2);
-        final cardWidth =
-            (constraints.maxWidth.clamp(0.0, 1120.0) - 12 * (crossAxis - 1)) /
-            crossAxis;
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: _items
-                .map(
-                  (item) => WishlistProductCard(
-                    item: item,
-                    width: cardWidth,
-                    onRemove: () => setState(() => _items.remove(item)),
-                    onAddToCart: () => _addToCart(item),
-                  ),
-                )
-                .toList(),
-          ),
-        );
-      },
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: ResponsiveProductGrid(
+        itemCount: _items.length,
+        itemBuilder: _buildWishlistProduct,
+      ),
     );
   }
 
-  void _addToCart(WishlistItem item) {
-    Get.find<AuthController>().requireAuthentication(
-      onAuthenticated: () {
-        Get.showSnackbar(
-          GetSnackBar(
-            message: '${item.name} added to cart.',
-            backgroundColor: AppColors.successGreen,
-            duration: const Duration(seconds: 2),
+  Widget _buildWishlistProduct(BuildContext context, int index) {
+    final product = _items[index];
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ProductCard(product: product),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: Semantics(
+            button: true,
+            label: 'Remove ${product.name} from wishlist',
+            child: Material(
+              color: Theme.of(context).colorScheme.surface,
+              shape: const CircleBorder(),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () => setState(() => _items.removeAt(index)),
+                child: const SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: Icon(
+                    Icons.favorite_border,
+                    color: Colors.red,
+                    size: 19,
+                  ),
+                ),
+              ),
+            ),
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }
