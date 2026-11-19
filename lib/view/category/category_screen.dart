@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import '../../controllers/bottom_nav_controller.dart';
 import '../utils/assets_path.dart';
 import '../home/widgets/category_grid_card.dart';
-import 'sub_category_screen.dart';
 import '../navigation/app_navigation.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -59,7 +58,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final filteredCategories = categories.where((category) {
       return (category['name'] as String).toLowerCase().contains(
         _searchQuery.trim().toLowerCase(),
@@ -109,7 +108,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  Get.find<BottomNavController>().backToHome();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
+                  } else if (Get.isRegistered<BottomNavController>()) {
+                    Get.find<BottomNavController>().backToHome();
+                  } else {
+                    AppRoutes.backToHome();
+                  }
                 },
                 icon: const Icon(CupertinoIcons.back),
               ),
@@ -126,11 +131,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     ),
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 180,
-                      mainAxisExtent: 160,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                    ),
+                          maxCrossAxisExtent: 180,
+                          mainAxisExtent: 160,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                        ),
                     itemCount: filteredCategories.length,
                     itemBuilder: (context, index) {
                       final category = filteredCategories[index];
@@ -140,11 +145,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         itemsCount: category['items']!,
                         onTap: () {
                           final categoryName = category['name']! as String;
-                          AppRoutes.to<void>(
+                          AppRoutes.toNamed<void>(
                             route: AppRoutes.subCategory,
                             arguments: {'categoryName': categoryName},
-                            mobileBuilder: () =>
-                                SubCategoryScreen(categoryName: categoryName),
                           );
                         },
                       );

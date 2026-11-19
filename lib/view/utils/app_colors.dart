@@ -11,6 +11,7 @@ class AppColors {
   static const Color successGreen = Color(0xFF16A34A);
   static const Color dangerRed = Color(0xFFE11D48);
   static const Color amber = Color(0xFFF59E0B);
+  static const Color amberTextLight = Color(0xFFB45309);
   static const Color codPurple = Color(0xFF7C3AED);
   static const Color secondaryText = Color(0xFF6B7280);
   static const Color border = Color(0xFFE5E7EB);

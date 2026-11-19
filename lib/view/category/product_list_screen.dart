@@ -66,7 +66,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final theme = Theme.of(context);
     final products = Product.demoProducts.where((product) {
       return product.name.toLowerCase().contains(
@@ -109,8 +109,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
                   } else {
                     AppRoutes.backToHome();
                   }
@@ -156,16 +156,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       itemCount: products.length,
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 260,
-                        mainAxisExtent: 250,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                      ),
+                            maxCrossAxisExtent: 260,
+                            mainAxisExtent: 250,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                          ),
                       itemBuilder: (context, index) {
                         final product = products[index];
-                        return ProductCard(
-                          product: product,
-                        );
+                        return ProductCard(product: product);
                       },
                     ),
             ),

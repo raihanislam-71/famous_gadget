@@ -1,12 +1,17 @@
+import 'package:famous_gadget/controllers/cart_controller.dart';
 import 'package:famous_gadget/controllers/product_cart_button_controller.dart';
 import 'package:famous_gadget/controllers/review_controller.dart';
+import 'package:famous_gadget/controllers/theme_controller.dart';
+import 'package:famous_gadget/view/navigation/app_navigation.dart';
+import 'package:famous_gadget/view/navigation/app_routes.dart';
+import 'package:famous_gadget/view/navigation/web_page_frame.dart';
 import 'package:famous_gadget/view/product_details/out_of_stock_product_details_screen.dart';
 import 'package:famous_gadget/view/product_details/product_details_screen.dart';
-import 'package:famous_gadget/view/navigation/app_routes.dart';
 import 'package:famous_gadget/view/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setUp(() {
@@ -251,7 +256,8 @@ void main() {
     await tester.pumpWidget(
       GetMaterialApp(
         theme: AppTheme.light,
-        home: const ProductDetailsScreen(productId: 'anker-r50i'),
+        initialRoute: '${AppRoutes.productDetails}/anker-r50i',
+        getPages: AppRoutePages.pages,
       ),
     );
     await tester.pumpAndSettle();
@@ -271,48 +277,37 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('WebSiteHeader shows announcement & search on home, hides on inner pages', (
+  testWidgets('web page frame shows the full header on desktop only', (
     tester,
   ) async {
+    SharedPreferences.setMockInitialValues({});
+    Get.put(CartController());
+    Get.put(ThemeController());
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    // Inner page frame: isHome is false
     await tester.pumpWidget(
       GetMaterialApp(
         theme: AppTheme.light,
-        initialRoute: '/products/details/anker-r50i',
-        getPages: AppRoutePages.pages,
+        home: const WebPageFrame(child: Text('Page content')),
       ),
     );
     await tester.pumpAndSettle();
 
-    // Orange announcement bar should NOT be shown
+    expect(find.text('Gadgets you love. Cash on Delivery BD.'), findsOneWidget);
+    expect(find.text('New Arrivals'), findsOneWidget);
+    expect(find.text('Campaigns'), findsOneWidget);
     expect(
-      find.text('Gadgets you love. Cash on Delivery BD.'),
-      findsNothing,
-    );
-    // Menu links should NOT be shown
-    expect(find.text('New Arrivals'), findsNothing);
-    expect(find.text('Campaigns'), findsNothing);
-
-    // Now test Home page: should show announcement & links
-    await tester.pumpWidget(
-      GetMaterialApp(
-        theme: AppTheme.light,
-        initialRoute: '/home',
-        getPages: AppRoutePages.pages,
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    expect(
-      find.text('Gadgets you love. Cash on Delivery BD.'),
+      find.text('Search authentic smart watches, earbuds, gimbals...'),
       findsOneWidget,
     );
-    expect(find.text('New Arrivals'), findsOneWidget);
+
+    tester.view.physicalSize = const Size(900, 800);
+    await tester.pumpAndSettle();
+    expect(find.text('Gadgets you love. Cash on Delivery BD.'), findsNothing);
+    expect(find.text('Page content'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

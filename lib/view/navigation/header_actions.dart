@@ -26,20 +26,14 @@ class HeaderActions extends StatelessWidget {
           HeaderIconButton(
             tooltip: 'Wishlist',
             icon: Icons.favorite_border,
-            onPressed: () => AppRoutes.to<void>(
-              route: AppRoutes.wishlist,
-              mobileBuilder: () => const SizedBox.shrink(),
-            ),
+            onPressed: () => AppRoutes.toNamed<void>(route: AppRoutes.wishlist),
           ),
         GetBuilder<CartController>(
           builder: (cart) => HeaderIconButton(
             tooltip: 'Cart',
             icon: Icons.shopping_cart_outlined,
             badge: cart.totalItemCount,
-            onPressed: () => AppRoutes.to<void>(
-              route: AppRoutes.cart,
-              mobileBuilder: () => const SizedBox.shrink(),
-            ),
+            onPressed: () => AppRoutes.toNamed<void>(route: AppRoutes.cart),
           ),
         ),
         const HeaderProfileMenu(),

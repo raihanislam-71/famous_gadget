@@ -142,10 +142,9 @@ extension _ProductDetailsDesktopReviews on _ProductDetailsScreenState {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () => AppRoutes.to<void>(
+                onPressed: () => AppRoutes.toNamed<void>(
                   route: AppRoutes.reviews,
-                  arguments: {'productId': _product.id},
-                  mobileBuilder: () => ReviewScreen(productId: _product.id),
+                  arguments: {'productId': _product.id}
                 ),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primary,

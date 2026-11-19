@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../breakpoints.dart';
 import '../../controllers/profile_controller.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
@@ -89,6 +92,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
@@ -98,7 +102,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       shape: const Border(bottom: BorderSide(color: AppColors.border)),
       toolbarHeight: 60,
       automaticallyImplyLeading: false,
-      titleSpacing: 16,
+      leading: _buildBackButton(context),
+      leadingWidth: isDesktopWeb ? 0 : null,
+      titleSpacing: isDesktopWeb ? webHeaderAlignedTitleSpacing(context) : 16,
       title: Text(
         'Edit Profile Screen',
         style: AppTextStyles.h2.copyWith(
@@ -107,6 +113,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildBackButton(BuildContext context) {
+    final showBack = !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
+    return showBack
+        ? IconButton(
+            icon: const Icon(CupertinoIcons.back),
+            tooltip: 'Back',
+            onPressed: () => Get.back<void>(),
+          )
+        : const SizedBox.shrink();
   }
 
   void _saveChanges() {
