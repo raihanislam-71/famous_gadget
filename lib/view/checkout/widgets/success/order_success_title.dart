@@ -9,6 +9,7 @@ class OrderSuccessTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       children: [
         Text(
@@ -17,7 +18,7 @@ class OrderSuccessTitle extends StatelessWidget {
           style: AppTextStyles.h2.copyWith(
             fontSize: 24,
             fontWeight: FontWeight.w800,
-            color: AppColors.surface,
+            color: theme.colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 8),

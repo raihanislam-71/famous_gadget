@@ -1,4 +1,3 @@
-import 'package:famous_gadget/view/category/product_by_category_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +74,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
 
     return Scaffold(
       appBar: AppBar(
@@ -113,8 +112,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
                   } else {
                     AppRoutes.backToHome();
                   }
@@ -152,11 +151,9 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               final categoryName = item['name'] as String;
-              AppRoutes.to<void>(
+              AppRoutes.toNamed<void>(
                 route: AppRoutes.products,
                 arguments: {'categoryName': categoryName},
-                mobileBuilder: () =>
-                    ProductByCategoryScreen(categoryName: categoryName),
               );
             },
           );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_navigation.dart';
 
 class HeaderNavLinks extends StatelessWidget {
@@ -15,7 +16,7 @@ class HeaderNavLinks extends StatelessWidget {
           label: 'New Arrivals',
           onTap: () => _openProducts('New Arrivals'),
         ),
-        HeaderLinkItem(label: 'Categories', onTap: _openCategories),
+        HeaderLinkItem(label: 'Brands', onTap: _openCategories),
         HeaderLinkItem(
           label: 'Campaigns',
           onTap: () => _openProducts('Hot Deals'),
@@ -25,17 +26,13 @@ class HeaderNavLinks extends StatelessWidget {
   }
 
   void _openCategories() {
-    AppRoutes.to<void>(
-      route: AppRoutes.categories,
-      mobileBuilder: () => const SizedBox.shrink(),
-    );
+    AppRoutes.toNamed<void>(route: AppRoutes.categories);
   }
 
   void _openProducts(String categoryName) {
-    AppRoutes.to<void>(
+    AppRoutes.toNamed<void>(
       route: AppRoutes.products,
       arguments: {'categoryName': categoryName},
-      mobileBuilder: () => const SizedBox.shrink(),
     );
   }
 }

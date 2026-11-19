@@ -56,7 +56,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final visibleProductIds = _visibleProductIds;
     return Scaffold(
       appBar: AppBar(
@@ -94,8 +94,8 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
                   } else {
                     AppRoutes.backToHome();
                   }
@@ -151,44 +151,27 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (visibleProductIds.isEmpty) {
-                    return Center(
+              child: visibleProductIds.isEmpty
+                  ? Center(
                       child: Text(
                         'No products found',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                    );
-                  }
-                  final columns = constraints.maxWidth < 560
-                      ? 2
-                      : constraints.maxWidth < 900
-                      ? 3
-                      : 4;
-                  final itemWidth =
-                      (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                  final childAspectRatio = itemWidth < 228
-                      ? itemWidth / 240
-                      : 0.95;
-                  return GridView.builder(
-                    itemCount: visibleProductIds.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columns,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: childAspectRatio,
+                    )
+                  : GridView.builder(
+                      itemCount: visibleProductIds.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 260,
+                            mainAxisExtent: 250,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                          ),
+                      itemBuilder: (context, index) {
+                        final productId = visibleProductIds[index];
+                        return ProductCard(productId: productId);
+                      },
                     ),
-                    itemBuilder: (context, index) {
-                      final productId = visibleProductIds[index];
-                      return ProductCard(
-                        productId: productId,
-                        width: double.infinity,
-                      );
-                    },
-                  );
-                },
-              ),
             ),
           ),
         ],

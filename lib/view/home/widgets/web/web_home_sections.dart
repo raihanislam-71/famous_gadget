@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
+import '../../../../models/product.dart';
+import '../../../widgets/product_card.dart';
 import 'web_category_card.dart';
-import 'web_product_card.dart';
 import 'web_section_layout.dart';
 import 'web_section_heading.dart';
 
@@ -22,26 +24,24 @@ class WebCategorySection extends StatelessWidget {
           children: [
             WebSectionHeading(
               title: 'Shop by Category',
-              subtitle: 'Explore our handpicked collections of trending tech gadgets',
+              subtitle:
+                  'Explore our handpicked collections of trending tech gadgets',
               onSeeAll: onSeeAll,
             ),
-            const SizedBox(height: 24),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final columns = constraints.maxWidth < 560 ? 2 : constraints.maxWidth < 900 ? 4 : 8;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: categories.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columns,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    mainAxisExtent: 146,
-                  ),
-                  itemBuilder: (context, index) => WebCategoryCard(category: categories[index]),
-                );
-              },
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 142,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 4),
+                itemBuilder: (context, index) {
+                  return SizedBox(
+                    width: 132,
+                    child: WebCategoryCard(category: categories[index]),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -53,7 +53,7 @@ class WebCategorySection extends StatelessWidget {
 class WebProductsSection extends StatelessWidget {
   final String title;
   final String subtitle;
-  final List<WebProduct> products;
+  final List<Product> products;
   final VoidCallback onSeeAll;
   final bool shaded;
 
@@ -78,25 +78,19 @@ class WebProductsSection extends StatelessWidget {
               subtitle: subtitle,
               onSeeAll: onSeeAll,
             ),
-            const SizedBox(height: 24),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final columns = constraints.maxWidth < 560 ? 2 : constraints.maxWidth < 900 ? 3 : 4;
-                final itemWidth = (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                final aspectRatio = itemWidth < 265 ? itemWidth / 270 : 0.98;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: products.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columns,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: aspectRatio,
-                  ),
-                  itemBuilder: (context, index) => WebProductCard(product: products[index]),
-                );
-              },
+            const SizedBox(height: 8),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: products.length,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 260,
+                mainAxisExtent: 250,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+              ),
+              itemBuilder: (context, index) =>
+                  ProductCard(product: products[index]),
             ),
           ],
         ),

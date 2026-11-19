@@ -15,7 +15,7 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -31,8 +31,8 @@ class ReviewScreen extends StatelessWidget {
             : IconButton(
                 icon: const Icon(CupertinoIcons.back),
                 onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
                   } else {
                     AppRoutes.backToHome();
                   }
@@ -44,10 +44,7 @@ class ReviewScreen extends StatelessWidget {
           Container(
             color: theme.colorScheme.surface,
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-            child: _buildRatingOverview(
-              context,
-              Get.find<ReviewController>(),
-            ),
+            child: _buildRatingOverview(context, Get.find<ReviewController>()),
           ),
           Container(
             color: theme.colorScheme.surface,

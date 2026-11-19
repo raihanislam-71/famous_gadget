@@ -32,6 +32,39 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('aligns the desktop cart title with other app bars', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1365, 768);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    Get.put(CartController());
+    addTearDown(Get.reset);
+
+    await tester.pumpWidget(
+      MaterialApp(theme: AppTheme.light, home: const CartScreen()),
+    );
+    await tester.pumpAndSettle();
+
+    final title = find.text('My Cart (0 Items)');
+    final appBar = find
+        .ancestor(
+          of: title,
+          matching: find.byWidgetPredicate(
+            (widget) =>
+                widget is Container &&
+                widget.padding == const EdgeInsets.only(left: 72, right: 8),
+          ),
+        )
+        .first;
+    expect(
+      tester.widget<Container>(appBar).padding,
+      const EdgeInsets.only(left: 72, right: 8),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('renders the empty cart within the bottom navigation shell', (
     tester,
   ) async {

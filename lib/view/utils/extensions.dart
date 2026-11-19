@@ -44,9 +44,3 @@ extension ContextExtension on BuildContext {
     );
   }
 }
-
-extension NavigatorExtension on BuildContext {
-  void navigateTo(Widget screen) => Navigator.push(this, MaterialPageRoute(builder: (_) => screen));
-  void navigateAndRemoveUntil(Widget screen) => Navigator.pushAndRemoveUntil(
-      this, MaterialPageRoute(builder: (_) => screen), (route) => false);
-}

@@ -85,34 +85,26 @@ class HeaderProfileMenu extends StatelessWidget {
     final auth = Get.find<AuthController>();
     switch (action) {
       case _ProfileMenuAction.account:
-        AppRoutes.to<void>(
-          route: AppRoutes.account,
-          mobileBuilder: () => const SizedBox.shrink(),
-        );
+        AppRoutes.toNamed<void>(route: AppRoutes.account);
         break;
       case _ProfileMenuAction.orders:
         auth.requireAuthentication(
-          onAuthenticated: () => AppRoutes.to<void>(
+          onAuthenticated: () => AppRoutes.toNamed<void>(
             route: AppRoutes.orders,
             arguments: const {'isPreview': true},
-            mobileBuilder: () => const SizedBox.shrink(),
           ),
         );
         break;
       case _ProfileMenuAction.addresses:
         auth.requireAuthentication(
-          onAuthenticated: () => AppRoutes.to<void>(
-            route: AppRoutes.addresses,
-            mobileBuilder: () => const SizedBox.shrink(),
-          ),
+          onAuthenticated: () =>
+              AppRoutes.toNamed<void>(route: AppRoutes.addresses),
         );
         break;
       case _ProfileMenuAction.wishlist:
         auth.requireAuthentication(
-          onAuthenticated: () => AppRoutes.to<void>(
-            route: AppRoutes.wishlist,
-            mobileBuilder: () => const SizedBox.shrink(),
-          ),
+          onAuthenticated: () =>
+              AppRoutes.toNamed<void>(route: AppRoutes.wishlist),
         );
         break;
       case _ProfileMenuAction.login:
@@ -122,9 +114,29 @@ class HeaderProfileMenu extends StatelessWidget {
         auth.openRegister();
         break;
       case _ProfileMenuAction.logout:
-        auth.logout();
+        _confirmLogout(auth);
         break;
     }
+  }
+
+  Future<void> _confirmLogout(AuthController auth) async {
+    final shouldLogout = await Get.dialog<bool>(
+      AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+    if (shouldLogout == true) auth.logout();
   }
 }
 

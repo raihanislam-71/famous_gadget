@@ -4,10 +4,12 @@ class Product {
     required this.name,
     required this.price,
     required this.originalPrice,
-    required this.description,
-    required this.specifications,
+    this.description = '',
+    this.specifications = const {},
     this.imagePath = 'assets/images/shoe.png',
     this.isInStock = true,
+    this.rating = '4.8',
+    this.reviewCount = '100',
   });
 
   final String id;
@@ -18,6 +20,8 @@ class Product {
   final Map<String, String> specifications;
   final String imagePath;
   final bool isInStock;
+  final String rating;
+  final String reviewCount;
 
   static Product demoForId(String id, {bool isInStock = true}) {
     const productIds = [
@@ -313,6 +317,8 @@ class Product {
       specifications: product.specifications,
       imagePath: product.imagePath,
       isInStock: isInStock,
+      rating: product.rating,
+      reviewCount: product.reviewCount,
     );
   }
 

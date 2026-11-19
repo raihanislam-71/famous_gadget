@@ -14,7 +14,7 @@ class WebWebContent extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: width > 1360 ? 0 : 24,
-            vertical: 36,
+            vertical: 8,
           ),
           child: child,
         ),

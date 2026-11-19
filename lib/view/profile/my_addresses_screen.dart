@@ -1,11 +1,14 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../breakpoints.dart';
 import '../../models/saved_address.dart';
+import '../navigation/app_navigation.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import 'add_address_screen.dart';
 import 'widgets/my_addresses/address_card.dart';
 
 class MyAddressesScreen extends StatefulWidget {
@@ -62,6 +65,7 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
+    final isDesktopWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.surface,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
@@ -71,7 +75,9 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
       shape: const Border(bottom: BorderSide(color: AppColors.border)),
       toolbarHeight: 60,
       automaticallyImplyLeading: false,
-      titleSpacing: 16,
+      leading: _buildBackButton(context),
+      leadingWidth: isDesktopWeb ? 0 : null,
+      titleSpacing: isDesktopWeb ? webHeaderAlignedTitleSpacing(context) : 16,
       title: Text(
         'My Addresses',
         style: AppTextStyles.h2.copyWith(
@@ -82,12 +88,25 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
     );
   }
 
+  Widget _buildBackButton(BuildContext context) {
+    final showBack = !kIsWeb || MediaQuery.sizeOf(context).width < 1100;
+    return showBack
+        ? IconButton(
+            icon: const Icon(CupertinoIcons.back),
+            tooltip: 'Back',
+            onPressed: () => Get.back<void>(),
+          )
+        : const SizedBox.shrink();
+  }
+
   Widget _buildAddressList() {
     return Column(
       children: List.generate(_addresses.length, (index) {
         final address = _addresses[index];
         return Padding(
-          padding: EdgeInsets.only(bottom: index < _addresses.length - 1 ? 12 : 0),
+          padding: EdgeInsets.only(
+            bottom: index < _addresses.length - 1 ? 12 : 0,
+          ),
           child: AddressCard(
             address: address,
             onEdit: () => _openAddressForm(address),
@@ -116,8 +135,9 @@ class _MyAddressesScreenState extends State<MyAddressesScreen> {
   }
 
   Future<void> _openAddressForm([SavedAddress? address]) async {
-    final updatedAddress = await Get.to<SavedAddress>(
-      () => AddAddressScreen(address: address),
+    final updatedAddress = await AppRoutes.toNamed<SavedAddress>(
+      route: AppRoutes.addressForm,
+      arguments: {'address': address},
       preventDuplicates: false,
     );
     if (!mounted || updatedAddress == null) return;
