@@ -1,7 +1,12 @@
+import 'package:famous_gadget/controllers/bottom_nav_controller.dart';
+import 'package:famous_gadget/controllers/cart_controller.dart';
+import 'package:famous_gadget/controllers/theme_controller.dart';
 import 'package:famous_gadget/view/navigation/app_navigation.dart';
+import 'package:famous_gadget/view/navigation/routes/catalog_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   tearDown(Get.reset);
@@ -61,6 +66,58 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('All products'), findsOneWidget);
+  });
+
+  testWidgets('browser back from cart restores the previous home tab', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    Get.put(BottomNavController());
+    Get.put(CartController());
+    Get.put(ThemeController());
+
+    final delegate = WebHistoryGetDelegate();
+    final cartPage = CatalogRoutes.pages.firstWhere(
+      (page) => page.name == AppRoutes.cart,
+    );
+    await tester.pumpWidget(
+      GetMaterialApp.router(
+        routeInformationParser: GetInformationParser(
+          initialRoute: AppRoutes.home,
+        ),
+        routerDelegate: delegate,
+        getPages: [
+          GetPage(
+            name: AppRoutes.home,
+            page: () => GetBuilder<BottomNavController>(
+              builder: (controller) => Scaffold(
+                body: Text(
+                  controller.selectedIndex == 0 ? 'Home' : 'Wrong tab',
+                ),
+              ),
+            ),
+          ),
+          cartPage,
+        ],
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    AppRoutes.toNamed<void>(route: AppRoutes.cart);
+    await tester.pumpAndSettle();
+    expect(Get.find<BottomNavController>().selectedIndex, 2);
+
+    await delegate.setNewRoutePath(GetNavConfig.fromRoute(AppRoutes.home)!);
+    expect(Get.find<BottomNavController>().selectedIndex, 0);
+    await tester.pump();
+    expect(find.text('My Cart (0 Items)'), findsNothing);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Home'), findsOneWidget);
+    expect(Get.find<BottomNavController>().selectedIndex, 0);
+    expect(delegate.history.map((route) => route.locationString), [
+      AppRoutes.home,
+    ]);
   });
 
   testWidgets('handles browser back through dynamic routes to the start', (
