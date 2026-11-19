@@ -155,13 +155,13 @@ class WebHistoryGetDelegate extends GetDelegate {
 
   @override
   Future<bool> popRoute({Object? result, PopMode popMode = PopMode.Page}) {
-    _restoreCartTabBeforePop();
+    _restoreShellTabBeforePop();
     return super.popRoute(result: result, popMode: PopMode.History);
   }
 
   @override
   Future<void> setNewRoutePath(GetNavConfig configuration) async {
-    _restoreCartTabBeforePop(targetRoute: configuration.locationString);
+    _restoreShellTabBeforePop(targetRoute: configuration.locationString);
     final previousRouteIndex = history.lastIndexWhere(
       (entry) => entry.locationString == configuration.locationString,
     );
@@ -173,15 +173,22 @@ class WebHistoryGetDelegate extends GetDelegate {
     await super.setNewRoutePath(configuration);
   }
 
-  void _restoreCartTabBeforePop({String? targetRoute}) {
+  void _restoreShellTabBeforePop({String? targetRoute}) {
     if (history.isEmpty ||
-        history.last.locationString != AppRoutes.cart ||
-        targetRoute == AppRoutes.cart ||
+        history.last.locationString == targetRoute ||
         !Get.isRegistered<BottomNavController>()) {
       return;
     }
 
-    Get.find<BottomNavController>().leaveCartRoute();
+    final controller = Get.find<BottomNavController>();
+    switch (history.last.locationString) {
+      case AppRoutes.cart:
+        controller.leaveCartRoute();
+        break;
+      case AppRoutes.account:
+        controller.leaveAccountRoute();
+        break;
+    }
   }
 
   Future<T> offAllNamed<T>(String page, {dynamic arguments}) async {
