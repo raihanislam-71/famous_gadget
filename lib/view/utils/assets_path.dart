@@ -1,5 +1,6 @@
 class AssetsPath {
   static const String _images = 'assets/images';
+  static const String orderSuccessAnimation = 'assets/animation/successful.svg';
   static const String splashLogo = '$_images/splashLogo.png';
   static const String appLogo = '$_images/appLogo.png';
   static const String appName = '$_images/appName.png';

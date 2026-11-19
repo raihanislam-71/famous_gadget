@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/bottom_nav_controller.dart';
+
 class AppRoutes {
   AppRoutes._();
 
@@ -153,11 +155,13 @@ class WebHistoryGetDelegate extends GetDelegate {
 
   @override
   Future<bool> popRoute({Object? result, PopMode popMode = PopMode.Page}) {
+    _restoreShellTabBeforePop();
     return super.popRoute(result: result, popMode: PopMode.History);
   }
 
   @override
   Future<void> setNewRoutePath(GetNavConfig configuration) async {
+    _restoreShellTabBeforePop(targetRoute: configuration.locationString);
     final previousRouteIndex = history.lastIndexWhere(
       (entry) => entry.locationString == configuration.locationString,
     );
@@ -167,6 +171,24 @@ class WebHistoryGetDelegate extends GetDelegate {
     }
 
     await super.setNewRoutePath(configuration);
+  }
+
+  void _restoreShellTabBeforePop({String? targetRoute}) {
+    if (history.isEmpty ||
+        history.last.locationString == targetRoute ||
+        !Get.isRegistered<BottomNavController>()) {
+      return;
+    }
+
+    final controller = Get.find<BottomNavController>();
+    switch (history.last.locationString) {
+      case AppRoutes.cart:
+        controller.leaveCartRoute();
+        break;
+      case AppRoutes.account:
+        controller.leaveAccountRoute();
+        break;
+    }
   }
 
   Future<T> offAllNamed<T>(String page, {dynamic arguments}) async {

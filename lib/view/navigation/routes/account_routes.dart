@@ -24,6 +24,8 @@ class AccountRoutes {
     GetPage<void>(
       name: AppRoutes.account,
       page: () => RouteHelpers.webPage(const AccountRouteEntry()),
+      transition: kIsWeb ? Transition.noTransition : null,
+      transitionDuration: kIsWeb ? Duration.zero : null,
     ),
     GetPage<void>(
       name: AppRoutes.login,
@@ -112,12 +114,23 @@ class _AccountTabRouteEntry extends StatefulWidget {
 }
 
 class _AccountTabRouteEntryState extends State<_AccountTabRouteEntry> {
+  late final BottomNavController _bottomNavController;
+
   @override
   void initState() {
     super.initState();
+    _bottomNavController = Get.find<BottomNavController>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) Get.find<BottomNavController>().changeIndex(3);
+      if (mounted) _bottomNavController.enterAccountRoute();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _bottomNavController.leaveAccountRoute();
+    });
+    super.dispose();
   }
 
   @override

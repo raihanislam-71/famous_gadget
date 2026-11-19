@@ -185,12 +185,23 @@ class _CartRouteEntry extends StatefulWidget {
 }
 
 class _CartRouteEntryState extends State<_CartRouteEntry> {
+  late final BottomNavController _bottomNavController;
+
   @override
   void initState() {
     super.initState();
+    _bottomNavController = Get.find<BottomNavController>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) Get.find<BottomNavController>().changeIndex(2);
+      if (mounted) _bottomNavController.enterCartRoute();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _bottomNavController.leaveCartRoute();
+    });
+    super.dispose();
   }
 
   @override

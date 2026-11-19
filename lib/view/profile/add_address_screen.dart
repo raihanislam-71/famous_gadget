@@ -95,6 +95,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     return AppBar(
       title: Text(widget.address == null ? 'Add Address' : 'Edit Address'),
       automaticallyImplyLeading: false,
+      leadingWidth: showBack ? null : 0,
+      titleSpacing: showBack ? 16 : 0,
       leading: showBack
           ? IconButton(
               icon: const Icon(CupertinoIcons.back),
