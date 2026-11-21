@@ -3,9 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/product.dart';
-import '../utils/app_colors.dart';
 import '../widgets/product_card.dart';
 import '../navigation/app_navigation.dart';
+import 'widgets/sort_options_sheet.dart';
+import 'widgets/filter_price_sheet.dart';
 
 class ProductByCategoryScreen extends StatefulWidget {
   final String categoryName;
@@ -55,7 +56,7 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
     final visibleProductIds = _visibleProductIds;
     return Scaffold(
       appBar: AppBar(
@@ -93,8 +94,8 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  if (Navigator.of(context).canPop()) {
-                    Navigator.of(context).pop();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
                   } else {
                     AppRoutes.backToHome();
                   }
@@ -150,44 +151,27 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (visibleProductIds.isEmpty) {
-                    return Center(
+              child: visibleProductIds.isEmpty
+                  ? Center(
                       child: Text(
                         'No products found',
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
-                    );
-                  }
-                  final columns = constraints.maxWidth < 560
-                      ? 2
-                      : constraints.maxWidth < 900
-                      ? 3
-                      : 4;
-                  final itemWidth =
-                      (constraints.maxWidth - 16 * (columns - 1)) / columns;
-                  final childAspectRatio = itemWidth < 228
-                      ? itemWidth / 240
-                      : 0.95;
-                  return GridView.builder(
-                    itemCount: visibleProductIds.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: columns,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: childAspectRatio,
+                    )
+                  : GridView.builder(
+                      itemCount: visibleProductIds.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 260,
+                            mainAxisExtent: 250,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                          ),
+                      itemBuilder: (context, index) {
+                        final productId = visibleProductIds[index];
+                        return ProductCard(productId: productId);
+                      },
                     ),
-                    itemBuilder: (context, index) {
-                      final productId = visibleProductIds[index];
-                      return ProductCard(
-                        productId: productId,
-                        width: double.infinity,
-                      );
-                    },
-                  );
-                },
-              ),
             ),
           ),
         ],
@@ -198,76 +182,20 @@ class _ProductByCategoryScreenState extends State<ProductByCategoryScreen> {
   void _showSortOptions() {
     showModalBottomSheet<void>(
       context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Popularity'),
-              trailing: _sortAscending
-                  ? const Icon(Icons.check, color: AppColors.primary)
-                  : null,
-              onTap: () {
-                setState(() => _sortAscending = true);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Price: low to high'),
-              trailing: !_sortAscending
-                  ? const Icon(Icons.check, color: AppColors.primary)
-                  : null,
-              onTap: () {
-                setState(() => _sortAscending = false);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
+      builder: (context) => SortOptionsSheet(
+        isAscending: _sortAscending,
+        onSortChanged: (value) => setState(() => _sortAscending = value),
       ),
     );
   }
 
   void _showFilters() {
-    var selectedRange = _priceRange;
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setSheetState) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Filter by price',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                RangeSlider(
-                  values: selectedRange,
-                  min: 0,
-                  max: 100000,
-                  divisions: 20,
-                  labels: RangeLabels(
-                    '৳${selectedRange.start.round()}',
-                    '৳${selectedRange.end.round()}',
-                  ),
-                  onChanged: (range) =>
-                      setSheetState(() => selectedRange = range),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    setState(() => _priceRange = selectedRange);
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Apply filters'),
-                ),
-              ],
-            ),
-          ),
-        ),
+      builder: (context) => FilterPriceSheet(
+        initialRange: _priceRange,
+        onApply: (range) => setState(() => _priceRange = range),
       ),
     );
   }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import '../utils/app_colors.dart';
 import '../utils/app_text_styles.dart';
-import '../utils/assets_path.dart';
+import 'widgets/orders/detail/order_item_detail_card.dart';
+import 'widgets/orders/detail/order_status_card.dart';
+import 'widgets/orders/detail/tracking_card.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   const OrderDetailScreen({
@@ -20,15 +20,13 @@ class OrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isCurrent = status == 'Processing';
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isCurrent = status == 'Processing';
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: isDarkMode
-            ? Brightness.light
-            : Brightness.dark,
+        statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
@@ -48,156 +46,21 @@ class OrderDetailScreen extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _buildStatusCard(context, isCurrent),
+            OrderStatusCard(status: status, isCurrent: isCurrent),
             const SizedBox(height: 16),
-            _buildTrackingCard(context),
+            const TrackingCard(),
             const SizedBox(height: 16),
             _buildDeliveryCard(context),
             const SizedBox(height: 16),
-            _buildItemsCard(context),
+            OrderItemDetailCard(
+              name: 'Sony WH-1000XM5',
+              detail: 'Qty: 1 • Navy Blue',
+              price: '৳32,500',
+              imagePath: 'assets/images/order_detail_sony.png', // Corrected path
+              isPreview: isPreview,
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildStatusCard(BuildContext context, bool isCurrent) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Current Status',
-                style: AppTextStyles.caption.copyWith(fontSize: 12),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                isCurrent ? 'Order Confirmed' : status,
-                style: AppTextStyles.badge.copyWith(fontSize: 16),
-              ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.amber.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              status,
-              style: AppTextStyles.badge.copyWith(
-                fontSize: 11,
-                color: AppColors.amber,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTrackingCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'DELIVERY TRACKING',
-            style: AppTextStyles.badge.copyWith(fontSize: 14),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildTrackingStep(
-                context,
-                'Ordered',
-                'Mar 15, 2024',
-                isComplete: true,
-              ),
-              _buildTrackingStep(
-                context,
-                'Confirmed',
-                'Mar 15, 2024',
-                isComplete: true,
-              ),
-              _buildTrackingStep(context, 'Shipped', 'Pending'),
-              _buildTrackingStep(context, 'Delivered', 'Pending'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTrackingStep(
-    BuildContext context,
-    String title,
-    String date, {
-    bool isComplete = false,
-  }) {
-    final color = isComplete
-        ? AppColors.primary
-        : Theme.of(context).dividerColor;
-    return SizedBox(
-      width: 68,
-      child: Column(
-        children: [
-          Container(
-            width: 16,
-            height: 16,
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: isComplete
-                ? Center(
-                    child: SvgPicture.asset(
-                      AssetsPath.orderTrackingCheck,
-                      width: 8,
-                      height: 8,
-                    ),
-                  )
-                : null,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.badge.copyWith(
-              fontSize: 12,
-              color: isComplete
-                  ? Theme.of(context).colorScheme.onSurface
-                  : Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            date,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.caption.copyWith(
-              fontSize: 9,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -245,11 +108,7 @@ class OrderDetailScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildDeliveryInfo(
-                context,
-                'Shipping Option',
-                'Standard Delivery',
-              ),
+              _buildDeliveryInfo(context, 'Shipping Option', 'Standard Delivery'),
               _buildDeliveryInfo(
                 context,
                 'Payment Method',
@@ -270,78 +129,13 @@ class OrderDetailScreen extends StatelessWidget {
     bool alignEnd = false,
   }) {
     return Column(
-      crossAxisAlignment: alignEnd
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
+      crossAxisAlignment:
+          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
         Text(label, style: AppTextStyles.caption.copyWith(fontSize: 12)),
         const SizedBox(height: 2),
         Text(value, style: AppTextStyles.uiSemibold.copyWith(fontSize: 13)),
       ],
-    );
-  }
-
-  Widget _buildItemsCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'ITEMS ORDERED',
-            style: AppTextStyles.badge.copyWith(fontSize: 14),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  AssetsPath.orderDetailSonyImage,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Sony WH-1000XM5',
-                      style: AppTextStyles.badge.copyWith(fontSize: 13),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Qty: 1 • Navy Blue',
-                      style: AppTextStyles.caption.copyWith(fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                '৳32,500',
-                style: AppTextStyles.badge.copyWith(
-                  fontSize: 14,
-                  color: AppColors.primary,
-                ),
-              ),
-            ],
-          ),
-          if (isPreview) ...[
-            const SizedBox(height: 12),
-            const Text(
-              'Demo order detail. Live tracking requires the API.',
-              style: AppTextStyles.caption,
-            ),
-          ],
-        ],
-      ),
     );
   }
 }

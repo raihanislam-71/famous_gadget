@@ -6,9 +6,7 @@ import 'package:get/get.dart';
 import '../../controllers/bottom_nav_controller.dart';
 import '../utils/assets_path.dart';
 import '../home/widgets/category_grid_card.dart';
-import 'sub_category_screen.dart';
 import '../navigation/app_navigation.dart';
-import 'product_list_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -18,6 +16,11 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  bool _isSearching = false;
+  String _searchQuery = '';
+
   final List<Map<String, dynamic>> categories = [
     {'name': 'Smartphones', 'image': AssetsPath.phone, 'items': 86},
     {'name': 'Security', 'image': AssetsPath.camera, 'items': 45},
@@ -31,32 +34,73 @@ class _CategoryScreenState extends State<CategoryScreen> {
     {'name': 'Router UPS', 'image': AssetsPath.projector, 'items': 19},
   ];
 
+  void _startSearch() {
+    setState(() => _isSearching = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _searchFocusNode.requestFocus();
+    });
+  }
+
+  void _stopSearch() {
+    _searchController.clear();
+    setState(() {
+      _isSearching = false;
+      _searchQuery = '';
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isWeb = kIsWeb;
+    final isWeb = kIsWeb && MediaQuery.sizeOf(context).width >= 1100;
+    final filteredCategories = categories.where((category) {
+      return (category['name'] as String).toLowerCase().contains(
+        _searchQuery.trim().toLowerCase(),
+      );
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Categories',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                onChanged: (query) => setState(() => _searchQuery = query),
+                textInputAction: TextInputAction.search,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search categories',
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  border: InputBorder.none,
+                  isDense: true,
+                ),
+              )
+            : Text(
+                'Categories',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         foregroundColor: Theme.of(context).colorScheme.onSurface,
         elevation: 0,
         actions: [
           IconButton(
-            tooltip: 'Search',
-            onPressed: () => AppRoutes.to<void>(
-              route: AppRoutes.search,
-              mobileBuilder: () => const ProductListScreen(
-                title: 'Search Products',
-                initialSearchActive: true,
-              ),
-            ),
-            icon: const Icon(Icons.search),
+            tooltip: _isSearching ? 'Clear search' : 'Search categories',
+            onPressed: _isSearching ? _stopSearch : _startSearch,
+            icon: Icon(_isSearching ? Icons.close : Icons.search),
           ),
         ],
         automaticallyImplyLeading: !isWeb,
@@ -64,7 +108,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ? null
             : IconButton(
                 onPressed: () {
-                  Get.find<BottomNavController>().backToHome();
+                  if (AppRoutes.canPop) {
+                    AppRoutes.back<void>();
+                  } else if (Get.isRegistered<BottomNavController>()) {
+                    Get.find<BottomNavController>().backToHome();
+                  } else {
+                    AppRoutes.backToHome();
+                  }
                 },
                 icon: const Icon(CupertinoIcons.back),
               ),
@@ -72,49 +122,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
       body: Column(
         children: [
           Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final width = constraints.maxWidth;
-                final crossAxisCount = width < 360
-                    ? 2
-                    : width < 600
-                    ? 3
-                    : width < 900
-                    ? 4
-                    : 6;
-
-                return GridView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
+            child: filteredCategories.isEmpty
+                ? const Center(child: Text('No categories found'))
+                : GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 16,
+                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 180,
+                          mainAxisExtent: 160,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                        ),
+                    itemCount: filteredCategories.length,
+                    itemBuilder: (context, index) {
+                      final category = filteredCategories[index];
+                      return CategoryGridCard(
+                        categoryName: category['name']!,
+                        imagePath: category['image']!,
+                        itemsCount: category['items']!,
+                        onTap: () {
+                          final categoryName = category['name']! as String;
+                          AppRoutes.toNamed<void>(
+                            route: AppRoutes.subCategory,
+                            arguments: {'categoryName': categoryName},
+                          );
+                        },
+                      );
+                    },
                   ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 0.82,
-                  ),
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    return CategoryGridCard(
-                      categoryName: categories[index]['name']!,
-                      imagePath: categories[index]['image']!,
-                      itemsCount: categories[index]['items']!,
-                      onTap: () {
-                        final categoryName =
-                            categories[index]['name']! as String;
-                        AppRoutes.to<void>(
-                          route: AppRoutes.subCategory,
-                          arguments: {'categoryName': categoryName},
-                          mobileBuilder: () =>
-                              SubCategoryScreen(categoryName: categoryName),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
           ),
         ],
       ),
